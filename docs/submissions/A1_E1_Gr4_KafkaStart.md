@@ -10,7 +10,7 @@
 - **Submission Date:** 05.03.2024; 23:59
  
 # E01 - Outage of Zookeeper
-//TODO outage of zookeeper and then what hapens if producer gets out but new one is waiting.
+
 ## E01-01: During Runtime
 
 ### Parameters and Process
@@ -19,12 +19,63 @@
 - **Action:** Run the lab as provided and then shut down the Docker Container of Zookeeper.
 
 ### Observations
+- Both Producer and Consumer continue running as before.
+- While running both Kafka and Zookeeper, the 'ConsumerForGazeEventsForEyeTrackerPartitionsRebalancing1' while running alone will consume gaze-events from partition 0 and 1. When starting 'ConsumerForGazeEventsForEyeTrackerPartitionsRebalancing2' it will take over the consumption of gaze-events from partition 1 while the 'Consumer..1' will take over the consumption of gaze-events from partition 0.
+- starting the 'Consumer..1' first --> Consume both partitions, Kafka log:
+  `  2024-03-17 18:19:07 [2024-03-17 17:19:07,932] INFO [GroupCoordinator 1001]: Stabilized group grp1 generation 5 (__consumer_offsets-48) with 1 members (kafka.coordinator.group.GroupCoordinator)
+  2024-03-17 18:19:07 [2024-03-17 17:19:07,941] INFO [GroupCoordinator 1001]: Assignment received from leader consumer-grp1-1-6a7ece98-b46a-454b-b6c8-1c8924394739 for group grp1 for generation 5. The group has 1 members, 0 of which are static. (kafka.coordinator.group.GroupCoordinator)
+  `
+- starting the 'Consumer..2' first --> now each Consumer consumes one partition, Kafka log:
+  `    2024-03-17 18:35:06 [2024-03-17 17:35:06,412] INFO [GroupCoordinator 1001]: Preparing to rebalance group grp1 in state PreparingRebalance with old generation 13 (__consumer_offsets-48) (reason: Adding new member consumer-grp1-1-0f9c477f-157b-4328-8f40-679b535209b1 with group instance id None; client reason: rebalance failed due to MemberIdRequiredException) (kafka.coordinator.group.GroupCoordinator)
+  2024-03-17 18:35:06 [2024-03-17 17:35:06,423] INFO [GroupCoordinator 1001]: Stabilized group grp1 generation 14 (__consumer_offsets-48) with 2 members (kafka.coordinator.group.GroupCoordinator)
+  2024-03-17 18:35:06 [2024-03-17 17:35:06,426] INFO [GroupCoordinator 1001]: Assignment received from leader consumer-grp1-1-b9580b44-12d4-455a-ab06-7927604b5ff5 for group grp1 for generation 14. The group has 2 members, 0 of which are static. (kafka.coordinator.group.GroupCoordinator)
+  `
+- stopping one of the Consumers -> finished consuming the assigned partition, then consumes the other partition from commited offset, surviving Consumer log:
+  `    [main] INFO org.apache.kafka.clients.consumer.internals.ConsumerCoordinator - [Consumer clientId=consumer-grp1-1, groupId=grp1] Setting offset for partition gaze-events-0 to the committed offset FetchPosition{offset=10479, offsetEpoch=Optional[0], currentLeader=LeaderAndEpoch{leader=Optional[localhost:9092 (id: 1001 rack: null)], epoch=0}}
+  [main] INFO org.apache.kafka.clients.consumer.internals.ConsumerCoordinator - [Consumer clientId=consumer-grp1-1, groupId=grp1] Setting offset for partition gaze-events-1 to the committed offset FetchPosition{offset=8134, offsetEpoch=Optional[0], currentLeader=LeaderAndEpoch{leader=Optional[localhost:9092 (id: 1001 rack: null)], epoch=0}}
+  `
 
-- **Outcome:** Both Producer and Consumer continue running as before.
+- Trying to do the same but taking out Zookeeper once both Consumers are working on a partition --> surviving Consumer was able to finish both partitions as before.
+
+- Trying to do the same but taking out Zookeeper once one Consumer is working on both partitions -> also worked
+
+- Kafka Container can't be started when the 'depends on: - zookeeper' is removed from the docker-compose file.
+  `  2024-03-17 19:10:06 [2024-03-17 18:10:06,354] INFO shutting down (kafka.server.KafkaServer)
+  2024-03-17 19:10:06 [2024-03-17 18:10:06,358] INFO App info kafka.server for -1 unregistered (org.apache.kafka.common.utils.AppInfoParser)
+  2024-03-17 19:10:06 [2024-03-17 18:10:06,358] INFO shut down completed (kafka.server.KafkaServer)
+  2024-03-17 19:10:06 [2024-03-17 18:10:06,358] ERROR Exiting Kafka due to fatal exception during startup. (kafka.Kafka$)
+  2024-03-17 19:10:06 kafka.zookeeper.ZooKeeperClientTimeoutException: Timed out waiting for connection while in state: CONNECTING
+  2024-03-17 19:10:06     at kafka.zookeeper.ZooKeeperClient.$anonfun$waitUntilConnected$3(ZooKeeperClient.scala:258)
+  2024-03-17 19:10:06     at kafka.zookeeper.ZooKeeperClient.waitUntilConnected(ZooKeeperClient.scala:254)
+  2024-03-17 19:10:06     at kafka.zookeeper.ZooKeeperClient.<init>(ZooKeeperClient.scala:116)
+  2024-03-17 19:10:06     at kafka.zk.KafkaZkClient$.apply(KafkaZkClient.scala:2266)
+  2024-03-17 19:10:06     at kafka.zk.KafkaZkClient$.createZkClient(KafkaZkClient.scala:2358)
+  2024-03-17 19:10:06     at kafka.server.KafkaServer.initZkClient(KafkaServer.scala:717)
+  2024-03-17 19:10:06     at kafka.server.KafkaServer.startup(KafkaServer.scala:226)
+  2024-03-17 19:10:06     at kafka.Kafka$.main(Kafka.scala:112)
+  2024-03-17 19:10:06     at kafka.Kafka.main(Kafka.scala)
+  2024-03-17 19:10:06 [2024-03-17 18:10:06,360] INFO shutting down (kafka.server.KafkaServer)`
+
 
 ### Conclusion
+- Zookeeper is primarily responsible for broker registration, leader election, partition-lists and metadata. When a broker starts, it registers itself in Zookeeper. When producers and consumers connect to the cluster, they use Zookeeper to discover the brokers and the leader for each partition.
+  - Producers send messages to the Kafka brokers. They interact with the brokers to determine which partition and therefore which broker they should send messages to based on the topic. The partitioning decision can be influenced by a key or round-robin if no key is provided.
+  - Consumers fetch messages from the brokers. They subscribe to topics and pull messages from the brokers. Consumers keep track of their offset (position) in each partition to manage which messages they have processed.
+  - Each Kafka broker manages the storage of messages in a partitioned and replicated manner across the cluster. When a producer sends a message to a broker, the broker appends the message to the appropriate partition log. This log is a simple, ordered, and immutable sequence of messages that is stored on disk.
+  - Replication is managed among the brokers to ensure fault tolerance. Each partition has one leader and zero or more follower replicas. The leader handles all read and write requests for the partition, while the followers replicate the leader's log. Followers pull messages from the leader to stay in sync.
+- Therefore, **shutting Zookeeper down after the broker is already registered and a leader is set for the partitions, it doesn't affect the producer-consumer set-up from the lab**.
+- **Producers and Consumers do not interact with Zookeeper directly. They only communicate with the Kafka brokers**. The brokers handle appending messages to logs, replication, and serving consumer requests. This process can continue even if Zookeeper temporarily loses connectivity, as long as the existing cluster state does not change (e.g., no new brokers, no re-elections needed). But operations such as adding a new broker or a new topic, would need Zookeeper.
 
-- Zookeeper is primarily responsible for setup. Therefore, shutting it down after the system is already running does not impact the currently running system.
+- With Zookeeper down it's not possible to modfiy topics (e.g. delete) as the partition metadata is stored in Zookeeper. See below screenshot where command to delete a topic is issued but not executed.
+ 
+<img src="img_2.png" width="750" height="450" />
+
+- The Kafka Broker relies on Zookeeper for discovery and coordination of the Kafka cluster.
+  - Brokers register themselves with Zookeeper, which allows them to be discovered by producers, consumers, and other brokers.
+  - Zookeeper stores metadata about topics, such as the number of partitions, replication factors, and other configuration details.
+  - It helps in leader election for partitions and keeps track of the status of nodes. It also notifies Kafka about any changes within the cluster, like adding or removing nodes.
+
+
 
 ## E01-02: Before Runtime
 
@@ -49,7 +100,8 @@
   - Subscription to topics seems to be successful since Kafka Container is up and subscription is possible.
 - `Id=grp1] Error while fetching metadata with correlation id 34524 : {gaze-events=UNKNOWN_TOPIC_OR_PARTITION, click-events=UNKNOWN_TOPIC_OR_PARTITION}`
   - Continuously fails within the While-loop to poll for records
-- Program keeps running
+- Program keeps running.
+
 
 #### Kafka
 - Kafka Container Logs:
@@ -67,7 +119,8 @@
 - The observations indicate that shutting down Zookeeper before running the system affects the connectivity and functionality of the producers and consumer, highlighting Zookeeper's critical role in initial system setup and maintenance. Zookeeper serves in managing the Kafka cluster, including broker health checks, leader election, and maintaining overall cluster stability.
 - The Kafka Container Logs indicate that the system is unable to establish a connection with the broker, which is a direct result of Zookeeper being down.
 - Topics were created previously
-- Additional monitoring shows that when the producer (examined with the click event test) is activated, consumer 1 is able to receive the events. However, upon initiation of consumer 2, it assumes control of the events that were formerly managed by consumer 1. Thus, for this scenario, it appears that only one consumer is capable of processing the events at any given time.
+
+
 
 # E02 - Impact of Load and Batch Size on Processing Latency
 
@@ -144,11 +197,47 @@
 ##### With batch size of 1KB
 - **Average latency: 6.32 ms**
 
-
+##### With batch size of 64KB and linger.ms=1000
+- **latency per record: 1003 ms - 1020 ms** 
+- Average latency: must be around 1010 ms, we did not wait for the average to be printed after 5000 records. Which would take 83 minutes.
 
 ### Conclusion
-It seems that with smaller batch sizes, the latency increases. With adding the property linger.ms, the latency did not increase or decrease significantly.
-This is expected as the producer has to send more requests to the broker, which increases the time it takes to send the data. The default batch size of 16KB seems to be a good balance between latency and throughput.
+- batch.size
+  - controls the maximum amount of data the producer will batch in memory per partition before sending it to the broker.
+  - A larger batch.size allows more messages to be batched together. This can increase throughput (because of reduced requests to the broker) but at the cost of potentially higher latency (as messages wait in the batch to be sent out).
+  - A smaller batch.size means batches are sent more frequently with fewer messages, potentially reducing latency (as messages spend less time waiting in the batch) but possibly decreasing throughput (because of the increased number of requests to the broker).
+
+
+- linger.ms
+  - specifies the maximum time to buffer data in memory per partition to reach the batch size before sending it out.
+  - A higher linger.ms value allows the producer to wait longer in hopes of sending larger batches, which can improve throughput but increase latency because messages are delayed up to linger.ms milliseconds to form a bigger batch.
+  - A lower linger.ms means the producer sends messages as soon as possible, even if the batch is not full, which can reduce latency at the expense of throughput because of the overhead of sending smaller batches.
+
+
+- Large batch.size and High linger.ms:
+  - maximizes the potential for high throughput by sending large batches less frequently.
+  - Increased latency due to both messages waiting to fill up the large batch size and the willingness to wait.
+  - High throughput is achieved by reducing the number of send operations.
+
+
+- Large batch.size and Low linger.ms:
+  - If the batch fills up quickly, it's sent immediately; otherwise, it sends whatever it has
+  - Moderate latency because while batches can be large, the producer won't wait long to send data. Throughput can still be high, especially under high load where the batch size is reached quickly.
+
+
+- Small batch.size and High linger.ms:
+  - producer will send small batches but is willing to wait to fill them as much as possible.
+  - Potentially low latency under light loads (since batches are small and can be sent quickly), but under heavier loads, there could be unnecessary latency due to linger.ms, even when the small batch size is quickly reached.
+
+
+- Small batch.size and Low linger.ms:
+  - producer sends messages as soon as possible, without much waiting to fill up the batch
+  - The lowest latency since messages are sent immediately after being produced or after a very short wait, but at the cost of lower throughput due to the overhead of sending many small batches.
+
+
+- Trade-offs between throughput and latency have to be considered, 'it depends' on the use-case.
+
+
 
 # E03 - Setup of prometheus and grafana
 
@@ -224,7 +313,8 @@ This can become a problem if the application is not designed to handle duplicate
 
 ### Conclusion
 - The consumer can read records from the specified offset, which can lead to not processing records that were sent before the consumer was started.
-- Even though the customer is aware of the offset, if kafka can not hold the data for the consumer, the consumer will not be able to read the data.
+- Manually specifying the offset can lead to a situation where the consumer does not read all records if done incorrectly.
+- Kafka however will keep the records for a certain amount of time, so the consumer can still read the records if the offset is set to a value that is lower than the current offset.
 
 ## E04-03: Disable auto commit
 
@@ -363,6 +453,6 @@ Resetting offset for partition click-events-0 to position FetchPosition{offset=0
 - The consumer lagged behind the producer significatly.
 - Given the property of the conusmer `auto.offset.reset= earliest` if a reset of the consumer group occurs, the consumer will start from the beginning of the topic.
 - Processing one partition at a time points towards an attempted rebalance where ideally another consumer would take care of the other partition.
-- 
-- //TODO test wether consumer lag has an effect on data loss. yes if the retention is short.
-- data is within kafka, this no data loss if the consumer just can t consume it.
+- When the consumer's `max.poll.interval.ms` is exceeded, Kafka assumes the consumer has failed or is stuck. This results in the consumer being kicked out of the group, leading to rebalance actions.
+- Message retention policies in Kafka determine how long messages are kept before being deleted. If the consumer falls too far behind, and messages are deleted according to the retention policy before the consumer has a chance to read them, data loss occurs.
+- Data is stored within kafka, this creats no immediate data loss if the consumer just can t consume it.
