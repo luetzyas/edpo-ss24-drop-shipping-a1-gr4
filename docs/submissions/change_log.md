@@ -31,6 +31,7 @@ Here, you will find a brief overview of our progress, including major milestones
   - what happens if 1 consumer is shut down
   - implement linger.ms to see if the latency behaviour changes
   - enhance conclusion for the experiment: Read from 0
+- work on commands file for own project shortcuts
 
 ## Submission 05. March 2024
 [Release 1.0](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/releases/tag/EDPO_A1_E1_2)
