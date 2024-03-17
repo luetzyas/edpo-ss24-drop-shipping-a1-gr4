@@ -12,9 +12,6 @@
 		<module>inventory</module>
 		<module>shipping</module>
 		<module>mailing</module>
-		<!--
-		<module>zeebe-monitor</module>
-		-->
 	</modules>
 
 	<build>
