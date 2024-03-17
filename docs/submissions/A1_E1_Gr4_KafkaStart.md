@@ -8,7 +8,8 @@
 ## Deadline
 
 - **Submission Date:** 05.03.2024; 23:59
- 
+- **[Work distribution](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/blob/master/docs/submissions/change_log.md)**
+- 
 # E01 - Outage of Zookeeper
 //TODO outage of zookeeper and then what hapens if producer gets out but new one is waiting.
 ## E01-01: During Runtime

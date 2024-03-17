@@ -60,7 +60,7 @@ You can find more information on the concepts in the [Practical Process Automati
 
 Flowing retail simulates a very easy order fulfillment system:
 
-![Events and Commands](docs/workflow-in-service.png)
+![Events and Commands](docs/img/workflow-in-service.png)
 
 <a name = "alternatives"></a>
 
@@ -96,7 +96,7 @@ Some services are **long running** in nature - for example: the payment service 
 
 Note that the state machine (_or workflow engine in this case_) is a library used **within** one service. If different services need a workflow engine they can  run whatever engine they want. This way it is an autonomous team decision if they want to use a framework, and which one:
 
-![Events and Commands](docs/workflow-in-service.png)
+![Events and Commands](docs/img/workflow-in-service.png)
 
 
 
