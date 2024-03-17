@@ -8,7 +8,10 @@ import java.util.concurrent.TimeUnit;
 
 import jakarta.servlet.http.HttpServletResponse;
 
+import org.camunda.bpm.engine.HistoryService;
 import org.camunda.bpm.engine.ProcessEngine;
+import org.camunda.bpm.engine.RepositoryService;
+import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.history.HistoricVariableInstance;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.variable.Variables;
@@ -26,7 +29,12 @@ import io.flowing.retail.payment.resthacks.adapter.NotifySemaphorAdapter;
 public class PaymentRestHacksControllerV6 {
 
   @Autowired
-  private ProcessEngine camunda;
+  private HistoryService historyService;
+
+  @Autowired
+  private RuntimeService runtimeService;
+
+
 
   @RequestMapping(path = "/payment/v6", method = PUT)
   public String retrievePayment(String retrievePaymentPayload, HttpServletResponse response) throws Exception {
@@ -40,14 +48,14 @@ public class PaymentRestHacksControllerV6 {
     NotifySemaphorAdapter.removeSemaphore(traceId);
 
     if (finished) {
-      boolean failed = camunda.getHistoryService().createHistoricActivityInstanceQuery().processInstanceId(pi.getId()) //
+      boolean failed = historyService.createHistoricActivityInstanceQuery().processInstanceId(pi.getId()) //
           .activityId("EndEvent_PaymentFailed") //
           .count() > 0;
       if (failed) {
         response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         return "{\"status\":\"failed\", \"traceId\": \"" + traceId + "\"}";
       } else {
-        HistoricVariableInstance historicVariableInstance = camunda.getHistoryService().createHistoricVariableInstanceQuery().processInstanceId(pi.getId()) //
+        HistoricVariableInstance historicVariableInstance = historyService.createHistoricVariableInstanceQuery().processInstanceId(pi.getId()) //
             .variableName("paymentTransactionId") //
             .singleResult();
         if (historicVariableInstance != null) {
@@ -65,7 +73,7 @@ public class PaymentRestHacksControllerV6 {
   }
 
   public ProcessInstance chargeCreditCard(String traceId, String customerId, long remainingAmount) {
-    return camunda.getRuntimeService() //
+    return runtimeService //
         .startProcessInstanceByKey("paymentV6", traceId, //
             Variables.putValue("amount", remainingAmount));
   }

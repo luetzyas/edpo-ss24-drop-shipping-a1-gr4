@@ -75,6 +75,7 @@
   		<dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
+			<version>3.2.3</version>
         </dependency>		
 		
 		<!-- testing -->
@@ -114,12 +115,6 @@
 			<artifactId>camunda-bpm-process-test-coverage</artifactId>
 			<version>0.3.0</version>
 			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>jakarta.persistence</groupId>
-			<artifactId>jakarta.persistence-api</artifactId>
-			<version>2.2.3</version>
-			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>javax.annotation</groupId>

@@ -8,6 +8,8 @@ import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletResponse;
 
 import org.camunda.bpm.engine.ProcessEngine;
+import org.camunda.bpm.engine.RepositoryService;
+import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
@@ -30,7 +32,13 @@ import io.flowing.retail.payment.resthacks.adapter.FailingOnLastRetry;
  */
 @RestController
 public class PaymentRestHacksControllerV3b {
-  
+
+  @Autowired
+  private RepositoryService repositoryService;
+
+  @Autowired
+  private RuntimeService runtimeService;
+
   @RequestMapping(path = "/payment/v3b", method = PUT)
   public String retrievePayment(String retrievePaymentPayload, HttpServletResponse response) throws Exception {
     String traceId = UUID.randomUUID().toString();
@@ -42,13 +50,12 @@ public class PaymentRestHacksControllerV3b {
     response.setStatus(HttpServletResponse.SC_ACCEPTED);    
     return "{\"status\":\"pending\", \"traceId\": \"" + traceId + "\"}";
   }
-  
-  @Autowired
-  private ProcessEngine camunda;
+
 
   @PostConstruct
   public void createFlowDefinition() {
     BpmnModelInstance flow = Bpmn.createExecutableProcess("paymentV3b") //
+            .camundaHistoryTimeToLive(1)
         .startEvent() //
         .serviceTask("stripe").camundaDelegateExpression("#{stripeAdapter3b}") //
           .camundaAsyncBefore().camundaFailedJobRetryTimeCycle("R3/PT10S") // 
@@ -59,7 +66,7 @@ public class PaymentRestHacksControllerV3b {
         .moveToActivity("stripe")
         .endEvent().done();
     
-    camunda.getRepositoryService().createDeployment() //
+    repositoryService.createDeployment() //
       .addModelInstance("payment.bpmn", flow) //
       .deploy();
   }  
@@ -98,7 +105,7 @@ public class PaymentRestHacksControllerV3b {
   }
 
   public void chargeCreditCard(String customerId, long remainingAmount) {
-    ProcessInstance pi = camunda.getRuntimeService() //
+    ProcessInstance pi = runtimeService //
         .startProcessInstanceByKey("paymentV3b", //
             Variables.putValue("amount", remainingAmount));    
   }

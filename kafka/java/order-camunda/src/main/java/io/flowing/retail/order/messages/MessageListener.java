@@ -1,9 +1,8 @@
 package io.flowing.retail.order.messages;
 
 import java.io.IOException;
-import java.util.Collections;
 
-import org.camunda.bpm.engine.ProcessEngine;
+import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.spin.plugin.variable.SpinValues;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -25,9 +24,10 @@ public class MessageListener {
   
   @Autowired
   private OrderRepository repository;
-  
+
+
   @Autowired
-  private ProcessEngine camunda;
+  private RuntimeService runtimeService;
 
   @Autowired
   private ObjectMapper objectMapper;
@@ -46,7 +46,7 @@ public class MessageListener {
     repository.save(order);    
     
     // and kick of a new flow instance
-    camunda.getRuntimeService().createMessageCorrelation(message.getType())
+    runtimeService.createMessageCorrelation(message.getType())
       .processInstanceBusinessKey(message.getTraceid())
       .setVariable("orderId", order.getId())
       .correlateWithResult();
@@ -69,7 +69,7 @@ public class MessageListener {
         messagePayloadJson, //
         new TypeReference<Message<JsonNode>>() {});
     
-    long correlatingInstances = camunda.getRuntimeService().createExecutionQuery() //
+    long correlatingInstances = runtimeService.createExecutionQuery() //
       .messageEventSubscriptionName(message.getType()) //
       .processInstanceBusinessKey(message.getTraceid()) //
       .count();
@@ -77,7 +77,7 @@ public class MessageListener {
     if (correlatingInstances==1) {
       System.out.println("Correlating " + message + " to waiting flow instance");
       
-      camunda.getRuntimeService().createMessageCorrelation(message.getType())
+      runtimeService.createMessageCorrelation(message.getType())
         .processInstanceBusinessKey(message.getTraceid())
         .setVariable(//
             "PAYLOAD_" + message.getType(), // 

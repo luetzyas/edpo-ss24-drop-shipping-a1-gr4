@@ -7,6 +7,8 @@ import java.util.UUID;
 import jakarta.annotation.PostConstruct;
 
 import org.camunda.bpm.engine.ProcessEngine;
+import org.camunda.bpm.engine.RepositoryService;
+import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
@@ -30,17 +32,21 @@ import com.netflix.hystrix.HystrixCommandGroupKey;
 public class PaymentRestHacksControllerV3 {
 
   @Autowired
-  private ProcessEngine camunda;
+  private RepositoryService repositoryService;
+
+  @Autowired
+  private RuntimeService runtimeService;
 
   @PostConstruct
   public void createFlowDefinition() {
     BpmnModelInstance flow = Bpmn.createExecutableProcess("paymentV3") //
+            .camundaHistoryTimeToLive(1)
         .startEvent() //
         .serviceTask("stripe").camundaDelegateExpression("#{stripeAdapter}") //
           .camundaAsyncBefore().camundaFailedJobRetryTimeCycle("R3/PT1M") //        
         .endEvent().done();
     
-    camunda.getRepositoryService().createDeployment() //
+    repositoryService.createDeployment() //
       .addModelInstance("payment.bpmn", flow) //
       .deploy();
   }
@@ -82,7 +88,7 @@ public class PaymentRestHacksControllerV3 {
   }
 
   public void chargeCreditCard(String customerId, long remainingAmount) {
-    ProcessInstance pi = camunda.getRuntimeService() //
+    ProcessInstance pi = runtimeService //
         .startProcessInstanceByKey("paymentV3", //
             Variables.putValue("amount", remainingAmount));    
   }

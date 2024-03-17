@@ -9,7 +9,10 @@ import java.util.concurrent.TimeUnit;
 
 import jakarta.servlet.http.HttpServletResponse;
 
+import org.camunda.bpm.engine.HistoryService;
 import org.camunda.bpm.engine.ProcessEngine;
+import org.camunda.bpm.engine.RepositoryService;
+import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.history.HistoricProcessInstance;
 import org.camunda.bpm.engine.history.HistoricVariableInstance;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
@@ -28,7 +31,10 @@ import io.flowing.retail.payment.resthacks.adapter.NotifySemaphorAdapter;
 public class PaymentRestHacksControllerV5 {
 
   @Autowired
-  private ProcessEngine camunda;
+  private RuntimeService runtimeService;
+
+  @Autowired
+  private HistoryService historyService;
 
   @RequestMapping(path = "/payment/v5", method = PUT)
   public String retrievePayment(String retrievePaymentPayload, HttpServletResponse response) throws Exception {
@@ -52,14 +58,14 @@ public class PaymentRestHacksControllerV5 {
   }
 
   public ProcessInstance retrievePayment(String traceId, String customerId, long remainingAmount) {
-    return camunda.getRuntimeService() //
+    return runtimeService //
         .startProcessInstanceByKey("paymentV5", traceId,//
             Variables.putValue("amount", remainingAmount));
   }
 
   @RequestMapping(path = "/payment/v5/{traceId}/status", method = GET)
   public String getPaymentStatus(@PathVariable("traceId") String traceId, HttpServletResponse response) throws Exception {
-    HistoricProcessInstance processInstance = camunda.getHistoryService() //
+    HistoricProcessInstance processInstance = historyService //
             .createHistoricProcessInstanceQuery() //
             .processInstanceBusinessKey(traceId) //
             .singleResult();
@@ -76,7 +82,7 @@ public class PaymentRestHacksControllerV5 {
   }
 
   private String resultUsingProcessHistory(String processInstanceId, String traceId) {
-    HistoricVariableInstance historicVariableInstance = camunda.getHistoryService().createHistoricVariableInstanceQuery()
+    HistoricVariableInstance historicVariableInstance = historyService.createHistoricVariableInstanceQuery()
             .processInstanceId(processInstanceId) //
             .variableName("paymentTransactionId") //
             .singleResult();

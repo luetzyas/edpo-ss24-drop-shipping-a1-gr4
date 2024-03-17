@@ -1,20 +1,13 @@
 package io.flowing.retail.order.domain;
 
+import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.GenericGenerator;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 
 @Entity(name="OrderEntity")
 public class Order {

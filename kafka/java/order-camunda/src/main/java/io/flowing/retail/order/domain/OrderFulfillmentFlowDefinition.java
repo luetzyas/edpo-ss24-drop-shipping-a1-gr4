@@ -16,7 +16,6 @@ import io.flowing.retail.order.flow.ShipGoodsAdapter;
 @Configuration
 public class OrderFulfillmentFlowDefinition {
 
-  @Autowired
   private ProcessEngine engine;
   
   @Autowired 
