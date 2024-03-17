@@ -10,10 +10,13 @@
 	<modules>
 		<module>checkout</module>
 		<module>payment</module>
+		<module>payment-camunda</module>
 		<module>inventory</module>
 		<module>shipping</module>
 		<module>choreography-alternative</module>
 		<module>monitor</module>
+		<module>mailing</module>
+		<module>order-camunda</module>
 	</modules>
 
 	<build>

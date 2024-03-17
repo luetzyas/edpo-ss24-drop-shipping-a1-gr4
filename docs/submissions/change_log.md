@@ -18,12 +18,12 @@ Here, you will find a brief overview of our progress, including major milestones
 - [**Exercise 4**: Orchestration vs Choreography in Flowing Retail](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/blob/master/docs/submissions/exercise_tasks/EDPO_SS24_E4.pdf)
 
 ## Submission 19. March 2024
-[Release]()
+[Release 2.0]()
 
 **@stefanmhsg**
-- Draft README.md file for the Mailing Service
-- Draft BPMN diagram
-
+- draft README.md file for the Mailing Service
+- draft BPMN diagram
+- review feedback changes
 
 **@luetzyas** 
 - create changelog for group project
@@ -31,9 +31,10 @@ Here, you will find a brief overview of our progress, including major milestones
   - what happens if 1 consumer is shut down
   - implement linger.ms to see if the latency behaviour changes
   - enhance conclusion for the experiment: Read from 0
-  - 
+- work on commands file for own project shortcuts
 
 ## Submission 05. March 2024
+[Release 1.0](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/releases/tag/EDPO_A1_E1_2)
 
 **@stefanmhsg**
 - perform experiments in the lab repositories for E1

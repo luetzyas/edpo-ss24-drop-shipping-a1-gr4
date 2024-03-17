@@ -2,7 +2,7 @@
 
 This folder contains services that connect to Apache Kafka as means of communication between the services.
 
-![Microservices](../docs/kafka-services.png)
+![Microservices](../docs/img/kafka-services.png)
 
 The nice thing about this architecture is, that Kafka is the only common denominator. For every service you can freely decide for
 
@@ -35,4 +35,4 @@ The services have to collaborate in order to implement the overall business capa
 * *Event-driven* wherever appropriate
 * Sending *Commands* in cases you want somebody to do something, which involves that events need to be transformed into events from the component responsible for, which in our case is the Order service:
 
-![Events and Commands](../docs/event-command-transformation.png)
+![Events and Commands](../docs/img/event-command-transformation.png)

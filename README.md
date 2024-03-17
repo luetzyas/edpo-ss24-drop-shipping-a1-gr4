@@ -23,7 +23,7 @@ the relevant projects have been built at least once:
 Then you can execute:
 
 ```
-  $ docker-compose -f docker-compose-kafka-java-choreography.yml up --build
+  $ docker-compose -p docker-choreography -f docker-compose-kafka-java-choreography.yml up
 ```
 from the directory [runner/docker-compose](runner/docker-compose).
 
@@ -32,7 +32,7 @@ from the directory [runner/docker-compose](runner/docker-compose).
 To run the **Camunda-based** version of the Flowing Retail project for lab07 you need to execute:
 
 ```
-  $ docker-compose -f docker-compose-kafka-java-order-camunda.yml up
+  $ docker-compose -p docker-order-camunda -f docker-compose-kafka-java-order-camunda.yml up
 ```
 from the directory [runner/docker-compose](runner/docker-compose).
 
@@ -40,7 +40,7 @@ from the directory [runner/docker-compose](runner/docker-compose).
 
 To run the **Zeebe-based** version of the Flowing retail project for lab11 you need to execute:
 ```
-  $ docker-compose -f docker-compose-kafka-java-order-zeebe.yml up
+  $ docker-compose -p docker-order-zeebe -f docker-compose-kafka-java-order-zeebe.yml up
 ```
 from the directory [runner/docker-compose](runner/docker-compose). This uses the [order-zeebe](kafka/java/order-zeebe) project for handling the order workflow.
 Hint: If you want to use the local Zeebe services you need to have the ''Self-managed local Zeebe'' configuration
@@ -60,7 +60,7 @@ You can find more information on the concepts in the [Practical Process Automati
 
 Flowing retail simulates a very easy order fulfillment system:
 
-![Events and Commands](docs/workflow-in-service.png)
+![Events and Commands](docs/img/workflow-in-service.png)
 
 <a name = "alternatives"></a>
 
@@ -96,7 +96,7 @@ Some services are **long running** in nature - for example: the payment service 
 
 Note that the state machine (_or workflow engine in this case_) is a library used **within** one service. If different services need a workflow engine they can  run whatever engine they want. This way it is an autonomous team decision if they want to use a framework, and which one:
 
-![Events and Commands](docs/workflow-in-service.png)
+![Events and Commands](docs/img/workflow-in-service.png)
 
 
 
