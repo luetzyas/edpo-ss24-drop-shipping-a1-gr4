@@ -5,9 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.drop.shipping.mailing.application.MailingService;
 import io.drop.shipping.mailing.messages.payload.GoodsShippedEventPayload;
-import io.drop.shipping.mailing.messages.payload.OrderPlacedEventPayload;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.Header;
@@ -15,8 +12,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class MessageListener {
-
-    private static final Logger LOG = LoggerFactory.getLogger(MessageListener.class);
 
     @Autowired
     private MailingService mailingService;
@@ -27,26 +22,28 @@ public class MessageListener {
 
     @KafkaListener(id = "mailing", topics = "flowing-retail")
     public void handleEvent(String messageJson, @Header("type") String messageType) throws Exception {
+        System.out.println("Event: " + messageType);
+        System.out.println("JSON: " + messageJson);
+
         try {
             switch (messageType) {
-                /**case "OrderPlacedEvent": //step 1
-                    sendMailForOrderPlacedEvent(messageJson, messageType);
-                    break;**/
+                case "OrderPlacedEvent": //step 1
+                    //sendMailForOrderPlacedEvent(messageJson, messageType);
+                    break;
                 case "PaymentReceivedEvent": //step 2
-                    LOG.info("Email sent for {}", messageType);
                     //sendMailForPaymentReceivedEvent(messageJson, messageType);
                     break;
                 case "OrderShippedEvent": //step 4 >> GoodsShippedEvent
-                    sendMailForOrderShippedEvent(messageJson, messageType);
+                    //sendMailForOrderShippedEvent(messageJson, messageType);
                     break;
-                /**case "OrderCompletedEvent": //step 5
-                    sendMailForOrderCompletedEvent(messageJson, messageType);
-                    break;**/
+                case "OrderCompletedEvent": //step 5
+                    //sendMailForOrderCompletedEvent(messageJson, messageType);
+                    break;
                 default:
-                    LOG.warn("Received unsupported event type: {}", messageType);
+                    System.out.println("Received unsupported event type: " + messageType);
             }
         } catch (Exception e) {
-            LOG.error("Error processing message", e);
+            System.out.println("Error processing message" + e);
         }
     }
 
@@ -60,9 +57,9 @@ public class MessageListener {
             //String recipient = eventPayload.getOrder().getCustomer(); // This should be replaced with the actual recipient from the payload
 
             mailingService.sendMail(emailSubject, emailContent);
-            LOG.info("Email sent for {}: {}", messageType, emailContent);
+            System.out.println("Email sent for " + messageType + ": " + emailContent);
         } catch (Exception e) {
-            LOG.error("Error {} ", Thread.currentThread().getStackTrace(), e);
+            System.out.println("Error " + Thread.currentThread().getStackTrace() + e);
         }
     }
 

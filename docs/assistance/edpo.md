@@ -14,17 +14,3 @@
 
 
 ## Group 4 Standard Constants
-
-### LOGGER
-```
-// Logger attribute
-private static final Logger LOG = LoggerFactory.getLogger(MessageListener.class);
-```
-```
-// current Method name
-LOG.error("Error {} ", Thread.currentThread().getStackTrace(), e);
-```
-```
-// info
-LOG.info("Email sent for {}: {}", messageType, emailContent);
-```

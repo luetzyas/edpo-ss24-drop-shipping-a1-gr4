@@ -32,6 +32,43 @@ Here, you will find a brief overview of our progress, including major milestones
   - implement linger.ms to see if the latency behaviour changes
   - enhance conclusion for the experiment: Read from 0
 - work on commands file for own project shortcuts
+- implement eventhandling in mailing service for OrderPlacedEvent, PaymentReceivedEvent, GoodsShippedEvent and OrderCompletedEvent
+- rework whole project because of this error occuring in unchanged services: ()
+```
+2024-03-18 21:11:29 SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+2024-03-18 21:11:29 SLF4J: Defaulting to no-operation (NOP) logger implementation
+2024-03-18 21:11:29 SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+2024-03-18 21:11:30 Exception in thread "main" java.lang.reflect.InvocationTargetException
+2024-03-18 21:11:30     at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+2024-03-18 21:11:30     at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:78)
+2024-03-18 21:11:30     at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+2024-03-18 21:11:30     at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+2024-03-18 21:11:30     at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:91)
+2024-03-18 21:11:30     at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:53)
+2024-03-18 21:11:30     at org.springframework.boot.loader.launch.JarLauncher.main(JarLauncher.java:58)
+2024-03-18 21:11:30 Caused by: java.lang.IllegalArgumentException: LoggerFactory is not a Logback LoggerContext but Logback is on the classpath. Either remove Logback or the competing implementation (class org.slf4j.helpers.NOPLoggerFactory loaded from jar:nested:/app.jar/!BOOT-INF/lib/slf4j-api-1.7.36.jar!/). If you are using WebLogic you will need to add 'org.slf4j' to prefer-application-packages in WEB-INF/weblogic.xml: org.slf4j.helpers.NOPLoggerFactory
+2024-03-18 21:11:30     at org.springframework.util.Assert.instanceCheckFailed(Assert.java:592)
+2024-03-18 21:11:30     at org.springframework.util.Assert.isInstanceOf(Assert.java:511)
+2024-03-18 21:11:30     at org.springframework.boot.logging.logback.LogbackLoggingSystem.getLoggerContext(LogbackLoggingSystem.java:396)
+2024-03-18 21:11:30     at org.springframework.boot.logging.logback.LogbackLoggingSystem.beforeInitialize(LogbackLoggingSystem.java:124)
+2024-03-18 21:11:30     at org.springframework.boot.context.logging.LoggingApplicationListener.onApplicationStartingEvent(LoggingApplicationListener.java:238)
+2024-03-18 21:11:30     at org.springframework.boot.context.logging.LoggingApplicationListener.onApplicationEvent(LoggingApplicationListener.java:220)
+2024-03-18 21:11:30     at org.springframework.context.event.SimpleApplicationEventMulticaster.doInvokeListener(SimpleApplicationEventMulticaster.java:185)
+2024-03-18 21:11:30     at org.springframework.context.event.SimpleApplicationEventMulticaster.invokeListener(SimpleApplicationEventMulticaster.java:178)
+2024-03-18 21:11:30     at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:156)
+2024-03-18 21:11:30     at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:138)
+2024-03-18 21:11:30     at org.springframework.boot.context.event.EventPublishingRunListener.multicastInitialEvent(EventPublishingRunListener.java:136)
+2024-03-18 21:11:30     at org.springframework.boot.context.event.EventPublishingRunListener.starting(EventPublishingRunListener.java:75)
+2024-03-18 21:11:30     at org.springframework.boot.SpringApplicationRunListeners.lambda$starting$0(SpringApplicationRunListeners.java:54)
+2024-03-18 21:11:30     at java.base/java.lang.Iterable.forEach(Iterable.java:75)
+2024-03-18 21:11:30     at org.springframework.boot.SpringApplicationRunListeners.doWithListeners(SpringApplicationRunListeners.java:118)
+2024-03-18 21:11:30     at org.springframework.boot.SpringApplicationRunListeners.starting(SpringApplicationRunListeners.java:54)
+2024-03-18 21:11:30     at org.springframework.boot.SpringApplication.run(SpringApplication.java:326)
+2024-03-18 21:11:30     at org.springframework.boot.SpringApplication.run(SpringApplication.java:1354)
+2024-03-18 21:11:30     at org.springframework.boot.SpringApplication.run(SpringApplication.java:1343)
+2024-03-18 21:11:30     at io.flowing.retail.inventory.InventoryApplication.main(InventoryApplication.java:10)
+2024-03-18 21:11:30     ... 7 more
+```
 
 ## Submission 05. March 2024
 [Release 1.0](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/releases/tag/EDPO_A1_E1_2)

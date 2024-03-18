@@ -1,9 +1,9 @@
 package io.drop.shipping.mailing.messages;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.drop.shipping.mailing.application.MailingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,42 +15,37 @@ import org.springframework.stereotype.Component;
 public class MessageListener {
 
     @Autowired
-    private MessageSender messageSender;
-    @Autowired
     private MailingService mailingService;
 
     private ObjectMapper objectMapper = new ObjectMapper()
             .registerModule(new JavaTimeModule()); // Register JavaTimeModule ISO-8601 compliant format
 
-
-    @KafkaListener(id = "mailing", topics = "flowing-retail")
-    public void orderCompletedEventReceived(String messageJson, @Header("type") String messageType) throws Exception {
-        if ("OrderCompletedEvent".equals(messageType)) {
-            System.out.println("Received new message");
-
-            try {
-                Message<JsonNode> message = objectMapper.readValue(messageJson, new TypeReference<Message<JsonNode>>(){});
-                ObjectNode data = (ObjectNode) message.getData();
-
-                //TODO we need a java object GoodsFetchedEventPayload or similar to map the data to it
-                /**
-                ObjectNode payload = (ObjectNode) message.getData();
-                GoodsFetchedEventPayload payloadEvent = objectMapper
-                        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-                        .treeToValue(payload, GoodsFetchedEventPayload.class);
-                **/
-
-
-                System.out.println("Received new message: " + data);
-
-                mailingService.sendMail(messageType, String.valueOf(data), "Franz Kafka");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        }
-    }
-
     //TODO: Add more methods for other message types
     //TOdO: enhance readMe to explain the process and how it needs to be run
+    @KafkaListener(id = "mailing", topics = "flowing-retail")
+    public void handleEvents(String messageJson, @Header("type") String messageType) throws Exception {
+        System.out.println("Event: " + messageType);
+        System.out.println("JSON: " + messageJson);
+
+        try {
+            switch (messageType) {
+                case "OrderPlacedEvent": //step 1
+                    //sendMailForOrderPlacedEvent(messageJson, messageType);
+                    break;
+                case "PaymentReceivedEvent": //step 2
+                    //sendMailForPaymentReceivedEvent(messageJson, messageType);
+                    break;
+                case "OrderShippedEvent": //step 4 >> GoodsShippedEvent
+                    //sendMailForOrderShippedEvent(messageJson, messageType);
+                    break;
+                case "OrderCompletedEvent": //step 5
+                    //sendMailForOrderCompletedEvent(messageJson, messageType);
+                    break;
+                default:
+                    System.out.println("Received unsupported event type: " + messageType);
+            }
+        } catch (Exception e) {
+            System.out.println("Error processing message" + e);
+        }
+    }
 }
