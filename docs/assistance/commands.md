@@ -36,13 +36,13 @@ docker exec -it kafka bash
 
 ### Start docker (with container name)
 ```
-  docker-compose -p docker-choreography -f docker-compose-kafka-java-choreography.yml up
+  docker-compose -p docker-choreography -f docker-compose-kafka-java-choreography.yml up --build
 ```
 ```
-  docker-compose -p docker-order-camunda -f docker-compose-kafka-java-order-camunda.yml up
+  docker-compose -p docker-order-camunda -f docker-compose-kafka-java-order-camunda.yml up --build
 ```
 ```
-  docker-compose -p docker-order-zeebe -f docker-compose-kafka-java-order-zeebe.yml up
+  docker-compose -p docker-order-zeebe -f docker-compose-kafka-java-order-zeebe.yml up --build
 ```
 
 ### Topic auflisten
