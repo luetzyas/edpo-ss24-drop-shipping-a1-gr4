@@ -2,7 +2,7 @@ package io.flowing.retail.zeebe.order.flow;
 
 import io.camunda.zeebe.client.api.response.ActivatedJob;
 import io.camunda.zeebe.client.api.worker.JobClient;
-import io.camunda.zeebe.spring.client.annotation.ZeebeWorker;
+import io.camunda.zeebe.spring.client.annotation.JobWorker;
 import io.flowing.retail.zeebe.order.domain.Order;
 import io.flowing.retail.zeebe.order.persistence.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,7 @@ public class SaveOrderAdapter {
   @Autowired
   private OrderRepository orderRepository;
 
-  @ZeebeWorker(type="save-order-z")
+  @JobWorker(type="save-order-z")
   public void saveOrder(JobClient client, ActivatedJob job) {
     OrderFlowContext context = OrderFlowContext.fromJson(job.getVariables());
     Order order = context.getOrder();

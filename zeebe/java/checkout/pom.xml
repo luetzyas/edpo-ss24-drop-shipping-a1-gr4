@@ -6,10 +6,10 @@
 	<version>0.0.1-SNAPSHOT</version>
 
 	<properties>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
-		<spring.boot.version>2.3.4.RELEASE</spring.boot.version>
-		<zeebe.version>1.0.0-rc3</zeebe.version>
+		<maven.compiler.release>17</maven.compiler.release>
+		<spring.boot.version>3.2.2</spring.boot.version>
+		<spring.kafka.version>3.1.2</spring.kafka.version>
+		<zeebe.version>8.4.2</zeebe.version>
 	</properties>
 
 	<dependencyManagement>
@@ -36,7 +36,7 @@
 		<dependency>
 			<groupId>org.glassfish</groupId>
 			<artifactId>javax.json</artifactId>
-			<version>1.0.4</version>
+			<version>1.1.4</version>
 		</dependency>
 	</dependencies>
 	<build>

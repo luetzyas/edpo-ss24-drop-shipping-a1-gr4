@@ -2,7 +2,7 @@ package io.flowing.retail.zeebe.payment;
 
 import io.camunda.zeebe.client.api.response.ActivatedJob;
 import io.camunda.zeebe.client.api.worker.JobClient;
-import io.camunda.zeebe.spring.client.annotation.ZeebeWorker;
+import io.camunda.zeebe.spring.client.annotation.JobWorker;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -10,7 +10,7 @@ import java.util.Map;
 @Component
 public class PaymentAdapter {
 
-  @ZeebeWorker(type="retrieve-payment-z")
+  @JobWorker(type="retrieve-payment-z")
   public void retrievePayment(JobClient client, ActivatedJob job) {
     try {
       Map<String, Object> variables = job.getVariablesAsMap();

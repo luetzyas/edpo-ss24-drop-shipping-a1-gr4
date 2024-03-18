@@ -1,6 +1,5 @@
 package io.flowing.retail.zeebe.order.domain;
 
-import java.util.UUID;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
