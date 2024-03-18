@@ -16,6 +16,7 @@
 		<module>choreography-alternative</module>
 		<module>monitor</module>
 		<module>mailing</module>
+		<module>vgr-camunda</module>
 		<module>order-camunda</module>
 	</modules>
 

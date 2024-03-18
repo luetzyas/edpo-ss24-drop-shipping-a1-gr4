@@ -20,12 +20,8 @@ public class PaymentReceivedAdapter implements JavaDelegate {
     String correlationId = (String) context.getVariable("correlationId");
     String traceId = context.getProcessBusinessKey();
 
-    messageSender.send( //
-        new Message<PaymentReceivedEventPayload>( //
-            "PaymentReceivedEvent", //
-            traceId, //
-            new PaymentReceivedEventPayload() //
-                .setRefId(refId))
+    messageSender.send(new Message<PaymentReceivedEventPayload>("PaymentReceivedEvent",
+            traceId, new PaymentReceivedEventPayload().setRefId(refId))
     		.setCorrelationid(correlationId));
   }
 
