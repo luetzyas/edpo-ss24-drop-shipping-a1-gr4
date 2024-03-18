@@ -4,10 +4,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
 @NoArgsConstructor
-@Setter
+@Data
 public class MovePartsEventPayload {
 
     private int active;

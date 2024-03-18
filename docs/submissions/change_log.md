@@ -26,6 +26,8 @@ Here, you will find a brief overview of our progress, including major milestones
 - enhance the experiments for E1
   - E01: Outage of Zookeeper (added: tried to modify topic while Zookeeper is down)
   - E06: Message Retention (new)
+- add new service vgr-camunda
+- adapt order-service to include vgr-flow
 
 **@luetzyas** 
 - create changelog for group project
