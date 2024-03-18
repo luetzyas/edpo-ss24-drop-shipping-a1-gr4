@@ -457,3 +457,47 @@ Resetting offset for partition click-events-0 to position FetchPosition{offset=0
 - When the consumer's `max.poll.interval.ms` is exceeded, Kafka assumes the consumer has failed or is stuck. This results in the consumer being kicked out of the group, leading to rebalance actions.
 - Message retention policies in Kafka determine how long messages are kept before being deleted. If the consumer falls too far behind, and messages are deleted according to the retention policy before the consumer has a chance to read them, data loss occurs.
 - Data is stored within kafka, this creats no immediate data loss if the consumer just can t consume it.
+
+# E06 - Message Retention
+
+### Parameters and Process
+- **Lab:** 02 Part2 Eye-tracking main.
+- **Action:** Change the Kafka-Server properties as outlined below and run the Click-Event Producer and Consumer as provided.
+
+### Observations
+
+- `KAFKA_OPTS='' /opt/bitnami/kafka/bin/kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity-name click-events --alter --add-config retention.bytes=8,retention.ms=100,segment.ms=100,segment.bytes=16,cleanup.policy=delete`
+  - After the click-event topic has been created, the following exception is thrown:
+  - `java.util.concurrent.ExecutionException: org.apache.kafka.common.errors.RecordBatchTooLargeException: The request included message batch larger than the configured segment size on the server.`
+  - This is because the batch size of the producer is 16384 bytes (16KB) and the segment size is set to 16 bytes. The producer is trying to send a batch that is larger than the segment size, which cannot be accommodated.
+
+- `KAFKA_OPTS='' /opt/bitnami/kafka/bin/kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity-name click-events --alter --add-config retention.bytes=8,retention.ms=1000,segment.ms=100,segment.bytes=16384,cleanup.policy=delete`
+  - Increasing the retention time to 1000ms and the segment size to 16384 bytes, the producer is able to send the batch to the broker.
+  - We can then witness the consumer not being able to consume the records in time before they are deleted.
+  ````
+  Received click-events - value: {eventID=0, timestamp=83634029504600, xPosition=1734, yPosition=267, clickedElement=EL6}- partition: 0
+  Received click-events - value: {eventID=1, timestamp=83634687082800, xPosition=1404, yPosition=491, clickedElement=EL3}- partition: 0
+  Received click-events - value: {eventID=2, timestamp=83636177034200, xPosition=292, yPosition=577, clickedElement=EL2}- partition: 0
+  Received click-events - value: {eventID=3, timestamp=83637335085600, xPosition=337, yPosition=676, clickedElement=EL4}- partition: 0
+  Received click-events - value: {eventID=4, timestamp=83638153414900, xPosition=1880, yPosition=335, clickedElement=EL2}- partition: 0
+  Received click-events - value: {eventID=5, timestamp=83639052486100, xPosition=1539, yPosition=12, clickedElement=EL12}- partition: 0
+  Received click-events - value: {eventID=6, timestamp=83639851944900, xPosition=147, yPosition=714, clickedElement=EL1}- partition: 0
+  [main] INFO org.apache.kafka.clients.consumer.internals.AbstractFetch - [Consumer clientId=consumer-grp1-1, groupId=grp1] Fetch position FetchPosition{offset=7, offsetEpoch=Optional[0], currentLeader=LeaderAndEpoch{leader=Optional[localhost:9092 (id: 1001 rack: null)], epoch=0}} is out of range for partition click-events-0, resetting offset
+  [main] INFO org.apache.kafka.clients.consumer.internals.SubscriptionState - [Consumer clientId=consumer-grp1-1, groupId=grp1] Resetting offset for partition click-events-0 to position FetchPosition{offset=18, offsetEpoch=Optional.empty, currentLeader=LeaderAndEpoch{leader=Optional[localhost:9092 (id: 1001 rack: null)], epoch=0}}.
+  Received click-events - value: {eventID=18, timestamp=83652004833100, xPosition=1850, yPosition=1076, clickedElement=EL6}- partition: 0
+  Received click-events - value: {eventID=19, timestamp=83652973231800, xPosition=1108, yPosition=772, clickedElement=EL4}- partition: 0
+  Received click-events - value: {eventID=20, timestamp=83654301538100, xPosition=1417, yPosition=591, clickedElement=EL8}- partition: 0
+  ````
+  - and again after some records
+  ````
+  Received click-events - value: {eventID=165, timestamp=83799355781100, xPosition=1286, yPosition=547, clickedElement=EL16}- partition: 0
+  Received click-events - value: {eventID=166, timestamp=83800309816800, xPosition=944, yPosition=737, clickedElement=EL9}- partition: 0
+  [main] INFO org.apache.kafka.clients.consumer.internals.AbstractFetch - [Consumer clientId=consumer-grp1-1, groupId=grp1] Fetch position FetchPosition{offset=167, offsetEpoch=Optional[0], currentLeader=LeaderAndEpoch{leader=Optional[localhost:9092 (id: 1001 rack: null)], epoch=0}} is out of range for partition click-events-0, resetting offset
+  [main] INFO org.apache.kafka.clients.consumer.internals.SubscriptionState - [Consumer clientId=consumer-grp1-1, groupId=grp1] Resetting offset for partition click-events-0 to position FetchPosition{offset=314, offsetEpoch=Optional.empty, currentLeader=LeaderAndEpoch{leader=Optional[localhost:9092 (id: 1001 rack: null)], epoch=0}}.
+  Received click-events - value: {eventID=314, timestamp=83951802916000, xPosition=1769, yPosition=316, clickedElement=EL17}- partition: 0
+  Received click-events - value: {eventID=315, timestamp=83953029039400, xPosition=118, yPosition=234, clickedElement=EL15}- partition: 0
+  ````
+
+### Conclusion
+- This demonstrates data loss from the consumer's perspective, where messages that the consumer expected to read are no longer available due to retention policies.
+- Since the consumers properties contain `auto.offset.reset= earliest` upon detecting that the offset is out of range, the consumer resets the offset to the earliest available offset and thus skips the records that were deleted.

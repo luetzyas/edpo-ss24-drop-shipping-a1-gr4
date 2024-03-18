@@ -29,6 +29,11 @@ from the directory [kafka/java](../../kafka/java).
 ## Docker
 from the directory [runner/docker-compose](../../runner/docker-compose).
 
+### Open bash in docker container
+```
+docker exec -it kafka bash
+```
+
 ### Start docker (with container name)
 ```
   docker-compose -p docker-choreography -f docker-compose-kafka-java-choreography.yml up
@@ -44,6 +49,24 @@ from the directory [runner/docker-compose](../../runner/docker-compose).
 ```
   docker-compose exec kafka bash -c "KAFKA_OPTS='' /opt/bitnami/kafka/bin/kafka-topics.sh --list --bootstrap-server localhost:9092"
 ```
+
+### Topic erstellen
+
+#### ohne configs
+````
+docker-compose exec kafka bash -c "KAFKA_OPTS='' /opt/bitnami/kafka/bin/kafka-topics.sh --create --topic new-topic --bootstrap-server localhost:9092"
+````
+
+#### mit configs
+````
+docker-compose exec kafka bash -c "KAFKA_OPTS='' /opt/bitnami/kafka/bin/kafka-topics.sh --create --topic data-loss-topic --bootstrap-server localhost:9092 --config retention.ms=1000 --config retention.bytes=16"
+````
+
+### Topic ändern
+````
+docker-compose exec kafka bash -c "KAFKA_OPTS='' /opt/bitnami/kafka/bin/kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity-name gaze-events --alter --add-config retention.ms=1000,retention.bytes=16"
+````
+
 
 ### Topic löschen
 from the docker [runner/docker-compose](../../runner/docker-compose).
