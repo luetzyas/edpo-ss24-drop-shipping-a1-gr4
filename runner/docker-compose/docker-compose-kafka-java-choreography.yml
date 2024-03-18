@@ -33,7 +33,6 @@ services:
     depends_on:
       - zookeeper
 
-
   checkout:
     build:
       context: ../../kafka/java/checkout
@@ -118,3 +117,4 @@ services:
 networks:
   flowing:
     driver: bridge
+

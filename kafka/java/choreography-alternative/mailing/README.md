@@ -40,4 +40,4 @@ And afterwards you run from the directory [runner/docker-compose](runner/docker-
 [application.properties](src/main/resources/application.properties) contains the configuration for the Kafka consumer and the mail server.
 
 ### Message Listener
-[MessageListener.java](src/main/java/io/flowing/retail/mailing/messages/MessageListener.java) 
+[MessageListener.java](src/main/java/io/drop/shipping/mailing/messages/MessageListener.java) 

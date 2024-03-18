@@ -1,4 +1,4 @@
-package io.flowing.retail.mailing.application;
+package io.drop.shipping.mailing.application;
 
 import org.springframework.stereotype.Component;
 

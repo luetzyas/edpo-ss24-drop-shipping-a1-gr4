@@ -37,7 +37,7 @@
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
 				<configuration>
-					<mainClass>io.flowing.retail.mailing.MailingApplication</mainClass>
+					<mainClass>io.drop.shipping.mailing.MailingApplication</mainClass>
 				</configuration>
 			</plugin>
 			<plugin>

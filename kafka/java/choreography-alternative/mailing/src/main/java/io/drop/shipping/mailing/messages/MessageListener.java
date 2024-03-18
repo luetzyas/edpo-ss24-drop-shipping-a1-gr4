@@ -1,11 +1,11 @@
-package io.flowing.retail.mailing.messages;
+package io.drop.shipping.mailing.messages;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import io.flowing.retail.mailing.application.MailingService;
+import io.drop.shipping.mailing.application.MailingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.Header;
