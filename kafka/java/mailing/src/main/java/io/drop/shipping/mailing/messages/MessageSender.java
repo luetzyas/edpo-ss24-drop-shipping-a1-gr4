@@ -1,4 +1,4 @@
-package io.flowing.retail.mailing.messages;
+package io.drop.shipping.mailing.messages;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.clients.admin.NewTopic;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class MessageSender {
 
-  @Value( "${flowing-retail.topic-name:flowing-retail}")
+  @Value( "${drop-shipping.topic-name:drop-shipping}")
   public String topicName;
 
   @Autowired
@@ -37,7 +37,7 @@ public class MessageSender {
       String jsonMessage = objectMapper.writeValueAsString(m);
 
       // wrap into a proper message for Kafka including a header
-      ProducerRecord<String, String> record = new ProducerRecord<String, String>("flowing-retail", jsonMessage);
+      ProducerRecord<String, String> record = new ProducerRecord<String, String>("drop-shipping", jsonMessage);
       record.headers().add("type", m.getType().getBytes());
 
       // and send it
