@@ -1,4 +1,4 @@
-package io.flowing.retail.mailing.messages;
+package io.drop.shipping.mailing.messages;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 

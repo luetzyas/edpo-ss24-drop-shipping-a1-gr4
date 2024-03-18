@@ -1,4 +1,4 @@
-package io.flowing.retail.mailing.messages;
+package io.drop.shipping.mailing.messages;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.clients.admin.NewTopic;

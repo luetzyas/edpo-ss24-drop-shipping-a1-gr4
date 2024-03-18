@@ -1,4 +1,4 @@
-package io.flowing.retail.mailing.messages.payload;
+package io.drop.shipping.mailing.messages.payload;
 
 import java.time.Instant;
 import java.time.OffsetDateTime;
