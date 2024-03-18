@@ -4,7 +4,7 @@ This log summarizes all notable changes made to the project from Week 6 onwards 
 Here, you will find a brief overview of our progress, including major milestones and the submission dates of our work.
 
 - **Submissions:** Our Submission documents can be found here [submissions](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/tree/master/docs/submissions).
-  - All exercise papers can be foud in the [exercise_tasks](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/tree/master/docs/submissions/exercise_tasks) folder 
+  - All exercise papers can be found in the [exercise_tasks](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/tree/master/docs/submissions/exercise_tasks) folder 
   - The given feedback to improve our project in the [feedback](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/tree/master/docs/submissions/feedback) folder.
 
 ## Group Information
@@ -23,7 +23,9 @@ Here, you will find a brief overview of our progress, including major milestones
 **@stefanmhsg**
 - draft README.md file for the Mailing Service
 - draft BPMN diagram
-- review feedback changes
+- enhance the experiments for E1
+  - E01: Outage of Zookeeper (added: tried to modify topic while Zookeeper is down)
+  - E06: Message Retention (new)
 
 **@luetzyas** 
 - create changelog for group project
