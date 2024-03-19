@@ -12,6 +12,10 @@
 
 # Exercise 04: Orchestration vs. Choreography in Flowing Retail
 
+### Code
+[Release]()
+
+The [README.md](/kafka/java/mailing/README.md) file provides detailed description of implementation.
 
 ### Implementation of an Event Notification Service in an Event-Driven Architecture
 
@@ -27,10 +31,7 @@ xxx
 #### Additional Considerations
 xxx
 
-### Code
-[Release]()
 
-The [README.md](/kafka/java/mailing/README.md) file provides detailed description of implementation.
 
 
 

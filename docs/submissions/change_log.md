@@ -32,12 +32,15 @@ Here, you will find a brief overview of our progress, including major milestones
 
 **@luetzyas** 
 - create changelog for group project
-- enhance the experiment for E1 and enhance E1 and E2 documentation with results
+- E01:
   - what happens if 1 consumer is shut down
   - implement linger.ms to see if the latency behaviour changes
   - enhance conclusion for the experiment: Read from 0
 - work on commands file for own project shortcuts
-- implement eventhandling in mailing service for OrderPlacedEvent, PaymentReceivedEvent, GoodsShippedEvent and OrderCompletedEvent
+- E02:
+  - enhance documentation according to the submission feedback
+  - implement eventhandling in mailing service for OrderPlacedEvent, PaymentReceivedEvent, GoodsShippedEvent and OrderCompletedEvent 
+  - implement new handlingEvents in the message listener and to "send" a mail with the according eventPayload
 - rework whole project because of this error occuring in unchanged services: ()
 ```
 2024-03-18 21:11:29 SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
