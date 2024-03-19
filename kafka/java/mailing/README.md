@@ -88,20 +88,21 @@ try {
 ```
 
 3. The service dispatches email notifications for each event type, leveraging specific sendMail...() methods that process the event payload.
-- It is implemented in the MessageListener.java class 
+- It is implemented in the MailingService.java class 
 ```java
 // send mail for OrderPlacedEvent
-private void sendMailForOrderPlacedEvent(String messageJson, String messageType) throws Exception {
+public void sendMailForOrderShippedEvent(String messageJson, String messageType) throws Exception {
     try {
-        Message<OrderPlacedEventPayload> message = objectMapper.readValue(messageJson, new TypeReference<Message<OrderPlacedEventPayload>>() {});
-        OrderPlacedEventPayload eventPayload = message.getData();
+        Message<GoodsShippedEventPayload> message = objectMapper.readValue(messageJson, new TypeReference<Message<GoodsShippedEventPayload>>() {
+        });
+        GoodsShippedEventPayload eventPayload = message.getData();
 
-        String emailSubject = "Order has been placed and is ready for payment";
-        String emailContent = "The order with ID " + eventPayload.getOrder() + " has been shipped.";
-        String recipient = eventPayload.getOrder().getCustomer(); // This should be replaced with the actual recipient from the payload
+        String emailSubject = messageType;
+        String emailContent = "The order with ID " + eventPayload.getShipmentId() + " has been shipped.";
+        String recipient = "EDPO Gruppe 4"; // This should be replaced with the actual recipient from the payload
 
-        mailingService.sendMail(emailSubject, emailContent);
-        System.out.println("Email sent for " + messageType + ": " + emailContent);
+        sendMail(emailSubject, emailContent, recipient);
+
     } catch (Exception e) {
         System.out.println("Error " + Thread.currentThread().getStackTrace() + e);
     }
