@@ -12,11 +12,6 @@
 
 # Exercise 04: Orchestration vs. Choreography in Flowing Retail
 
-### Code
-[Release]()
-
-The [README.md](/kafka/java/mailing/README.md) file provides detailed description of implementation.
-
 ### Implementation of Events and Commands in an Orchestrated Architecture
 
 #### Decision
@@ -50,7 +45,10 @@ With further development of the project we plan to extend the usage of smart-fac
 We might consider to establish an additional orchestrated flow for the production of the goods.
 This could mean that the Order-Service no longer sends commands to orchestrate the production but merely emit an event to start the production process governed by an appropriate service.
 
+### Code
+[Release]()
 
+The [README.md](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/blob/master/kafka/java/vgr-camunda/README.md) file provides detailed description of VGR-Flow implementation.
 
 
 
