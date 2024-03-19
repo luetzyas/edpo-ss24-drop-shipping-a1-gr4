@@ -25,6 +25,12 @@ from the directory [kafka/java](../../kafka/java).
 ```
   $ mvn spring-boot:run
 ```
+* Start using docker compose:
+
+```
+docker-compose -f docker-compose-kafka-java-order-camunda.yml up
+```
+
 
 ## Docker
 from the directory [runner/docker-compose](../../runner/docker-compose).

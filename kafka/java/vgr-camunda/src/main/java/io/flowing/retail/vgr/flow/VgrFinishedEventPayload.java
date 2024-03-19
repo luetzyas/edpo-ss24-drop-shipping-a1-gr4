@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 public class VgrFinishedEventPayload {
 
-
-
+    private String traceId;
 
 }
