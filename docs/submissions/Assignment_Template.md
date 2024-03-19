@@ -13,6 +13,10 @@
 
 # Exercise 0X: XXX
 
+### Code
+[Release]()
+
+The [README.md](/kafka/java/mailing/README.md) file provides detailed description of implementation.
 
 ### Implementation of an Event Notification Service in an Event-Driven Architecture
 
@@ -27,12 +31,6 @@ xxx
 
 #### Additional Considerations
 xxx
-
-### Code
-The mailing service is located in [kafka/java/mailing](/kafka/java/mailing) directory.
-
-The [README.md](/kafka/java/mailing/README.md) file provides detailed description of implementation.
-
 
 
 

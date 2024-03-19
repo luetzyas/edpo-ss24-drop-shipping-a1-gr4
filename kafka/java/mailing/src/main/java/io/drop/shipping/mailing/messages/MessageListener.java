@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.drop.shipping.mailing.application.MailingService;
 import io.drop.shipping.mailing.messages.payload.GoodsShippedEventPayload;
+import io.drop.shipping.mailing.messages.payload.OrderPlacedEventPayload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.Header;
@@ -47,14 +48,15 @@ public class MessageListener {
         }
     }
 
-    private void sendMailForOrderShippedEvent(String messageJson, String messageType) throws Exception {
+    /**
+    private void sendMailForOrderPlacedEvent(String messageJson, String messageType) throws Exception {
         try {
-            Message<GoodsShippedEventPayload> message = objectMapper.readValue(messageJson, new TypeReference<Message<GoodsShippedEventPayload>>() {});
-            GoodsShippedEventPayload eventPayload = message.getData();
+            Message<OrderPlacedEventPayload> message = objectMapper.readValue(messageJson, new TypeReference<Message<OrderPlacedEventPayload>>() {});
+            OrderPlacedEventPayload eventPayload = message.getData();
 
-            String emailSubject = "Order Status Update";
-            String emailContent = "The order with ID " + eventPayload.getShipmentId() + " has been shipped.";
-            //String recipient = eventPayload.getOrder().getCustomer(); // This should be replaced with the actual recipient from the payload
+            String emailSubject = "Order has been placed and is ready for payment";
+            String emailContent = "The order with ID " + eventPayload.getOrder() + " has been shipped.";
+            String recipient = eventPayload.getOrder().getCustomer(); // This should be replaced with the actual recipient from the payload
 
             mailingService.sendMail(emailSubject, emailContent);
             System.out.println("Email sent for " + messageType + ": " + emailContent);
@@ -62,5 +64,6 @@ public class MessageListener {
             System.out.println("Error " + Thread.currentThread().getStackTrace() + e);
         }
     }
+    **/
 
 }
