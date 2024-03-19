@@ -13,24 +13,27 @@
 # Exercise 03: Process Orchestration with Camunda
 
 
-### Implementation of an Event Notification Service in an Event-Driven Architecture
+### Implementation of a process solution using Spring Boot and Camunda
 
 #### Decision
-xxx
+We decided to extend the existing Flowing-Retail-Kafka-Camunda-Orchestrated project with a new service `VGR-Camunda` to implement an additional BPMN-based Process that extends the Order-Fulfillment process.
+
 
 #### Rationale
-xxx
+As we aim to include the Smart-Factory highlevel dataset to facility stream processing, we start by implementing a Microservice that simulates the VGR (Vacuum-Gripper-Robot) in the Smart-Factory.
+
 
 #### Design
-xxx
+Each service is configured to run its own instance of the Camunda BPMN engine.
 
 #### Additional Considerations
-xxx
+The VGR process can be extended once we have decided on the states and actions of the VGR in the Smart-Factory Flow.
+To make use of other BPMN elemnts, we have created a Camunda form for the Checkout service.
 
 ### Code
 [Release]()
 
-The [README.md](/kafka/java/mailing/README.md) file provides detailed description of implementation.
+The [README.md](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/blob/master/kafka/java/vgr-camunda/README.md) file provides detailed description of VGR-Flow implementation.
 
 
 
