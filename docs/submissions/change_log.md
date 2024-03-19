@@ -16,6 +16,7 @@ Here, you will find a brief overview of our progress, including major milestones
 - [**Exercise 2**: Kafka with Spring](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/blob/master/docs/submissions/exercise_tasks/EDPO_SS24_E2.pdf)
 - [**Exercise 3**: Process Orchestration with Camunda](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/blob/master/docs/submissions/exercise_tasks/EDPO_SS24_E3.pdf)
 - [**Exercise 4**: Orchestration vs Choreography in Flowing Retail](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/blob/master/docs/submissions/exercise_tasks/EDPO_SS24_E4.pdf)
+- [**Exercise 5**: Zeebe.io](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/blob/master/docs/submissions/exercise_tasks/EDPO_SS24_E4.pdf)
 
 ## Submission 19. March 2024
 [Release 2.0]()
@@ -37,12 +38,13 @@ Here, you will find a brief overview of our progress, including major milestones
   - implement linger.ms to see if the latency behaviour changes
   - enhance conclusion for the experiment: Read from 0
 - work on commands file for own project shortcuts
-- E02:
-  - enhance documentation according to the submission feedback
-  - implement eventhandling in mailing service for OrderPlacedEvent, PaymentReceivedEvent, GoodsShippedEvent and OrderCompletedEvent 
-  - implement new handlingEvents in the message listener and to "send" a mail with the according eventPayload
+- E02: 
+  - enhance documentation according to the submission feedback [doc](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/blob/master/docs/submissions/A1_E2_Gr4_KaftaWithSpring.md)
+  - write detailed steps in the mailingservice [README.md](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/blob/master/kafka/java/mailing/README.md) 
+  - implement eventhandling in mailing service for OrderPlacedEvent, PaymentReceivedEvent, GoodsShippedEvent and OrderCompletedEvent [mailing-service](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/tree/master/kafka/java/mailing/src/main/java/io/drop/shipping/mailing) 
+  - implement new handlingEvents in the message listener and to "send" a mail with the according eventPayload [mailing-service](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/tree/master/kafka/java/mailing/src/main/java/io/drop/shipping/mailing)
 - rework whole project because of this error occuring in unchanged services: ()
-```
+```java
 2024-03-18 21:11:29 SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
 2024-03-18 21:11:29 SLF4J: Defaulting to no-operation (NOP) logger implementation
 2024-03-18 21:11:29 SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
