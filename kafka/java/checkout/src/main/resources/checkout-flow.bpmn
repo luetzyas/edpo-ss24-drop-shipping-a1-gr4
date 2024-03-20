@@ -5,7 +5,7 @@
       <bpmn:outgoing>Flow_1u6rhu5</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:sequenceFlow id="Flow_1u6rhu5" sourceRef="StartEvent_1" targetRef="Activity_1tlex1c" />
-    <bpmn:serviceTask id="Activity_1tlex1c" name="Process Order" camunda:delegateExpression="${processOrderDelegate}">
+    <bpmn:serviceTask id="Activity_1tlex1c" name="Process Order" camunda:delegateExpression="${processOrderAdapter}">
       <bpmn:incoming>Flow_1u6rhu5</bpmn:incoming>
       <bpmn:outgoing>Flow_0myq5q7</bpmn:outgoing>
     </bpmn:serviceTask>

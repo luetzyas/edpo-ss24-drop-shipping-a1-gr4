@@ -6,7 +6,9 @@ import io.flowing.retail.checkout.messages.MessageSender;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class OrderPlacedAdapter implements JavaDelegate {
     @Autowired
     private MessageSender messageSender; // Autowired to use Spring's KafkaTemplate

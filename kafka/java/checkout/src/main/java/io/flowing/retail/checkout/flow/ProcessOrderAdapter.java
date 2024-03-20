@@ -4,8 +4,10 @@ import io.flowing.retail.checkout.domain.Customer;
 import io.flowing.retail.checkout.domain.Order;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
+import org.springframework.stereotype.Component;
 
-public class ProcessOrderDelegate implements JavaDelegate {
+@Component
+public class ProcessOrderAdapter implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution execution) throws Exception {
