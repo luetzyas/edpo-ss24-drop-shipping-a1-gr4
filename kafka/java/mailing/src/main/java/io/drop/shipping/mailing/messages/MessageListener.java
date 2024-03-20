@@ -17,53 +17,31 @@ public class MessageListener {
     @Autowired
     private MailingService mailingService;
 
-    private ObjectMapper objectMapper = new ObjectMapper()
-            .registerModule(new JavaTimeModule()); // Register JavaTimeModule ISO-8601 compliant format
-
 
     @KafkaListener(id = "mailing", topics = "flowing-retail")
     public void handleEvent(String messageJson, @Header("type") String messageType) throws Exception {
-        System.out.println("Event: " + messageType);
-        System.out.println("JSON: " + messageJson);
-
         try {
             switch (messageType) {
-                case "OrderPlacedEvent": //step 1
-                    //sendMailForOrderPlacedEvent(messageJson, messageType);
+                case "OrderPlacedEvent":
+                    mailingService.sendMailForOrderPlacedEvent(messageJson, messageType);
                     break;
-                case "PaymentReceivedEvent": //step 2
-                    //sendMailForPaymentReceivedEvent(messageJson, messageType);
+                case "PaymentReceivedEvent":
+                    mailingService.sendMailForPaymentReceivedEvent(messageJson, messageType);
                     break;
-                case "OrderShippedEvent": //step 4 >> GoodsShippedEvent
-                    //sendMailForOrderShippedEvent(messageJson, messageType);
+                case "GoodsShippedEvent":
+                    mailingService.sendEmailForGoodsShippedEvent(messageJson, messageType);
                     break;
-                case "OrderCompletedEvent": //step 5
-                    //sendMailForOrderCompletedEvent(messageJson, messageType);
+                case "OrderCompletedEvent":
+                    mailingService.sendMailForOrderCompetedEvent(messageJson, messageType);
+                    break;
+                case "VgrFinishedEvent":
+                    mailingService.sendMailForVgrFinishedEvent(messageJson, messageType);
                     break;
                 default:
-                    System.out.println("Received unsupported event type: " + messageType);
+                    System.out.println("Eventtype: '" + messageType + "' is not handled");
             }
         } catch (Exception e) {
             System.out.println("Error processing message" + e);
         }
     }
-
-    /**
-    private void sendMailForOrderPlacedEvent(String messageJson, String messageType) throws Exception {
-        try {
-            Message<OrderPlacedEventPayload> message = objectMapper.readValue(messageJson, new TypeReference<Message<OrderPlacedEventPayload>>() {});
-            OrderPlacedEventPayload eventPayload = message.getData();
-
-            String emailSubject = "Order has been placed and is ready for payment";
-            String emailContent = "The order with ID " + eventPayload.getOrder() + " has been shipped.";
-            String recipient = eventPayload.getOrder().getCustomer(); // This should be replaced with the actual recipient from the payload
-
-            mailingService.sendMail(emailSubject, emailContent);
-            System.out.println("Email sent for " + messageType + ": " + emailContent);
-        } catch (Exception e) {
-            System.out.println("Error " + Thread.currentThread().getStackTrace() + e);
-        }
-    }
-    **/
-
 }

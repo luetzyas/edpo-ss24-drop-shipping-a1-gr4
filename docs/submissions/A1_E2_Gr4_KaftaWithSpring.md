@@ -15,9 +15,9 @@
 ### Code
 [Release 1.0](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/releases/tag/EDPO_A1_E1_2)
 
-The mailing service is located in [kafka/java/mailing](/kafka/java/mailing) directory.
+The mailing service is located in [kafka/java/mailing](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/blob/master/kafka/java/mailing) directory.
 
-The [README.md](/kafka/java/mailing/README.md) file provides detailed description of implementation.
+The [README.md](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/blob/master/kafka/java/mailing/README.md) file provides detailed description of implementation.
 
 ### Implementation of an Event Notification Service in an Event-Driven Architecture
 
@@ -45,7 +45,7 @@ EventListener in the [MessageListener](https://github.com/luetzyas/edpo-ss24-dro
 - VGRFinishedEvent
 
 Example for: "OrderPlacedEvent"
-```
+```java
 // look for the event type and call the corresponding method
 try {
     switch (messageType) {
