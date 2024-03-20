@@ -31,7 +31,7 @@ The VGR process can be extended once we have decided on the states and actions o
 To make use of other BPMN elemnts, we have created a Camunda form for the Checkout service.
 
 ### Code
-[Release]()
+[Release](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/releases/tag/EDPO_A1_E3_4)
 
 The [README.md](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/blob/master/kafka/java/vgr-camunda/README.md) file provides detailed description of VGR-Flow implementation.
 
