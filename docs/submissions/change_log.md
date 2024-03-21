@@ -18,6 +18,17 @@ Here, you will find a brief overview of our progress, including major milestones
 - [**Exercise 4**: Orchestration vs Choreography in Flowing Retail](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/blob/master/docs/submissions/exercise_tasks/EDPO_SS24_E4.pdf)
 - [**Exercise 5**: Zeebe.io](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/blob/master/docs/submissions/exercise_tasks/EDPO_SS24_E4.pdf)
 
+
+## Submission 02. April 2024
+[Release 3.0 tbd](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/releases/tag/EDPO_A1_E5_6)
+
+**@stefanmhsg**
+- Camundafy the checkout service
+  - as per the [README.md](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/blob/master/kafka/java/checkout/README.md)
+  - replaced checkout with camunda form
+
+**@luetzyas**
+
 ## Submission 19. March 2024
 [Release 2.0](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/releases/tag/EDPO_A1_E3_4)
 

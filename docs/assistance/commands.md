@@ -30,7 +30,16 @@ from the directory [kafka/java](../../kafka/java).
 ```
 docker-compose -f docker-compose-kafka-java-order-camunda.yml up
 ```
+### Development
 
+* to reflect code changes
+```
+docker-compose -f docker-compose-kafka-java-order-camunda.yml up --build
+```
+* to stop the containers and remove the volumes
+```
+docker-compose -f docker-compose-kafka-java-order-camunda.yml down -v  
+```
 
 ## Docker
 from the directory [runner/docker-compose](../../runner/docker-compose).

@@ -46,7 +46,7 @@ We might consider to establish an additional orchestrated flow for the productio
 This could mean that the Order-Service no longer sends commands to orchestrate the production but merely emit an event to start the production process governed by an appropriate service.
 
 ### Code
-[Release]()
+[Release](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/releases/tag/EDPO_A1_E3_4)
 
 The [README.md](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/blob/master/kafka/java/vgr-camunda/README.md) file provides detailed description of VGR-Flow implementation.
 

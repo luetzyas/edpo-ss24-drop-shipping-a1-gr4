@@ -1,0 +1,69 @@
+{
+  "components": [
+    {
+      "label": "Customer Name",
+      "type": "textfield",
+      "id": "customerName",
+      "key": "customerName",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "label": "Customer Address",
+      "type": "textfield",
+      "id": "customerAddress",
+      "key": "customerAddress",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "label": "Article ID #1",
+      "type": "textfield",
+      "id": "articleId1",
+      "key": "articleId1",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "label": "Amount #1",
+      "type": "number",
+      "id": "amount1",
+      "key": "amount1",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "label": "Article ID #2",
+      "type": "textfield",
+      "id": "articleId2",
+      "key": "articleId2"
+    },
+    {
+      "label": "Amount #2",
+      "type": "number",
+      "id": "amount2",
+      "key": "amount2"
+    },
+    {
+      "action": "submit",
+      "label": "Submit",
+      "type": "button",
+      "id": "Field_0mmdnqh",
+      "key": "field_1tsp421",
+      "properties": {}
+    }
+  ],
+  "type": "default",
+  "id": "checkout-form",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.3.0"
+  },
+  "executionPlatform": "Camunda Platform",
+  "executionPlatformVersion": "7.17.0",
+  "schemaVersion": 4
+}
