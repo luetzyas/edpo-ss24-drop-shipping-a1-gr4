@@ -15,7 +15,6 @@ The workflow engine is the only common denominator. For every service you can de
 You find the variations in the sub folders. 
 
 * [Java](java/)
-* [Node.js](nodejs/)
 
 ## Run on Camunda Cloud
 
@@ -46,11 +45,6 @@ Now you can simulate a new order by a PUT request
 ```
 curl -X PUT http://localhost:8090/api/cart/order?customerId="0815"
 ```
-
-### For Nodejs
-
-You can cut and paste the environment variable block from the [Camunda Cloud console](https://camunda.io) to set the configuration through environment variables.
-
 
 ## Does Zeebe complement or replace middleware?
 

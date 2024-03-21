@@ -36,7 +36,7 @@ To run the **Camunda-based** version of the Flowing Retail project for lab07 you
 ```
 from the directory [runner/docker-compose](runner/docker-compose).
 
-## Lab11
+## Lab11a
 
 To run the **Zeebe-based** version of the Flowing retail project for lab11 you need to execute:
 ```
@@ -46,6 +46,15 @@ from the directory [runner/docker-compose](runner/docker-compose). This uses the
 Hint: If you want to use the local Zeebe services you need to have the ''Self-managed local Zeebe'' configuration
 active in your [application.properties](/kafka/java/order-zeebe/src/main/resources/application.properties) file. If you want
 to use the hosted Camunda Cloud configuration you need to configure your Camunda Cloud credentials here.
+
+## Lab11b
+
+To run the **Zeebe-based** version of the Flowing retail project for lab11 you need to execute:
+```
+  $ docker-compose -f docker-compose-java-order-zeebe.yml up
+```
+from the directory [runner/docker-compose](runner/docker-compose). This uses Zeebo with JobWorkers in the individual services for handling the order workflow.
+Check the [README](zeebe/README.md) for more details.
 
 ---
 The rest of this README file is the original one provided by Bernd Rücker.
