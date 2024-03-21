@@ -31,7 +31,7 @@ public class MessageListener {
                 case "GoodsShippedEvent":
                     mailingService.sendEmailForGoodsShippedEvent(messageJson, messageType);
                     break;
-                case "OrderCompletedEvent":
+                case "OrderCompletegit log --all -- [file path]git log --all -- [file path]git dEvent":
                     mailingService.sendMailForOrderCompetedEvent(messageJson, messageType);
                     break;
                 case "VgrFinishedEvent":
