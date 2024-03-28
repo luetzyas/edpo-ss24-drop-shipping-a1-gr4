@@ -1,5 +1,8 @@
 package io.drop.shipping.mailing.messages.payload;
 
+import lombok.Data;
+
+@Data
 public class OrderCompletedEventPayload {
 
     /**
@@ -8,15 +11,6 @@ public class OrderCompletedEventPayload {
      * }
      */
 
-
     private String orderId;
 
-
-    public String getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(String orderId) {
-        this.orderId = orderId;
-    }
 }

@@ -1,5 +1,8 @@
 package io.drop.shipping.mailing.messages.payload;
 
+import lombok.Data;
+
+@Data
 public class VgrPayload {
 
     /**
@@ -9,14 +12,5 @@ public class VgrPayload {
      */
 
     private String traceId;
-
-    public String getTraceId() {
-        return traceId;
-    }
-
-    public VgrPayload setTraceId(String refId) {
-        this.traceId = refId;
-        return this;
-    }
 
 }

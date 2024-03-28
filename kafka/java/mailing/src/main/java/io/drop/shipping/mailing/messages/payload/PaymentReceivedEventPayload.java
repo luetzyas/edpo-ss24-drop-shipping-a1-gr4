@@ -1,5 +1,8 @@
 package io.drop.shipping.mailing.messages.payload;
 
+import lombok.Data;
+
+@Data
 public class PaymentReceivedEventPayload {
 
   /**
@@ -9,34 +12,9 @@ public class PaymentReceivedEventPayload {
    *       "amount":15
    *    }
    */
+
   private String refId;
-
   private String reason;
-
   private int amount;
 
-  public String getRefId() {
-    return refId;
-  }
-
-  public PaymentReceivedEventPayload setRefId(String refId) {
-    this.refId = refId;
-    return this;
-  }
-
-  public String getReason() {
-    return reason;
-  }
-
-  public void setReason(String reason) {
-    this.reason = reason;
-  }
-
-  public int getAmount() {
-    return amount;
-  }
-
-  public void setAmount(int amount) {
-    this.amount = amount;
-  }
 }
