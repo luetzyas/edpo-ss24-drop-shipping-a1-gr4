@@ -30,9 +30,14 @@ Here, you will find a brief overview of our progress, including major milestones
 **@luetzyas**
 TODO:
 - Adr for Camunda 7/8 (kann pro Microservice entschieden werden)
+- Camunda Docker image
   - https://docs.camunda.org/manual/7.20/installation/docker/
   - https://docs.camunda.org/manual/7.20/installation/docker/
-- Camunda Docker image 
+- Feedback
+  - simple bpmn >> needs more complexity for the next submission
+  - E4: 
+    - progress ok >> more complexity
+    - more commands and events
 
 ## Submission 19. March 2024
 [Release 2.0](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/releases/tag/EDPO_A1_E3_4)
