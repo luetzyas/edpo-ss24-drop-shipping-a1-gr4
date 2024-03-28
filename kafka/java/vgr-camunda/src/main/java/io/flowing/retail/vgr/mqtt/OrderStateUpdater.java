@@ -20,13 +20,11 @@ public class OrderStateUpdater {
         try {
             lastStateJson = message.getPayload();
             // Process the message as needed, e.g., save to a database or log it
-            System.out.println("Updated order state: " + lastStateJson);
+            System.out.println("******** Updated order state ******** -->  : " + lastStateJson);
 
             FactoryOrderState orderState = objectMapper.readValue(lastStateJson, FactoryOrderState.class);
             // Save the order state using repository or any other service
             // repository.save(orderState);
-
-
 
         } catch (Exception e){
             // Handle JSON parsing or other exceptions

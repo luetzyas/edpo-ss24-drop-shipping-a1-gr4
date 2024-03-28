@@ -5,9 +5,7 @@ import lombok.Data;
 @Data
 public class FactoryOrderState {
     private String state;
-    private String timestamp;
+    private String ts; // timestamp
     private String type;
     private String topic;
-
-
 }
