@@ -1,8 +1,11 @@
 package io.drop.shipping.mailing.messages.payload;
 
+import lombok.Data;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Data
 public class OrderPlacedEventPayload {
 
     /**
@@ -26,33 +29,6 @@ public class OrderPlacedEventPayload {
      */
 
     private String orderId;
-
     private CustomerPayload customer;
-
     private List<OrderItemPayload> items = new ArrayList<>();
-
-    public String getOrderId() {
-        return orderId;
-    }
-
-    public CustomerPayload getCustomer() {
-        return customer;
-    }
-
-    public void setOrderId(String orderId) {
-        this.orderId = orderId;
-    }
-
-    public void setCustomer(CustomerPayload customer) {
-        this.customer = customer;
-    }
-
-
-    public List<OrderItemPayload> getItems() {
-        return items;
-    }
-
-    public void setItems(List<OrderItemPayload> items) {
-        this.items = items;
-    }
 }
