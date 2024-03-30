@@ -26,6 +26,7 @@ Here, you will find a brief overview of our progress, including major milestones
 - Camundafy the checkout service
   - as per the [README.md](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/blob/master/kafka/java/checkout/README.md)
   - replaced checkout with camunda form
+  - MQTT Client for VGR Service capturing Order state
 
 **@luetzyas**
 TODO:
