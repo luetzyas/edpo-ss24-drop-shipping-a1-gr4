@@ -19,10 +19,25 @@
       }
     },
     {
-      "label": "Article ID #1",
-      "type": "textfield",
+      "values": [
+        {
+          "value": "RED",
+          "label": "Red"
+        },
+        {
+          "label": "Blue",
+          "value": "BLUE"
+        },
+        {
+          "value": "WHITE",
+          "label": "White"
+        }
+      ],
+      "label": "Article #1",
+      "type": "select",
       "id": "articleId1",
       "key": "articleId1",
+      "description": "the thing you want",
       "validate": {
         "required": true
       }
@@ -34,19 +49,65 @@
       "key": "amount1",
       "validate": {
         "required": true
-      }
+      },
+      "description": "how many you want",
+      "defaultValue": 0
     },
     {
+      "values": [
+        {
+          "value": "RED",
+          "label": "Red"
+        },
+        {
+          "label": "Blue",
+          "value": "BLUE"
+        },
+        {
+          "value": "WHITE",
+          "label": "White"
+        }
+      ],
       "label": "Article ID #2",
-      "type": "textfield",
+      "type": "select",
       "id": "articleId2",
-      "key": "articleId2"
+      "key": "articleId2",
+      "description": "another thing you want"
     },
     {
       "label": "Amount #2",
       "type": "number",
       "id": "amount2",
-      "key": "amount2"
+      "key": "amount2",
+      "description": "how many of the other thing you want"
+    },
+        {
+      "values": [
+        {
+          "value": "RED",
+          "label": "Red"
+        },
+        {
+          "label": "Blue",
+          "value": "BLUE"
+        },
+        {
+          "value": "WHITE",
+          "label": "White"
+        }
+      ],
+      "label": "Article ID #3",
+      "type": "select",
+      "id": "articleId3",
+      "key": "articleId3",
+      "description": "another thing you want"
+    },
+    {
+      "label": "Amount #3",
+      "type": "number",
+      "id": "amount3",
+      "key": "amount3",
+      "description": "how many of the other thing you want"
     },
     {
       "action": "submit",
