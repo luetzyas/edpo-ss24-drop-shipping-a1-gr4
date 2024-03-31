@@ -31,7 +31,7 @@ public class CheckAvailableStockAdapter implements JavaDelegate {
     // Create the payload for the stock check event
     CheckAvailableStockEventPayload payload = new CheckAvailableStockEventPayload();
     payload.setRefId(order.getId());
-    payload.setItems(new ArrayList<>(order.getItems())); // Create a new list from the order's items
+    payload.setItems(new ArrayList<>(order.getItems()));
 
     Message<CheckAvailableStockEventPayload> message = new Message<>(
             "CheckAvailableStockEvent",
