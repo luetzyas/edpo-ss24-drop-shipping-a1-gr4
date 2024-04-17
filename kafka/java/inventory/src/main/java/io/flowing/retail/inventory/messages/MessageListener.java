@@ -3,6 +3,7 @@ package io.flowing.retail.inventory.messages;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.flowing.retail.inventory.application.InventoryService;
+import io.flowing.retail.inventory.mqtt.StockStateUpdater;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.Header;
@@ -21,7 +22,13 @@ public class MessageListener {
   private InventoryService inventoryService;
 
   @Autowired
+  private IdempotentReceiver idempotentReceiver;
+
+  @Autowired
   private ObjectMapper objectMapper;
+
+  private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(MessageListener.class);
+
 
   @Transactional
   @KafkaListener(id = "inventory", topics = MessageSender.TOPIC_NAME)
@@ -29,6 +36,8 @@ public class MessageListener {
 
     switch (messageType) {
       case ("FetchGoodsCommand"): {
+        System.out.println("Received FetchGoodsCommand");
+        try {
       Message<FetchGoodsCommandPayload> message = objectMapper.readValue(messagePayloadJson, new TypeReference<Message<FetchGoodsCommandPayload>>() {});
 
       FetchGoodsCommandPayload fetchGoodsCommand = message.getData();
@@ -44,32 +53,56 @@ public class MessageListener {
                               .setPickId(pickId))
                       .setCorrelationid(message.getCorrelationid()));
     }
+    catch (Exception e) {
+      e.printStackTrace();
+    }
+    }
     case ("CheckAvailableStockEvent"): {
-      Message<CheckAvailableStockEventPayload> message = objectMapper.readValue(messagePayloadJson, new TypeReference<Message<CheckAvailableStockEventPayload>>() {});
+      System.out.println("Received CheckAvailableStockEvent");
+        try {
+          Message<CheckAvailableStockEventPayload> message = objectMapper.readValue(messagePayloadJson, new TypeReference<Message<CheckAvailableStockEventPayload>>() {
+          });
 
-      CheckAvailableStockEventPayload checkAvailableStockEvent = message.getData();
+          CheckAvailableStockEventPayload checkAvailableStockEvent = message.getData();
+
+          // Check if the message has already been processed
+          if (idempotentReceiver.isDuplicate(checkAvailableStockEvent.getRefId())) {
+            System.out.println("Duplicate CheckAvailableStockEvent detected for refId: " + checkAvailableStockEvent.getRefId() + ", skipping processing.");
+            return;
+          }
+
+          System.out.println("MessageListener: Check if stock available for: " + checkAvailableStockEvent.getItems());
+          boolean available = inventoryService.checkAvailability(checkAvailableStockEvent.getItems());
+          System.out.println("MessageListener: Stock available: " + available);
+
+          GoodsAvailableEventPayload goodsAvailableEventPayload = new GoodsAvailableEventPayload();
+            goodsAvailableEventPayload.setRefId(checkAvailableStockEvent.getRefId());
+            goodsAvailableEventPayload.setAvailable(available);
+
+          List<GoodsAvailableEventPayload.ItemAvailability> availableItems = inventoryService.getAvailableItems(checkAvailableStockEvent.getItems());
+          System.out.println("MessageListener: Available items (requestedQuantity / availableQuantity): " + availableItems);
+          List<GoodsAvailableEventPayload.ItemAvailability> unavailableItems = inventoryService.getUnavailableItems(checkAvailableStockEvent.getItems());
+          System.out.println("MessageListener: Unavailable items (requestedQuantity / unavailableQuantity): " + unavailableItems);
+
+          goodsAvailableEventPayload.setAvailableItems(availableItems);
+          goodsAvailableEventPayload.setUnavailableItems(unavailableItems);
+
+          Message<GoodsAvailableEventPayload> messagePayload = new Message<>();
+            messagePayload.setType("GoodsAvailableEvent");
+            messagePayload.setTraceid(message.getTraceid());
+            messagePayload.setCorrelationid(message.getCorrelationid());
+            messagePayload.setData(goodsAvailableEventPayload);
+          //  System.out.println("MessageListener: Sending GoodsAvailableEvent: " + messagePayload); implementation before outbox
+
+          // Add to outbox instead of sending directly
+          InMemoryOutbox.addToOutbox(messagePayload);
+          System.out.println("Added to outbox: " + messagePayload);
+          // messageSender.send(messagePayload); implementation before outbox
 
 
-      boolean available = inventoryService.checkAvailability(checkAvailableStockEvent.getItems());
-
-
-      GoodsAvailableEventPayload goodsAvailableEventPayload = new GoodsAvailableEventPayload();
-        goodsAvailableEventPayload.setRefId(checkAvailableStockEvent.getRefId());
-        goodsAvailableEventPayload.setAvailable(available);
-
-      List<GoodsAvailableEventPayload.ItemAvailability> availableItems = inventoryService.getAvailableItems(checkAvailableStockEvent.getItems());
-      List<GoodsAvailableEventPayload.ItemAvailability> unavailableItems = inventoryService.getUnavailableItems(checkAvailableStockEvent.getItems());
-
-      goodsAvailableEventPayload.setAvailableItems(availableItems);
-      goodsAvailableEventPayload.setUnavailableItems(unavailableItems);
-
-      Message<GoodsAvailableEventPayload> messagePayload = new Message<GoodsAvailableEventPayload>();
-        messagePayload.setType("GoodsAvailableEvent");
-        messagePayload.setTraceid(message.getTraceid());
-        messagePayload.setCorrelationid(message.getCorrelationid());
-        messagePayload.setData(goodsAvailableEventPayload);
-
-      messageSender.send(messagePayload);
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
     }
     default:
       throw new IllegalArgumentException("Unknown message type: " + messageType);

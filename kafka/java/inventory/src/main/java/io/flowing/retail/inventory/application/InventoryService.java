@@ -7,18 +7,17 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-import io.flowing.retail.inventory.domain.FactoryStockState;
-import io.flowing.retail.inventory.domain.InventoryUpdateMessage;
+import io.flowing.retail.inventory.domain.*;
 import io.flowing.retail.inventory.messages.GoodsAvailableEventPayload;
+import io.flowing.retail.inventory.mqtt.StockStateUpdater;
 import org.springframework.stereotype.Component;
-
-import io.flowing.retail.inventory.domain.Item;
-import io.flowing.retail.inventory.domain.PickOrder;
 
 @Component
 public class InventoryService {
 
   private final Map<String, FactoryStockState> stockStateMap = new ConcurrentHashMap<>();
+
+  private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(InventoryService.class);
 
 
   /**
@@ -61,43 +60,65 @@ public class InventoryService {
   }
 
   // Check overall availability based on Workpiece types and their amounts
-  public boolean checkAvailability(List<InventoryUpdateMessage.Workpiece> workpieces) {
+  public boolean checkAvailability(List<OrderItem> orderItems) {
     // Logic to aggregate requested amounts by type
-    Map<String, Integer> requestedAmounts = new HashMap<>();
-    workpieces.forEach(workpiece -> requestedAmounts.merge(workpiece.getType(), 1, Integer::sum));
+    System.out.println("InventoryService: checkAvailability");
+    try {
+      Map<String, Integer> requestedAmounts = new HashMap<>();
+      for (OrderItem item : orderItems) {
+        if (item != null && item.getArticleId() != null) {
+          requestedAmounts.merge(item.getArticleId(), item.getAmount(), Integer::sum); // Aggregate amounts by type (already done in Order Service, but just in case)
+        } else {
+          System.out.println("OrderItem or type is null");
+        }
+      }
+      // Check against current stock
+      return requestedAmounts.entrySet().stream() // Converts the set of entries in the requestedAmounts map into a Stream
+              .allMatch(entry -> // lambda expression where entry is each element in the stream
+                      stockStateMap.containsKey(entry.getKey()) &&
+                              stockStateMap.get(entry.getKey()).getAmount() >= entry.getValue());
+    } catch (Exception e) {
+      e.printStackTrace();
+      return false;
+    }
 
-    // Check against current stock
-    return requestedAmounts.entrySet().stream()
-            .allMatch(entry ->
-                    stockStateMap.containsKey(entry.getKey()) &&
-                            stockStateMap.get(entry.getKey()).getAmount() >= entry.getValue());
   }
 
   // Get available Workpieces
-  public List<GoodsAvailableEventPayload.ItemAvailability> getAvailableItems(List<InventoryUpdateMessage.Workpiece> workpieces) {
-    return workpieces.stream()
-            .filter(workpiece ->
-                    stockStateMap.containsKey(workpiece.getType()) &&
-                            stockStateMap.get(workpiece.getType()).getAmount() > 0)
-            .map(workpiece -> new GoodsAvailableEventPayload.ItemAvailability(workpiece.getType(), 1,
-                    stockStateMap.get(workpiece.getType()).getAmount()))
+  public List<GoodsAvailableEventPayload.ItemAvailability> getAvailableItems(List<OrderItem> orderItems) {
+    System.out.println("Checking if requested items available");
+    // Aggregate the required amounts by articleId
+    Map<String, Integer> requestedAmounts = orderItems.stream()
+            .collect(Collectors.groupingBy(OrderItem::getArticleId, Collectors.summingInt(OrderItem::getAmount)));
+    // Filter and map to ItemAvailability, considering actual stock availability
+    return requestedAmounts.entrySet().stream()
+            .filter(entry -> stockStateMap.containsKey(entry.getKey()))
+            .map(entry -> {
+              int stockAvailable = stockStateMap.get(entry.getKey()).getAmount(); // Get the available stock amount
+              int amountToReport = Math.min(entry.getValue(), stockAvailable); // Report the lesser of the requested and available amounts
+              return new GoodsAvailableEventPayload.ItemAvailability(entry.getKey(), entry.getValue(), amountToReport); // E.g BLUE -> (we have 3, requested 5, so we report 3)
+            })
             .collect(Collectors.toList());
   }
 
   // Get unavailable Workpieces
-  public List<GoodsAvailableEventPayload.ItemAvailability> getUnavailableItems(List<InventoryUpdateMessage.Workpiece> workpieces) {
-    Map<String, Long> counts = workpieces.stream().collect(Collectors.groupingBy(InventoryUpdateMessage.Workpiece::getType, Collectors.counting()));
-
-    return counts.entrySet().stream()
-            .filter(entry ->
-                    !stockStateMap.containsKey(entry.getKey()) ||
-                            stockStateMap.get(entry.getKey()).getAmount() < entry.getValue())
-            .map(entry -> new GoodsAvailableEventPayload.ItemAvailability(entry.getKey(), entry.getValue().intValue(),
-                    stockStateMap.containsKey(entry.getKey()) ? stockStateMap.get(entry.getKey()).getAmount() : 0))
+  public List<GoodsAvailableEventPayload.ItemAvailability> getUnavailableItems(List<OrderItem> orderItems) {
+    System.out.println("Checking if requested items are unavailable");
+    // Aggregate the required amounts by articleId
+    Map<String, Integer> requestedAmounts = orderItems.stream()
+            .collect(Collectors.groupingBy(OrderItem::getArticleId, Collectors.summingInt(OrderItem::getAmount)));
+    // Filter and map to ItemAvailability, highlighting shortfalls
+    return requestedAmounts.entrySet().stream()
+            .map(entry -> {
+              int stockAvailable = stockStateMap.containsKey(entry.getKey()) ? stockStateMap.get(entry.getKey()).getAmount() : 0;
+              int shortfall = entry.getValue() > stockAvailable ? entry.getValue() - stockAvailable : 0;
+              return new GoodsAvailableEventPayload.ItemAvailability(entry.getKey(), entry.getValue(), shortfall);
+            })
             .collect(Collectors.toList());
   }
 
     public void updateStock(InventoryUpdateMessage updateMessage) {
+    System.out.println("Updating Inventory with: " + updateMessage);
       Map<String, FactoryStockState> tempMap = new HashMap<>();
 
       for (InventoryUpdateMessage.StockItem stockItem : updateMessage.getStockItems()) {
@@ -115,6 +136,7 @@ public class InventoryService {
       }
 
       // Update the main inventory state with the temporary map
-      tempMap.forEach((articleId, factoryStockState) -> stockStateMap.put(articleId, factoryStockState));
+      stockStateMap.putAll(tempMap);
+      System.out.println("Updated Inventory to: " + stockStateMap);
     }
 }

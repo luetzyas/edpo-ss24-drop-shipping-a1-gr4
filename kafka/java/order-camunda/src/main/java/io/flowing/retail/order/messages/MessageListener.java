@@ -2,6 +2,7 @@ package io.flowing.retail.order.messages;
 
 import java.io.IOException;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.spin.plugin.variable.SpinValues;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +25,8 @@ public class MessageListener {
   
   @Autowired
   private OrderRepository repository;
-
-
   @Autowired
   private RuntimeService runtimeService;
-
   @Autowired
   private ObjectMapper objectMapper;
   
@@ -44,14 +42,43 @@ public class MessageListener {
     
     // persist domain entity
     repository.save(order);    
-    
-    // and kick of a new flow instance
-    runtimeService.createMessageCorrelation(message.getType())
-      .processInstanceBusinessKey(message.getTraceid())
-      .setVariable("orderId", order.getId())
-      .correlateWithResult();
+    try {
+      // and kick of a new flow instance
+      runtimeService.createMessageCorrelation(message.getType())
+              .processInstanceBusinessKey(message.getTraceid())
+              .setVariable("orderId", order.getId())
+              .setVariable("customer", SpinValues.jsonValue(objectMapper.writeValueAsString(order.getCustomer())).create())
+              .setVariable("items", SpinValues.jsonValue(objectMapper.writeValueAsString(order.getItems())).create())
+              .correlateWithResult();
+    } catch (JsonProcessingException e) {
+      throw new RuntimeException("Failed to serialize order items", e);
+    }
+
   }
-  
+
+  @Transactional
+  public void goodsAvailableReceived(String messagePayloadJson) throws IOException {
+    Message<GoodsAvailableEventPayload> message = objectMapper.readValue(
+            messagePayloadJson,
+            new TypeReference<Message<GoodsAvailableEventPayload>>() {
+            }
+    );
+
+    GoodsAvailableEventPayload payload = message.getData();
+    System.out.println("Goods availability checked for order: " + payload.getRefId());
+    System.out.println("Are required goods fully available? : " + payload.isAvailable());
+    System.out.println("Available items: " + payload.getAvailableItems());
+    System.out.println("Unavailable items: " + payload.getUnavailableItems());
+
+    runtimeService.createMessageCorrelation("GoodsAvailableEvent")
+            .processInstanceBusinessKey(message.getTraceid())
+            .setVariable("available", payload.isAvailable())
+            .setVariable("availableItems", payload.getAvailableItems())
+            .setVariable("unavailableItems", payload.getUnavailableItems())
+            .correlateWithResult();
+  }
+
+
   /**
    * Very generic listener for simplicity. It takes all events and checks, if a 
    * flow instance is interested. If yes, they are correlated, 
@@ -63,8 +90,15 @@ public class MessageListener {
   @KafkaListener(id = "order", topics = MessageSender.TOPIC_NAME)
   public void messageReceived(String messagePayloadJson, @Header("type") String messageType) throws Exception{
     if ("OrderPlacedEvent".equals(messageType)) {
+        System.out.println("OrderPlacedEvent received");
       orderPlacedReceived(objectMapper.readValue(messagePayloadJson, new TypeReference<Message<Order>>() {}));
     }
+    if ("GoodsAvailableEvent".equals(messageType)) {
+      System.out.println("GoodsAvailableEvent received");
+      goodsAvailableReceived(messagePayloadJson);
+    }
+
+
     Message<JsonNode> message = objectMapper.readValue( //
         messagePayloadJson, //
         new TypeReference<Message<JsonNode>>() {});

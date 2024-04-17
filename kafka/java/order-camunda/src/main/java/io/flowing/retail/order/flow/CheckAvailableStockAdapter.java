@@ -28,17 +28,20 @@ public class CheckAvailableStockAdapter implements JavaDelegate {
         (String)context.getVariable("orderId")).get(); 
     String traceId = context.getProcessBusinessKey();
 
+    System.out.println("CheckAvailableStockAdapter retrieved order from orderRepository: " + order);
+
     // Create the payload for the stock check event
     CheckAvailableStockEventPayload payload = new CheckAvailableStockEventPayload();
     payload.setRefId(order.getId());
-    payload.setItems(new ArrayList<>(order.getItems()));
+    payload.setItems(order.getItems());
+    System.out.println("CheckAvailableStockAdapter created payload: " + payload);
 
     Message<CheckAvailableStockEventPayload> message = new Message<>(
             "CheckAvailableStockEvent",
             traceId,
             payload
     );
-
+    System.out.println("Sending CheckAvailableStockEvent: " + message);
     messageSender.send(message);
 
   }
