@@ -9,7 +9,9 @@ import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -49,8 +51,7 @@ public class ProcessOrderAdapter implements JavaDelegate {
         aggregatedItems.forEach(order::addItem);
         logger.info("ProcessOrderAdapter: Items added to order " + order.getItems());
 
-        // Check overall availability based on Workpiece types and their amounts
-        boolean allItemsAvailable = true;
+        List<String> unavailableItems = new ArrayList<>();
 
         for (Map.Entry<String, Integer> entry : aggregatedItems.entrySet()) {
             String articleId = entry.getKey();
@@ -59,14 +60,15 @@ public class ProcessOrderAdapter implements JavaDelegate {
             FactoryStockState stockState = checkoutService.getCurrentStockState().get(articleId);
             if (stockState == null || stockState.getAmount() < requiredAmount) {
                 // Item is not available in sufficient quantity
-                allItemsAvailable = false;
-                System.out.println("Item not available in sufficient quantity: " + articleId);
-                break; // Optional: stop checking further items if one is already unavailable
+                unavailableItems.add(articleId);
+                System.out.println("Insufficient stock for item: " + articleId);
             }
         }
-
+        // Check overall availability based on Workpiece types and their amounts
+        boolean allItemsAvailable = unavailableItems.isEmpty();
         if (!allItemsAvailable) {
             execution.setVariable("allItemsAvailable", false);
+            execution.setVariable("unavailableItems", String.join(", ", unavailableItems));
         } else {
             execution.setVariable("allItemsAvailable", true);
         }

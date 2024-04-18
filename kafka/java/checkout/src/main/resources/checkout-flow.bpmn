@@ -34,6 +34,10 @@
           <camunda:formField id="confirmOrder" label="Confirm Order (items not in stock)" type="boolean">
             <camunda:properties />
           </camunda:formField>
+          <camunda:formField id="userInformation" label="Warning: Potential delay, following items not available currently:" type="string" defaultValue="${unavailableItems}">
+            <camunda:properties />
+            <camunda:validation />
+          </camunda:formField>
         </camunda:formData>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_1oenfhd</bpmn:incoming>
@@ -73,12 +77,6 @@
         <dc:Bounds x="270" y="57" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_0eqq3vi_di" bpmnElement="Gateway_0eqq3vi" isMarkerVisible="true">
-        <dc:Bounds x="445" y="72" width="50" height="50" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="425" y="48" width="90" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0g2zdfq_di" bpmnElement="Activity_0lkarep">
         <dc:Bounds x="800" y="57" width="100" height="80" />
         <bpmndi:BPMNLabel />
@@ -87,6 +85,12 @@
         <dc:Bounds x="962" y="79" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="948" y="122" width="64" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0eqq3vi_di" bpmnElement="Gateway_0eqq3vi" isMarkerVisible="true">
+        <dc:Bounds x="445" y="72" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="425" y="48" width="90" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0sj2p8r_di" bpmnElement="Activity_14yjv27">
@@ -119,6 +123,10 @@
         <di:waypoint x="370" y="97" />
         <di:waypoint x="445" y="97" />
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_00d74yu_di" bpmnElement="Flow_00d74yu">
+        <di:waypoint x="900" y="97" />
+        <di:waypoint x="962" y="97" />
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0rm8akb_di" bpmnElement="Flow_0rm8akb">
         <di:waypoint x="495" y="97" />
         <di:waypoint x="800" y="97" />
@@ -133,10 +141,6 @@
         <bpmndi:BPMNLabel>
           <dc:Bounds x="479" y="163" width="13" height="14" />
         </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_00d74yu_di" bpmnElement="Flow_00d74yu">
-        <di:waypoint x="900" y="97" />
-        <di:waypoint x="962" y="97" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0xa73zl_di" bpmnElement="Flow_0xa73zl">
         <di:waypoint x="650" y="210" />
