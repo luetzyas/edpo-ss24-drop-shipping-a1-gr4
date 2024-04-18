@@ -104,14 +104,12 @@
     </bpmn:parallelGateway>
     <bpmn:sequenceFlow id="Flow_15o31k3" sourceRef="Activity_1su7td0" targetRef="stockAvailabilityReceived" />
     <bpmn:sequenceFlow id="Flow_1kns988" sourceRef="Gateway_1qmn90u" targetRef="Activity_0q97ruw" />
-    <bpmn:exclusiveGateway id="isStockAvailable" name="is stock available?">
+    <bpmn:exclusiveGateway id="isStockAvailable" name="is stock available?" default="available">
       <bpmn:incoming>Flow_13up8ge</bpmn:incoming>
       <bpmn:outgoing>available</bpmn:outgoing>
       <bpmn:outgoing>notAvailable</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:sequenceFlow id="available" name="yes" sourceRef="isStockAvailable" targetRef="Gateway_1qmn90u">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${available}</bpmn:conditionExpression>
-    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="available" name="yes" sourceRef="isStockAvailable" targetRef="Gateway_1qmn90u" />
     <bpmn:sequenceFlow id="Flow_13up8ge" sourceRef="stockAvailabilityReceived" targetRef="isStockAvailable" />
     <bpmn:intermediateCatchEvent id="stockAvailabilityReceived" name="Stock availability received">
       <bpmn:extensionElements />
@@ -138,6 +136,10 @@
       <bpmn:text>Event Based gateway: timeout, response recieved,..</bpmn:text>
     </bpmn:textAnnotation>
     <bpmn:association id="Association_1doutuz" sourceRef="isStockAvailable" targetRef="TextAnnotation_1shg9wn" />
+    <bpmn:textAnnotation id="TextAnnotation_1di1t62">
+      <bpmn:text>Reserve required goods</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_0cynnla" sourceRef="Activity_1su7td0" targetRef="TextAnnotation_1di1t62" />
   </bpmn:process>
   <bpmn:message id="Message_10bsjj4" name="PaymentReceivedEvent" />
   <bpmn:message id="Message_1jkh767" name="GoodsFetchedEvent" />
@@ -149,6 +151,14 @@
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="order">
       <bpmndi:BPMNShape id="TextAnnotation_1shg9wn_di" bpmnElement="TextAnnotation_1shg9wn">
         <dc:Bounds x="863" y="210" width="100" height="84" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_1hl2utz_di" bpmnElement="TextAnnotation_1hl2utz">
+        <dc:Bounds x="820" y="80" width="100" height="84" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_1di1t62_di" bpmnElement="TextAnnotation_1di1t62">
+        <dc:Bounds x="470" y="180" width="100" height="41" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="SendTask_0o0ju8o_di" bpmnElement="Task_08fl4d5">
@@ -237,13 +247,17 @@
         <dc:Bounds x="1300" y="240" width="100" height="84" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="TextAnnotation_1hl2utz_di" bpmnElement="TextAnnotation_1hl2utz">
-        <dc:Bounds x="790" y="80" width="100" height="84" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Association_1doutuz_di" bpmnElement="Association_1doutuz">
         <di:waypoint x="785" y="310" />
         <di:waypoint x="863" y="258" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_0whl0iz_di" bpmnElement="Association_0whl0iz">
+        <di:waypoint x="784" y="168" />
+        <di:waypoint x="820" y="143" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_0cynnla_di" bpmnElement="Association_0cynnla">
+        <di:waypoint x="479" y="280" />
+        <di:waypoint x="508" y="221" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="BoundaryEvent_0vliqe1_di" bpmnElement="BoundaryEvent_1yzgt6u">
         <dc:Bounds x="835" y="544" width="36" height="36" />
@@ -396,10 +410,6 @@
       <bpmndi:BPMNEdge id="Association_16mhjo7_di" bpmnElement="Association_16mhjo7">
         <di:waypoint x="1239" y="370" />
         <di:waypoint x="1300" y="307" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Association_0whl0iz_di" bpmnElement="Association_0whl0iz">
-        <di:waypoint x="781" y="166" />
-        <di:waypoint x="790" y="156" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

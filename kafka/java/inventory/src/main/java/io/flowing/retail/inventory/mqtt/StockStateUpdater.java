@@ -33,11 +33,11 @@ public class StockStateUpdater {
 
     @ServiceActivator(inputChannel = "mqttInputChannel")
     public void updateOrderState(Message<String> message) {
-        System.out.println("Received mqtt message to update stock state");
+       // System.out.println("Received mqtt message to update stock state");
         String lastStateJson = message.getPayload().replace("None", "null");
 
        // lastStateJson = message.getPayload();
-        System.out.println("Stock update message raw message: " + message);
+      //  System.out.println("Stock update message raw message: " + message);
 
         try {
             InventoryUpdateMessage updateMessage = objectMapper.readValue(lastStateJson, InventoryUpdateMessage.class);

@@ -1,9 +1,12 @@
 package io.flowing.retail.checkout.flow;
 
+import io.flowing.retail.checkout.application.CheckoutService;
 import io.flowing.retail.checkout.domain.Customer;
+import io.flowing.retail.checkout.domain.FactoryStockState;
 import io.flowing.retail.checkout.domain.Order;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -13,6 +16,8 @@ import java.util.Map;
 public class ProcessOrderAdapter implements JavaDelegate {
 
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(ProcessOrderAdapter.class);
+    @Autowired
+    private CheckoutService checkoutService;
 
 
     @Override
@@ -44,6 +49,27 @@ public class ProcessOrderAdapter implements JavaDelegate {
         aggregatedItems.forEach(order::addItem);
         logger.info("ProcessOrderAdapter: Items added to order " + order.getItems());
 
+        // Check overall availability based on Workpiece types and their amounts
+        boolean allItemsAvailable = true;
+
+        for (Map.Entry<String, Integer> entry : aggregatedItems.entrySet()) {
+            String articleId = entry.getKey();
+            Integer requiredAmount = entry.getValue();
+
+            FactoryStockState stockState = checkoutService.getCurrentStockState().get(articleId);
+            if (stockState == null || stockState.getAmount() < requiredAmount) {
+                // Item is not available in sufficient quantity
+                allItemsAvailable = false;
+                System.out.println("Item not available in sufficient quantity: " + articleId);
+                break; // Optional: stop checking further items if one is already unavailable
+            }
+        }
+
+        if (!allItemsAvailable) {
+            execution.setVariable("allItemsAvailable", false);
+        } else {
+            execution.setVariable("allItemsAvailable", true);
+        }
         execution.setVariable("order", order); // Store the order object for the next task
     }
 }

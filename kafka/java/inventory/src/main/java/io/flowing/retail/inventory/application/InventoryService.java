@@ -4,11 +4,15 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import io.flowing.retail.inventory.domain.*;
 import io.flowing.retail.inventory.messages.GoodsAvailableEventPayload;
+import io.flowing.retail.inventory.messages.InMemoryOutbox;
+import io.flowing.retail.inventory.messages.InventoryUpdatedEventPayload;
+import io.flowing.retail.inventory.messages.Message;
 import io.flowing.retail.inventory.mqtt.StockStateUpdater;
 import org.springframework.stereotype.Component;
 
@@ -118,7 +122,7 @@ public class InventoryService {
   }
 
     public void updateStock(InventoryUpdateMessage updateMessage) {
-    System.out.println("Updating Inventory with: " + updateMessage);
+  //  System.out.println("Updating Inventory with: " + updateMessage);
       Map<String, FactoryStockState> tempMap = new HashMap<>();
 
       for (InventoryUpdateMessage.StockItem stockItem : updateMessage.getStockItems()) {
@@ -136,7 +140,24 @@ public class InventoryService {
       }
 
       // Update the main inventory state with the temporary map
-      stockStateMap.putAll(tempMap);
-      System.out.println("Updated Inventory to: " + stockStateMap);
+      // Determine if the inventory actually needs updating
+      if (!mapsAreEqual(stockStateMap, tempMap)) {
+        stockStateMap.putAll(tempMap);
+        System.out.println("InventoryService: Updated Inventory to: " + stockStateMap);
+
+        // Write Event to Outbox
+        InventoryUpdatedEventPayload payload = new InventoryUpdatedEventPayload(stockStateMap);
+        Message<InventoryUpdatedEventPayload> messagePayload = new Message<>("InventoryUpdatedEvent", UUID.randomUUID().toString(), payload);
+        System.out.println("InventoryService: Writing InventoryUpdatedEvent to Outbox");
+        InMemoryOutbox.addToOutbox(messagePayload);
+      }
+  }
+  // Utility method to compare two maps
+  private boolean mapsAreEqual(Map<String, FactoryStockState> oldMap, Map<String, FactoryStockState> newMap) {
+    if (oldMap.size() != newMap.size()) {
+      return false;
     }
+    return oldMap.entrySet().stream()
+            .allMatch(e -> e.getValue().equals(newMap.get(e.getKey())));
+  }
 }
