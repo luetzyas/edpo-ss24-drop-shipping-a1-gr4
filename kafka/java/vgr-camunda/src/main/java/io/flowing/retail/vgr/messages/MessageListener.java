@@ -36,22 +36,18 @@ public class MessageListener {
   @KafkaListener(id = "vgr", topics = MessageSender.TOPIC_NAME)
   public void messageReceived(String messagePayloadJson, @Header("type") String messageType) throws Exception {
     try {
+      if ("TriggerVgrCommand".equals(messageType)) {
+        Message<TriggerVgrCommandPayload> message = objectMapper.readValue(messagePayloadJson, new TypeReference<Message<TriggerVgrCommandPayload>>() {
+        });
+        TriggerVgrCommandPayload triggerVgrCommandPayload = message.getData();
+        System.out.println("Trigger VGR: " + triggerVgrCommandPayload.getRefId());
 
-      if (!"TriggerVgrCommand".equals(messageType)) {
-        System.out.println("Ignoring message of type " + messageType);
-        return;
+        runtimeService.createMessageCorrelation(message.getType()) //
+                .processInstanceBusinessKey(message.getTraceid())
+                .setVariable("refId", triggerVgrCommandPayload.getRefId()) //
+                .setVariable("correlationId", message.getCorrelationid()) //
+                .correlateWithResult();
       }
-
-    Message<TriggerVgrCommandPayload> message = objectMapper.readValue(messagePayloadJson, new TypeReference<Message<TriggerVgrCommandPayload>>() {
-    });
-    TriggerVgrCommandPayload triggerVgrCommandPayload = message.getData();
-    System.out.println("Trigger VGR: " + triggerVgrCommandPayload.getRefId());
-
-    runtimeService.createMessageCorrelation(message.getType()) //
-            .processInstanceBusinessKey(message.getTraceid())
-            .setVariable("refId", triggerVgrCommandPayload.getRefId()) //
-            .setVariable("correlationId", message.getCorrelationid()) //
-            .correlateWithResult();
     } catch (Exception e) {
       e.printStackTrace();
     }

@@ -22,15 +22,31 @@ Here, you will find a brief overview of our progress, including major milestones
 [Release 3.0 tbd](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/releases/tag/EDPO_A1_E5_6)
 
 **@stefanmhsg**
-- Implement Camunda for the checkout service
-  - as per the [README.md](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/blob/master/kafka/java/checkout/README.md)
+- Checkout Service 
+  - as per the newly created [README.md](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/blob/master/kafka/java/checkout/README.md)
+  - implemented with Camunda
   - replaced checkout with camunda form
     - assembling an order instance-variable from the form data
     - checkout-bpmn-flow which checks if ordered items are in stock, if not User Task will ask for a confirmation to proceed with the order and show which items are not in stock
   - Event-Carried State Transfer Pattern to keep a local copy of the inventory data
     - Message Listener for `InventoryUpdatedEvent`
     - `CheckoutService` to update the local inventory data
-- MQTT Client for VGR Service capturing Order state
+
+- VGR Service
+  - MQTT Client for VGR Service capturing Order state
+  - Updated existing [README.md](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/blob/master/kafka/java/vgr-camunda/README.md)
+
+- Inventory Service
+  - MQTT Client for Inventory Service capturing Inventory state
+  - Event-Carried State Transfer Pattern notifying Checkout Service about Inventory changes
+  - Idempotent Consumer Pattern
+  - Outbox Pattern
+  - as per the newly created [README.md](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/blob/master/kafka/java/inventory/README.md)
+
+- Order Service
+  - Extended Flow for parallel execution of payment and reserving required goods
+  - as per the newly created [README.md](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/blob/master/kafka/java/order-camunda/README.md)
+
 
 **@luetzyas**
 TODO:
