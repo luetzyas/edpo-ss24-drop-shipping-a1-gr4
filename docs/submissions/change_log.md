@@ -17,6 +17,7 @@ Here, you will find a brief overview of our progress, including major milestones
 - [**Exercise 3**: Process Orchestration with Camunda](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/blob/master/docs/submissions/exercise_tasks/EDPO_SS24_E3.pdf)
 - [**Exercise 4**: Orchestration vs Choreography in Flowing Retail](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/blob/master/docs/submissions/exercise_tasks/EDPO_SS24_E4.pdf)
 - [**Exercise 5**: Zeebe.io](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/blob/master/docs/submissions/exercise_tasks/EDPO_SS24_E5.pdf)
+- [**Exercise 6**: Sagas and Stateful Resilience Patterns](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/blob/master/docs/submissions/exercise_tasks/EDPO_SS24_E6.pdf)
 
 ## Final Submission 21. April 2024
 [Release 3.0 tbd](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/releases/tag/EDPO_A1_E5_6)
@@ -31,6 +32,11 @@ Here, you will find a brief overview of our progress, including major milestones
 - MQTT Client for VGR Service capturing Order state
 
 **@luetzyas**
+- Assignment 1 Presentation
+  - Presentation slides
+  - Presentation script
+- 
+
 TODO:
 - Adr for Camunda 7/8 (kann pro Microservice entschieden werden)
 - Camunda Docker image
