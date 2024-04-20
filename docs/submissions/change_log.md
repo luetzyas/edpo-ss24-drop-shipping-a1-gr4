@@ -18,15 +18,17 @@ Here, you will find a brief overview of our progress, including major milestones
 - [**Exercise 4**: Orchestration vs Choreography in Flowing Retail](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/blob/master/docs/submissions/exercise_tasks/EDPO_SS24_E4.pdf)
 - [**Exercise 5**: Zeebe.io](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/blob/master/docs/submissions/exercise_tasks/EDPO_SS24_E5.pdf)
 
-
-## Submission 02. April 2024
+## Final Submission 21. April 2024
 [Release 3.0 tbd](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/releases/tag/EDPO_A1_E5_6)
 
 **@stefanmhsg**
-- Camundafy the checkout service
+- Implement Camunda for the checkout service
   - as per the [README.md](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/blob/master/kafka/java/checkout/README.md)
   - replaced checkout with camunda form
-  - MQTT Client for VGR Service capturing Order state
+  - assembling an order instance-variable from the form data
+  - checkout-bpmn-flow which checks if ordered items are in stock, if not User Task will ask for a confirmation to proceed with the order and show which items are not in stock
+  - Event-Carried State Transfer Pattern to keep a local copy of the inventory data
+- MQTT Client for VGR Service capturing Order state
 
 **@luetzyas**
 TODO:
