@@ -124,9 +124,13 @@ execution.setVariable("order", order); // Store the order object for the next ta
 
 3. `is stock available?` Exclusive Gateway evaluates `${allItemsAvailable}`
 
-4. `Confirm Order` User Task 
+4. `Confirm Order` User Task
+    - Process variable `${unavailableItems}` is used to display respecitve items in the generated form.
 
-3. The Send Task Place Order is a delegate expression to `placeOrderAdapter` which is implemented in [PlaceOrderAdapter.java](src/main/java/io/flowing/retail/checkout/flow/PlaceOrderAdapter.java)
+   <img src="confirm-order-implementation.png" width="500">
+
+
+5. The Send Task `Place Order` is a delegate expression to `placeOrderAdapter` which is implemented in [OrderPlacedAdapter.java](src/main/java/io/flowing/retail/checkout/flow/OrderPlacedAdapter.java)
   - The `execute` method extracts the order from the process variable and sends an OrderPlacedEvent to Kafka.
 ```java
 Order order = (Order) execution.getVariable("order");
