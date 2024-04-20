@@ -25,9 +25,11 @@ Here, you will find a brief overview of our progress, including major milestones
 - Implement Camunda for the checkout service
   - as per the [README.md](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/blob/master/kafka/java/checkout/README.md)
   - replaced checkout with camunda form
-  - assembling an order instance-variable from the form data
-  - checkout-bpmn-flow which checks if ordered items are in stock, if not User Task will ask for a confirmation to proceed with the order and show which items are not in stock
+    - assembling an order instance-variable from the form data
+    - checkout-bpmn-flow which checks if ordered items are in stock, if not User Task will ask for a confirmation to proceed with the order and show which items are not in stock
   - Event-Carried State Transfer Pattern to keep a local copy of the inventory data
+    - Message Listener for `InventoryUpdatedEvent`
+    - `CheckoutService` to update the local inventory data
 - MQTT Client for VGR Service capturing Order state
 
 **@luetzyas**

@@ -138,6 +138,56 @@ Message<Order> message = new Message<>("OrderPlacedEvent", order);
 messageSender.send(message);
 ```
 
+### Event-Carried State Transfer Pattern for Inventory Data
+Every time there's a change in the inventory levels, the Inventory service broadcasts this information as an `InventoryUpdatedEvent`. The Checkout service listens to these events and maintains an up-to-date internal copy of the stock levels.
+
+
+   <img src="ECST-pattern.png" width="500">
+
+1. `MessageListener` is implemented in [MessageListener.java](src/main/java/io/flowing/retail/checkout/messages/MessageListener.java)
+  - The `messageReceived` method listens to the `flowing-retail` topic and processes the incoming messages of type `InventoryUpdatedEvent`.
+  - The `InventoryUpdatedEventPayload` is extracted from the message and passed to the `CheckoutService` for updating the local inventory data.
+
+```java
+@KafkaListener(id = "checkout", topics = "flowing-retail")
+public void messageReceived(String messagePayloadJson, @Header("type") String messageType) throws Exception{
+    if ("InventoryUpdatedEvent".equals(messageType)) {
+        System.out.println("Received InventoryUpdatedEvent");
+        try {
+            Message<InventoryUpdatedEventPayload> message = objectMapper.readValue(messagePayloadJson, new TypeReference<Message<InventoryUpdatedEventPayload>>() {
+            });
+            InventoryUpdatedEventPayload inventoryUpdatedEvent = message.getData();
+            checkoutService.updateInventory(inventoryUpdatedEvent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+2. `CheckoutService` is implemented in [CheckoutService.java](src/main/java/io/flowing/retail/checkout/application/CheckoutService.java)
+  - The `updateInventory` method updates the local inventory data based on the incoming `InventoryUpdatedEventPayload`.
+  - The `getCurrentStockState` method returns a copy of the current inventory data.
+  - The inventory data is stored in a `ConcurrentHashMap` to ensure thread-safety.
+```java
+@Component
+public class CheckoutService {
+    private final Map<String, FactoryStockState> stockStateMap = new ConcurrentHashMap<>();
+
+    public void updateInventory(InventoryUpdatedEventPayload payload) {
+        Map<String, FactoryStockState> receivedStockState = payload.getStockDetails();
+        stockStateMap.clear();
+        // Populate the map with the new states
+        stockStateMap.putAll(receivedStockState);
+        System.out.println("CheckoutService: Updated Inventory replica");
+    }
+
+    public Map<String, FactoryStockState> getCurrentStockState() {
+        return new ConcurrentHashMap<>(stockStateMap);
+    }
+}
+```
+
 ### Deleted static checkout page
 - Removed `ShopRestController`, `TomcatConfiguration` and `shop.html`
 - [http://localhost:8091/](http://localhost:8091/) now shows the Camunda Webapp instead of html checkout page
