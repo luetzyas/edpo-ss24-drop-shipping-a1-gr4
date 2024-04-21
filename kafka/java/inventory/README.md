@@ -58,7 +58,7 @@ public void updateOrderState(Message<String> message) {
 }
 ````
 
-3. The [InventoryService.java](src/main/java/io/flowing/retail/inventory/service/InventoryService.java) updates the stock in the ConcurrentHashMap `stockStateMap`. If there was an actual change in the stock, an `InventoryUpdatedEvent` is created.
+3. The [InventoryService.java](src/main/java/io/flowing/retail/inventory/application/InventoryService.java) updates the stock in the ConcurrentHashMap `stockStateMap`. If there was an actual change in the stock, an `InventoryUpdatedEvent` is created.
 
 ````Java
 public void updateStock(InventoryUpdateMessage updateMessage) {
@@ -116,7 +116,7 @@ Due to message duplication in Kafka, the Inventory Service implements the Idempo
 
 The idea of an Idempotent Consumer is to track received message IDs in the database. The message ID commit happens in the same transaction as any other database writes, making these actions atomic. This will prevent a message being processed twice and ensures data consistency.
 
-1. The [MessageListener.java](src/main/java/io/flowing/retail/inventory/kafka/MessageListener.java) checks if the incoming message has already been processed using the refId.
+1. The [MessageListener.java](src/main/java/io/flowing/retail/inventory/messages/MessageListener.java) checks if the incoming message has already been processed using the refId.
 
 ````Java
 // Check if the message has already been processed
@@ -126,7 +126,7 @@ if (idempotentReceiver.isDuplicate(checkAvailableStockEvent.getRefId())) {
 }
 ````
 
-2. The [IdempotentReceiver.java](src/main/java/io/flowing/retail/inventory/message/IdempotentReceiver.java) stores the processed refIds in a Set. It adds a refId to the Set if it is not already present.
+2. The [IdempotentReceiver.java](src/main/java/io/flowing/retail/inventory/messages/IdempotentReceiver.java) stores the processed refIds in a Set. It adds a refId to the Set if it is not already present.
 
 ````Java
 @Component
@@ -142,7 +142,7 @@ public class IdempotentReceiver {
 #### Outbox Pattern
 Since the Inventory service will also emit an event upon successful processing, we have to ensure reliable message delivery, even in the presence of failures, by integrating an 'outbox' table where messages intended for publishing to Kafka are first stored as part of the business transaction.
 
-[InMemoryOutbox.java](src/main/java/io/flowing/retail/inventory/message/InMemoryOutbox.java) is an in-memory implementation of the outbox pattern. It stores messages in a ConcurrentLinkedQueue.
+[InMemoryOutbox.java](src/main/java/io/flowing/retail/inventory/messages/InMemoryOutbox.java) is an in-memory implementation of the outbox pattern. It stores messages in a ConcurrentLinkedQueue.
 
 ````Java
 @Component
@@ -163,7 +163,7 @@ A polling loop will continuously check if new messages have been added to the ou
 
 Given that the inventory service does not use a persistent database, we can simplify those patterns to an in-memory implementation. A Redis DB could be used to scale along multiple instances and ensure persistence across re-starts.
 
-The [OutboxPoller.java](src/main/java/io/flowing/retail/inventory/message/OutboxPoller.java) polls the outbox every second and sends the message to Kafka.
+The [OutboxPoller.java](src/main/java/io/flowing/retail/inventory/messages/OutboxPoller.java) polls the outbox every second and sends the message to Kafka.
 
 ````Java
 
