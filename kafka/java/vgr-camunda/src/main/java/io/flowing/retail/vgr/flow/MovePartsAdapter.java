@@ -25,6 +25,7 @@ public class MovePartsAdapter implements JavaDelegate {
     String traceId = context.getProcessBusinessKey();
     System.out.println("Move parts for order-fulfillment process instance " + traceId);
 
+    // TODO: Implement Order processing logic here
     // Assuming some mechanism to determine these values based on the context or process state
     int active = 1; // Example value
     int code = 0; // Example value
