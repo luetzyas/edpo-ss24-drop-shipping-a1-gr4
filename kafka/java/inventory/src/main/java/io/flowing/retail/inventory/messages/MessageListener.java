@@ -73,31 +73,31 @@ public class MessageListener {
       }
       break;
     }
-    case ("CheckAvailableStockEvent"): {
-      System.out.println("Received CheckAvailableStockEvent");
+    case ("ReserveGoodsCommand"): {
+      System.out.println("Received ReserveGoodsCommand");
         try {
-          Message<CheckAvailableStockEventPayload> message = objectMapper.readValue(messagePayloadJson, new TypeReference<Message<CheckAvailableStockEventPayload>>() {
+          Message<ReserveStockItemsCommandPayload> message = objectMapper.readValue(messagePayloadJson, new TypeReference<Message<ReserveStockItemsCommandPayload>>() {
           });
 
-          CheckAvailableStockEventPayload checkAvailableStockEvent = message.getData();
+          ReserveStockItemsCommandPayload reserveStockItemsCommand = message.getData();
 
           // Check if the message has already been processed
-          if (idempotentReceiver.isDuplicate(checkAvailableStockEvent.getRefId())) {
-            System.out.println("Duplicate CheckAvailableStockEvent detected for refId: " + checkAvailableStockEvent.getRefId() + ", skipping processing.");
+          if (idempotentReceiver.isDuplicate(reserveStockItemsCommand.getRefId())) {
+            System.out.println("Duplicate ReserveGoodsCommand detected for refId: " + reserveStockItemsCommand.getRefId() + ", skipping processing.");
             return;
           }
 
-          System.out.println("MessageListener: Check if stock available for: " + checkAvailableStockEvent.getItems());
-          boolean available = inventoryService.checkAvailability(checkAvailableStockEvent.getItems());
+          System.out.println("MessageListener: Check if stock available for: " + reserveStockItemsCommand.getItems());
+          boolean available = inventoryService.checkAvailability(reserveStockItemsCommand.getItems());
           System.out.println("MessageListener: Stock available: " + available);
 
           GoodsAvailableEventPayload goodsAvailableEventPayload = new GoodsAvailableEventPayload();
-            goodsAvailableEventPayload.setRefId(checkAvailableStockEvent.getRefId());
+            goodsAvailableEventPayload.setRefId(reserveStockItemsCommand.getRefId());
             goodsAvailableEventPayload.setAvailable(available);
 
-          List<GoodsAvailableEventPayload.ItemAvailability> availableItems = inventoryService.getAvailableItems(checkAvailableStockEvent.getItems());
+          List<GoodsAvailableEventPayload.ItemAvailability> availableItems = inventoryService.getAvailableItems(reserveStockItemsCommand.getItems());
           System.out.println("MessageListener: Available items (requestedQuantity / availableQuantity): " + availableItems);
-          List<GoodsAvailableEventPayload.ItemAvailability> unavailableItems = inventoryService.getUnavailableItems(checkAvailableStockEvent.getItems());
+          List<GoodsAvailableEventPayload.ItemAvailability> unavailableItems = inventoryService.getUnavailableItems(reserveStockItemsCommand.getItems());
           System.out.println("MessageListener: Unavailable items (requestedQuantity / unavailableQuantity): " + unavailableItems);
 
           goodsAvailableEventPayload.setAvailableItems(availableItems);

@@ -1,7 +1,6 @@
 package io.flowing.retail.order.flow;
 
 import io.flowing.retail.order.domain.Order;
-import io.flowing.retail.order.domain.OrderItem;
 import io.flowing.retail.order.messages.Message;
 import io.flowing.retail.order.messages.MessageSender;
 import io.flowing.retail.order.persistence.OrderRepository;
@@ -10,11 +9,8 @@ import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Component
-public class CheckAvailableStockAdapter implements JavaDelegate {
+public class ReserveStockItemsAdapter implements JavaDelegate {
   
   @Autowired
   private MessageSender messageSender;  
@@ -28,20 +24,20 @@ public class CheckAvailableStockAdapter implements JavaDelegate {
         (String)context.getVariable("orderId")).get(); 
     String traceId = context.getProcessBusinessKey();
 
-    System.out.println("CheckAvailableStockAdapter retrieved order from orderRepository: " + order);
+    System.out.println("ReserveStockItemsAdapter retrieved order from orderRepository: " + order);
 
     // Create the payload for the stock check event
-    CheckAvailableStockEventPayload payload = new CheckAvailableStockEventPayload();
+    ReserveStockItemsCommandPayload payload = new ReserveStockItemsCommandPayload();
     payload.setRefId(order.getId());
     payload.setItems(order.getItems());
-    System.out.println("CheckAvailableStockAdapter created payload: " + payload);
+    System.out.println("ReserveStockItemsAdapter created payload: " + payload);
 
-    Message<CheckAvailableStockEventPayload> message = new Message<>(
-            "CheckAvailableStockEvent",
+    Message<ReserveStockItemsCommandPayload> message = new Message<>(
+            "ReserveGoodsCommand", // old: CheckAvailableStockEvent
             traceId,
             payload
     );
-    System.out.println("Sending CheckAvailableStockEvent: " + message);
+    System.out.println("Sending ReserveGoodsCommand: " + message);
     messageSender.send(message);
 
   }
