@@ -1,27 +1,10 @@
-# VGR Service
+# Order Service
 
 ## Run
 
-The service is integrated with the `flowing-retail Camunda` application.
+The service is orchestrating the `flowing-retail Camunda` application.
 
-In the docker-compose file, the service is defined as a separate service.
-
-```yaml
-
-```
-
-It is started when the relevant projects have been built at least once:
-
-```
-  $ cd .\kafka\java\
-  $ mvn clean install
-```
-
-And afterwards you run from the directory [runner/docker-compose](runner/docker-compose).
-
-```
-  $ docker-compose -f docker-compose-kafka-java-order-camunda.yml up --build
-```
+The start event is triggered by the `OrderPlacedEvent` from the Checkout-Service.
 
 ## Implementation
 
@@ -38,10 +21,8 @@ And afterwards you run from the directory [runner/docker-compose](runner/docker-
 ### Flow
 1. The Order-flow orchestrates the subsequent services during order fulfillment.
 
-2. VGR
-- `Trigger VGR` is implemented as java delegate `#{triggerVgrAdapter}` [TriggerVgrAdapter.java](kafka/java/order-camunda/src/main/java/io/flowing/retail/order/flow/TriggerVgrAdapter.java)
-- The execute method invokes sending a message to the `flowing-retail` topic with type `TriggerVgrCommand`.
-- The `VGR finished` event is then correlated with the `order.bpmn` models incoming-message activity `VGR Finished` which results in the continuation of the order-flow.
+2. The `Reserve Stock items` Send Task is implemented as Java Delegate [ReserveStockItemsAdapter](src/main/java/io/flowing/retail/order/flow/ReserveStockItemsAdapter.java) which sends a Command to the Inventory Service with the OrderId and the OrderItems.
+3. The Items `reserved received` Catch Event waits until the `GoodsBlockedEvent` is received from the Inventory Service.
 
 ### Summary of the Flow
 

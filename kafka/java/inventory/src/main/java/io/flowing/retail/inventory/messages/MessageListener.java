@@ -73,48 +73,40 @@ public class MessageListener {
       }
       break;
     }
-    case ("CheckAvailableStockEvent"): {
-      System.out.println("Received CheckAvailableStockEvent");
+    case ("ReserveGoodsCommand"): {
+      System.out.println("Received ReserveGoodsCommand");
         try {
-          Message<CheckAvailableStockEventPayload> message = objectMapper.readValue(messagePayloadJson, new TypeReference<Message<CheckAvailableStockEventPayload>>() {
+          Message<ReserveStockItemsCommandPayload> message = objectMapper.readValue(messagePayloadJson, new TypeReference<Message<ReserveStockItemsCommandPayload>>() {
           });
 
-          CheckAvailableStockEventPayload checkAvailableStockEvent = message.getData();
+          ReserveStockItemsCommandPayload reserveStockItemsCommand = message.getData();
 
           // Check if the message has already been processed
-          if (idempotentReceiver.isDuplicate(checkAvailableStockEvent.getRefId())) {
-            System.out.println("Duplicate CheckAvailableStockEvent detected for refId: " + checkAvailableStockEvent.getRefId() + ", skipping processing.");
+          if (idempotentReceiver.isDuplicate(reserveStockItemsCommand.getRefId())) {
+            System.out.println("Duplicate ReserveGoodsCommand detected for refId: " + reserveStockItemsCommand.getRefId() + ", skipping processing.");
             return;
           }
 
-          System.out.println("MessageListener: Check if stock available for: " + checkAvailableStockEvent.getItems());
-          boolean available = inventoryService.checkAvailability(checkAvailableStockEvent.getItems());
-          System.out.println("MessageListener: Stock available: " + available);
+          // Reserve goods and order additional items if necessary
+          boolean goodsReserved = inventoryService.reserveGoods(reserveStockItemsCommand, message.getTraceid(), message.getCorrelationid());
 
-          GoodsAvailableEventPayload goodsAvailableEventPayload = new GoodsAvailableEventPayload();
-            goodsAvailableEventPayload.setRefId(checkAvailableStockEvent.getRefId());
-            goodsAvailableEventPayload.setAvailable(available);
 
-          List<GoodsAvailableEventPayload.ItemAvailability> availableItems = inventoryService.getAvailableItems(checkAvailableStockEvent.getItems());
-          System.out.println("MessageListener: Available items (requestedQuantity / availableQuantity): " + availableItems);
-          List<GoodsAvailableEventPayload.ItemAvailability> unavailableItems = inventoryService.getUnavailableItems(checkAvailableStockEvent.getItems());
-          System.out.println("MessageListener: Unavailable items (requestedQuantity / unavailableQuantity): " + unavailableItems);
+          // Send AllGoodsAvailableEvent
+          if (goodsReserved) {
+            AllGoodsAvailableEventPayload allGoodsAvailableEventPayload = new AllGoodsAvailableEventPayload();
+            allGoodsAvailableEventPayload.setRefId(reserveStockItemsCommand.getRefId());
+            allGoodsAvailableEventPayload.setItems(reserveStockItemsCommand.getItems());
 
-          goodsAvailableEventPayload.setAvailableItems(availableItems);
-          goodsAvailableEventPayload.setUnavailableItems(unavailableItems);
+            Message<AllGoodsAvailableEventPayload> allGoodsAvailableEventMessage = new Message<>();
+              allGoodsAvailableEventMessage.setType("AllGoodsAvailableEvent");
+              allGoodsAvailableEventMessage.setTraceid(message.getTraceid());
+              allGoodsAvailableEventMessage.setCorrelationid(message.getCorrelationid());
+              allGoodsAvailableEventMessage.setData(allGoodsAvailableEventPayload);
 
-          Message<GoodsAvailableEventPayload> messagePayload = new Message<>();
-            messagePayload.setType("GoodsAvailableEvent");
-            messagePayload.setTraceid(message.getTraceid());
-            messagePayload.setCorrelationid(message.getCorrelationid());
-            messagePayload.setData(goodsAvailableEventPayload);
-          //  System.out.println("MessageListener: Sending GoodsAvailableEvent: " + messagePayload); implementation before outbox
-
-          // Add to outbox instead of sending directly
-          InMemoryOutbox.addToOutbox(messagePayload);
-          System.out.println("Added to outbox: " + messagePayload);
-          // messageSender.send(messagePayload); implementation before outbox
-
+            // Add to outbox instead of sending directly
+            InMemoryOutbox.addToOutbox(allGoodsAvailableEventMessage);
+            System.out.println("Added to outbox: " + allGoodsAvailableEventMessage);
+          }
 
         } catch (Exception e) {
           e.printStackTrace();

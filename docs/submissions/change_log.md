@@ -33,7 +33,7 @@ Here, you will find a brief overview of our progress, including major milestones
     - assembling an order instance-variable from the form data
     - checkout-bpmn-flow which checks if ordered items are in stock, if not User Task will ask for a confirmation to proceed with the order and show which items are not in stock
   - Event-Carried State Transfer Pattern to keep a local copy of the inventory data
-    - Message Listener for `InventoryUpdatedEvent`
+    - Message Listener for `InventoryUpdatedEvent` and `GoodsBlockedEvent`
     - `CheckoutService` to update the local inventory data
 
 - VGR Service
