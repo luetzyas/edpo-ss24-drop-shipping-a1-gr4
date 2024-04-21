@@ -1,5 +1,8 @@
-package io.flowing.retail.inventory.messages;
+package io.flowing.retail.inventory.connector;
 
+import io.flowing.retail.inventory.messages.InMemoryOutbox;
+import io.flowing.retail.inventory.messages.Message;
+import io.flowing.retail.inventory.messages.MessageSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
