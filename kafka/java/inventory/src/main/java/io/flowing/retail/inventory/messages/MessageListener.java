@@ -3,7 +3,7 @@ package io.flowing.retail.inventory.messages;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.flowing.retail.inventory.application.InventoryService;
-import io.flowing.retail.inventory.mqtt.StockStateUpdater;
+import io.flowing.retail.inventory.connector.MessageSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.Header;
@@ -38,24 +38,40 @@ public class MessageListener {
       case ("FetchGoodsCommand"): {
         System.out.println("Received FetchGoodsCommand");
         try {
-      Message<FetchGoodsCommandPayload> message = objectMapper.readValue(messagePayloadJson, new TypeReference<Message<FetchGoodsCommandPayload>>() {});
+          Message<FetchGoodsCommandPayload> message = objectMapper.readValue(messagePayloadJson, new TypeReference<Message<FetchGoodsCommandPayload>>() {});
+          FetchGoodsCommandPayload fetchGoodsCommand = message.getData();
+          String pickId = inventoryService.pickItems(fetchGoodsCommand.getItems(), fetchGoodsCommand.getReason(), fetchGoodsCommand.getRefId());
 
-      FetchGoodsCommandPayload fetchGoodsCommand = message.getData();
-      String pickId = inventoryService.pickItems( //
-              fetchGoodsCommand.getItems(), fetchGoodsCommand.getReason(), fetchGoodsCommand.getRefId());
+          GoodsFetchedEventPayload goodsFetchedPayload = new GoodsFetchedEventPayload()
+                  .setRefId(fetchGoodsCommand.getRefId())
+                  .setPickId(pickId);
 
-      messageSender.send( //
-              new Message<GoodsFetchedEventPayload>( //
-                      "GoodsFetchedEvent", //
-                      message.getTraceid(), //
-                      new GoodsFetchedEventPayload() //
-                              .setRefId(fetchGoodsCommand.getRefId())
-                              .setPickId(pickId))
-                      .setCorrelationid(message.getCorrelationid()));
-    }
-    catch (Exception e) {
-      e.printStackTrace();
-    }
+          Message<GoodsFetchedEventPayload> goodsFetchedEventMessage = new Message<>();
+            goodsFetchedEventMessage.setType("GoodsFetchedEvent");
+            goodsFetchedEventMessage.setTraceid(message.getTraceid());
+            goodsFetchedEventMessage.setCorrelationid(message.getCorrelationid());
+            goodsFetchedEventMessage.setData(goodsFetchedPayload);
+
+          // Add to outbox instead of sending directly
+          InMemoryOutbox.addToOutbox(goodsFetchedEventMessage);
+          System.out.println("Added to outbox: " + goodsFetchedEventMessage);
+
+/*
+          messageSender.send( //
+                  new Message<GoodsFetchedEventPayload>( //
+                          "GoodsFetchedEvent", //
+                          message.getTraceid(), //
+                          new GoodsFetchedEventPayload() //
+                                  .setRefId(fetchGoodsCommand.getRefId())
+                                  .setPickId(pickId))
+                          .setCorrelationid(message.getCorrelationid()));
+
+ */
+
+      } catch (Exception e) {
+          e.printStackTrace();
+      }
+      break;
     }
     case ("CheckAvailableStockEvent"): {
       System.out.println("Received CheckAvailableStockEvent");
@@ -103,6 +119,7 @@ public class MessageListener {
         } catch (Exception e) {
           e.printStackTrace();
         }
+    break;
     }
     default:
       throw new IllegalArgumentException("Unknown message type: " + messageType);
