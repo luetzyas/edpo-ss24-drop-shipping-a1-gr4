@@ -13,7 +13,7 @@
 # Final Report
 
 ## Code
-[Release](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/releases/tag/EDPO_A1_E3.0)
+[Release](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/releases/tag/EDPO_A1_3.0)
 
 ## General Project Description
 What Services did we implement?
