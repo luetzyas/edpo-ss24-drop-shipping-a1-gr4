@@ -11,8 +11,7 @@ Here, you will find a brief overview of our progress, including major milestones
 
 ## Group Information
 
-- **Yasmin Lützelschwab
-  ** ([luetzyas](https://github.com/luetzyas)) → [e-Mail](mailto:yasminesmeralda.luetzelschwab@student.unisg.ch)
+- **Yasmin Lützelschwab** ([luetzyas](https://github.com/luetzyas)) → [e-Mail](mailto:yasminesmeralda.luetzelschwab@student.unisg.ch)
 - **Stefan Meier** ([stefanmhsg](https://github.com/stefanmhsg)) → [e-Mail](mailto:stefan.meier@student.unisg.ch)
 
 ## Exercise Overview
@@ -54,7 +53,7 @@ Here, you will find a brief overview of our progress, including major milestones
 
 
 **@luetzyas**
-- Assignment 1 Presentation
+- Assignment 1 Presentation [Presentation](A1_Gr4_MidtermPresentation.pdf)
     - Presentation slides
     - Presentation script
 - added ADR's
@@ -63,6 +62,8 @@ Here, you will find a brief overview of our progress, including major milestones
     - [0003 Choreographed vs. Orchestrated](adr/0003-Choreographed-vs-Orchestrated.md)
     - [0004 Camunda 7 vs. 8](adr/0004-Camunda-7-vs-8.md)
     - [0005 Mailing service with Camunda 8](adr/0005-mailing-service-with-camunda-8.md)
+- Inventory Service
+  - MQTT subscription >> topic `f/i/stock`
 
 TODO: adr mailing >> event discount granted
 
