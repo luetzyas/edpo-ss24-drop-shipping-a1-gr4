@@ -23,7 +23,7 @@ Here, you will find a brief overview of our progress, including major milestones
 - [**Exercise 6**: Sagas and Stateful Resilience Patterns](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/blob/master/docs/submissions/exercise_tasks/EDPO_SS24_E6.pdf)
 
 ## Final Submission 21. April 2024
-[Release 1.2 tbd](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/releases/tag/EDPO_A1_E5_6)
+[Release 1.2](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/releases/tag/EDPO_A1_E5_6)
 
 **@stefanmhsg**
 - Checkout Service 
@@ -56,15 +56,15 @@ Here, you will find a brief overview of our progress, including major milestones
   - Outbox Pattern
 
 **@luetzyas**
-- Assignment 1 Presentation [Presentation](A1_Gr4_MidtermPresentation.pdf)
+- Assignment 1 [Presentation](A1_Gr4_MidtermPresentation.pdf)
     - Presentation slides
     - Presentation script
-- added ADR's
-    - [0001 add Mailing service](adr/0001-add-mailing-service.md)
-    - [0002 add Factory service](adr/0002-add-factory-service.md)
-    - [0003 Choreographed vs. Orchestrated](adr/0003-Choreographed-vs-Orchestrated.md)
-    - [0004 Camunda 7 vs. 8](adr/0004-Camunda-7-vs-8.md)
-    - [0005 Mailing service with Camunda 8](adr/0005-mailing-service-with-camunda-8.md)
+- docs
+    - ADR [0001 add Mailing service](adr/0001-add-mailing-service.md)
+    - ADR [0002 add Factory service](adr/0002-add-factory-service.md)
+    - ADR [0003 Choreographed vs. Orchestrated](adr/0003-Choreographed-vs-Orchestrated.md)
+    - E5 Report
+    - work on Assignment 1 final report
 - Inventory Service
   - MQTT subscription >> topic `f/i/stock`
 - Mailing Service
@@ -74,8 +74,8 @@ Here, you will find a brief overview of our progress, including major milestones
   - Expand `MailingSerivce` with Zeebe.io to send mails
 - Zeebe.io
   - implement new .yml file for mailing service with zeebe.io
-
-TODO: adr mailing >> event discount granted
+  - test mailing bpmn
+  - send mail with event logic bpmn
 
 ## Submission 19. March 2024
 [Release 1.1](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/releases/tag/EDPO_A1_E3_4)
