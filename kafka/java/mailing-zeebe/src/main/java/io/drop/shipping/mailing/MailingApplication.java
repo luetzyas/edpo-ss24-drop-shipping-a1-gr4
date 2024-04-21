@@ -14,8 +14,8 @@ import java.util.Map;
 
 @SpringBootApplication
 @EnableZeebeClient
-//@ZeebeDeployment(resources = "classpath:send-email-kafka.bpmn")
-@ZeebeDeployment(resources = "classpath:test_send-email-zeebe.bpmn")
+@ZeebeDeployment(resources = "classpath:send-email-kafka.bpmn")
+//@ZeebeDeployment(resources = "classpath:test_send-email-zeebe.bpmn")
 public class MailingApplication implements CommandLineRunner {
 
     public static void main(String[] args) throws Exception {
