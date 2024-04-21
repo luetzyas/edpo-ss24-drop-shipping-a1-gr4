@@ -23,7 +23,7 @@ Here, you will find a brief overview of our progress, including major milestones
 - [**Exercise 6**: Sagas and Stateful Resilience Patterns](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/blob/master/docs/submissions/exercise_tasks/EDPO_SS24_E6.pdf)
 
 ## Final Submission 21. April 2024
-[Release 3.0 tbd](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/releases/tag/EDPO_A1_E5_6)
+[Release 1.2 tbd](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/releases/tag/EDPO_A1_E5_6)
 
 **@stefanmhsg**
 - Checkout Service 
@@ -67,21 +67,18 @@ Here, you will find a brief overview of our progress, including major milestones
     - [0005 Mailing service with Camunda 8](adr/0005-mailing-service-with-camunda-8.md)
 - Inventory Service
   - MQTT subscription >> topic `f/i/stock`
+- Mailing Service
+  - Duplicate Mailing Service to use Camunda 8 >> Zeebe.io
+  - Connect with Zeebe.io Cloud Client [application.properties](../../kafka/java/mailing/src/main/resources/application.properties)
+  - Standard Mailing Flow without Logic >> to test Zeeebe
+  - Expand `MailingSerivce` with Zeebe.io to send mails
+- Zeebe.io
+  - implement new .yml file for mailing service with zeebe.io
 
 TODO: adr mailing >> event discount granted
 
-- Adr for Camunda 7/8 (kann pro Microservice entschieden werden)
-- Camunda Docker image
-  - https://docs.camunda.org/manual/7.20/installation/docker/
-  - https://docs.camunda.org/manual/7.20/installation/docker/
-- Feedback
-  - simple bpmn >> needs more complexity for the next submission
-  - E4: 
-    - progress ok >> more complexity
-    - more commands and events
-
 ## Submission 19. March 2024
-[Release 2.0](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/releases/tag/EDPO_A1_E3_4)
+[Release 1.1](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/releases/tag/EDPO_A1_E3_4)
 
 **@stefanmhsg**
 - draft README.md file for the Mailing Service
