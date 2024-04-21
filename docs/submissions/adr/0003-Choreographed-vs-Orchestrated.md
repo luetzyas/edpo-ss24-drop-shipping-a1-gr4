@@ -25,7 +25,7 @@ services: [Inventory](../../../kafka/java/inventory), [Payment](../../../kafka/j
 and [Shipping](../../../kafka/java/shipping) will be orchestrated due to their interdependencies and the critical
 importance of their flow sequence.
 <br></br>
-![enhanved Microservice overview](../../img/kafka-services/add-mailing-kafka-services.png)
+![enhanved Microservice overview](../../docs/kafka-services/add-mailing-kafka-services.png)
 Green = Choreography </br>
 Blue = Orchestrated by the order service </br>
 Grey = Monitor service listenes to events

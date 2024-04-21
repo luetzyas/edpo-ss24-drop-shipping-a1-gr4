@@ -20,7 +20,7 @@ inventory data and order data are synchronized in real time.
 The Factory ([VGR](../../../kafka/java/vgr-camunda)) service will subscribe to the topic: `f/i/order` to reflect the
 current status of the order at the smart factory.
 <br></br>
-![enhanved Microservice overview](../../img/kafka-services/add-factory-kafka-services.png)
+![enhanved Microservice overview](../../docs/kafka-services/add-factory-kafka-services.png)
 
 ### Granularity Disintegrators
 

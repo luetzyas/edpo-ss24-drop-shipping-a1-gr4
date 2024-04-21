@@ -28,7 +28,7 @@ be dispatched:
 - VgrFinishedEvent (mail for internal processing with the factory not for the customer)
 
 <br></br>
-![enhanved Microservice overview](../../img/kafka-services/add-mailing-kafka-services.png)
+![enhanved Microservice overview](../../docs/kafka-services/add-mailing-kafka-services.png)
 
 - **Workflow and Choreography:**
   The Mailing Service will subscribe to events all services to trigger customer communications.

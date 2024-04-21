@@ -30,12 +30,12 @@ Given the coupling in the real world, we accept the coupling in the software arc
 
 The Order-flow orchestrates the VGR during order fulfillment.
 
-<img src="../img/order-flow.png" width="50%" title="Order-BPMN-Flow"/>
+<img src="../docs/order-flow.png" width="50%" title="Order-BPMN-Flow"/>
 
 1. Trigger VGR sends a command to the VGR-Camunda service.
 2. VGR-Camunda service starts its own process.
 
-<img src="../img/vgr-bpmn.png" width="853" alt="VGR-BPMN-FLOW">
+<img src="../docs/vgr-bpmn.png" width="853" alt="VGR-BPMN-FLOW">
 
 3. The activity "Move Parts" emits events about the VGRs state.
 4. Once the VGR-Camunda service is finished, it emits an event to the Order-Service.
