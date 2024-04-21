@@ -1,19 +1,13 @@
 package io.flowing.retail.inventory.application;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import io.flowing.retail.inventory.domain.*;
-import io.flowing.retail.inventory.messages.GoodsAvailableEventPayload;
-import io.flowing.retail.inventory.messages.InMemoryOutbox;
-import io.flowing.retail.inventory.messages.InventoryUpdatedEventPayload;
-import io.flowing.retail.inventory.messages.Message;
-import io.flowing.retail.inventory.mqtt.StockStateUpdater;
+import io.flowing.retail.inventory.messages.*;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -21,19 +15,45 @@ public class InventoryService {
 
   private final Map<String, FactoryStockState> stockStateMap = new ConcurrentHashMap<>();
 
+  private final Map<String, List<InventoryBlockedGoodsState>> blockedGoods = new ConcurrentHashMap<>();
+
+
   private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(InventoryService.class);
 
 
-  /**
-   * reserve goods on stock for a defined period of time
-   * 
-   * @param reason A reason why the goods are reserved (e.g. "customer order")
-   * @param refId A reference id fitting to the reason of reservation (e.g. the order id), needed to find reservation again later
-   * @param expirationDate Date until when the goods are reserved, afterwards the reservation is removed
-   * @return if reservation could be done successfully
-   */
-  public boolean reserveGoods(List<Item> items, String reason, String refId, LocalDateTime expirationDate) {
-    // TODO: Implement
+  public boolean reserveGoods(ReserveStockItemsCommandPayload reserveStockItemsCommand, String traceId, String correlationId) {
+    // Reserve all ordered items with the inventory service
+    updateBlockedGoods(reserveStockItemsCommand.getItems(), reserveStockItemsCommand.getRefId(), traceId, correlationId);
+
+    // Check if additional items are needed
+    boolean available = checkAvailability(reserveStockItemsCommand.getItems());
+    System.out.println("InventoryService: Stock available: " + available);
+
+    List<GoodsAvailableEventPayload.ItemAvailability> availableItems = getAvailableItems(reserveStockItemsCommand.getItems());
+    System.out.println("InventoryService: Available items (requestedQuantity / availableQuantity): " + availableItems);
+
+    List<GoodsAvailableEventPayload.ItemUnavailability> unavailableItems = getUnavailableItems(reserveStockItemsCommand.getItems());
+    System.out.println("MessageListener: Unavailable items (requestedQuantity / unavailableQuantity): " + unavailableItems);
+
+    // if unavailable items exist, order them
+    if (!available) {
+      System.out.println("InventoryService: Ordering additional items");
+      // Order additional items
+      List<OrderItem> orderItems = unavailableItems.stream()
+              .map(item -> new OrderItem(item.getItemId(), item.getUnavailableQuantity()))
+              .collect(Collectors.toList());
+      available = orderAdditionalItems(reserveStockItemsCommand.getRefId(), orderItems);
+    }
+
+    return available;
+  }
+
+  private boolean orderAdditionalItems(String refId, List<OrderItem> orderItems) {
+    blockedGoods.forEach((key, value) -> {
+      if (key.equals(refId)) {
+        System.out.println("InventoryService: Additional Goods arrived, order can be fulfilled for refId: " + refId);
+      }
+    });
     return true;
   }
 
@@ -66,7 +86,6 @@ public class InventoryService {
   // Check overall availability based on Workpiece types and their amounts
   public boolean checkAvailability(List<OrderItem> orderItems) {
     // Logic to aggregate requested amounts by type
-    System.out.println("InventoryService: checkAvailability");
     try {
       Map<String, Integer> requestedAmounts = new HashMap<>();
       for (OrderItem item : orderItems) {
@@ -90,7 +109,6 @@ public class InventoryService {
 
   // Get available Workpieces
   public List<GoodsAvailableEventPayload.ItemAvailability> getAvailableItems(List<OrderItem> orderItems) {
-    System.out.println("Checking if requested items available");
     // Aggregate the required amounts by articleId
     Map<String, Integer> requestedAmounts = orderItems.stream()
             .collect(Collectors.groupingBy(OrderItem::getArticleId, Collectors.summingInt(OrderItem::getAmount)));
@@ -106,7 +124,7 @@ public class InventoryService {
   }
 
   // Get unavailable Workpieces
-  public List<GoodsAvailableEventPayload.ItemAvailability> getUnavailableItems(List<OrderItem> orderItems) {
+  public List<GoodsAvailableEventPayload.ItemUnavailability> getUnavailableItems(List<OrderItem> orderItems) {
     System.out.println("Checking if requested items are unavailable");
     // Aggregate the required amounts by articleId
     Map<String, Integer> requestedAmounts = orderItems.stream()
@@ -116,7 +134,7 @@ public class InventoryService {
             .map(entry -> {
               int stockAvailable = stockStateMap.containsKey(entry.getKey()) ? stockStateMap.get(entry.getKey()).getAmount() : 0;
               int shortfall = entry.getValue() > stockAvailable ? entry.getValue() - stockAvailable : 0;
-              return new GoodsAvailableEventPayload.ItemAvailability(entry.getKey(), entry.getValue(), shortfall);
+              return new GoodsAvailableEventPayload.ItemUnavailability(entry.getKey(), entry.getValue(), shortfall);
             })
             .collect(Collectors.toList());
   }
@@ -159,5 +177,43 @@ public class InventoryService {
     }
     return oldMap.entrySet().stream()
             .allMatch(e -> e.getValue().equals(newMap.get(e.getKey())));
+  }
+
+  public void updateBlockedGoods(List<OrderItem> items, String refId, String traceId, String correlationId) {
+    // Obtain the current list of blocked goods for this refId, or create a new list if none exists.
+    List<InventoryBlockedGoodsState> currentBlockedItems = blockedGoods.computeIfAbsent(refId, k -> new ArrayList<>());
+
+    // Iterate over the items to be reserved and update the currentBlockedItems list with each ordered item
+    for (OrderItem item : items) {
+      currentBlockedItems.add(new InventoryBlockedGoodsState(item.getArticleId(), item.getAmount(), false));
+    }
+    // Update the blockedGoods map with the new list of blocked items
+    blockedGoods.put(refId, currentBlockedItems);
+    System.out.println("InventoryService: Updated blocked goods for refId: " + refId + " to: " + blockedGoods.get(refId));
+
+    // Write GoodsBlockedEvent to Outbox
+    GoodsBlockedEventPayload payload = new GoodsBlockedEventPayload();
+    // Aggregate blocked goods by articleId
+    Map<String, InventoryBlockedGoodsState> aggregatedBlockedItems = blockedGoods.values().stream()
+            .flatMap(List::stream)
+            .filter(item -> !item.getConsumed())
+            .collect(Collectors.toMap(
+                    InventoryBlockedGoodsState::getArticleId,
+                    item -> item,  // Use the item as the value in the map
+                    (existingItem, newItem) -> new InventoryBlockedGoodsState(existingItem.getArticleId(), existingItem.getAmount() + newItem.getAmount(), false)
+            ));
+
+    payload.setBlockedGoodsStateMap(aggregatedBlockedItems);
+
+    Message<GoodsBlockedEventPayload> messagePayload = new Message<>();
+    messagePayload.setType("GoodsBlockedEvent");
+    messagePayload.setTraceid(traceId);
+    messagePayload.setCorrelationid(correlationId);
+    messagePayload.setData(payload);
+
+    // Notifying the Checkout Service of the blocked goods
+    InMemoryOutbox.addToOutbox(messagePayload);
+    System.out.println("Outbox: GoodsBlockedEvent added for refId: " + refId);
+
   }
 }

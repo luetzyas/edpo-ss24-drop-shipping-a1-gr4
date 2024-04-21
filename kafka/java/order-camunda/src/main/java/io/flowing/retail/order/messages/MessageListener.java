@@ -58,23 +58,20 @@ public class MessageListener {
 
   @Transactional
   public void goodsAvailableReceived(String messagePayloadJson) throws IOException {
-    Message<GoodsAvailableEventPayload> message = objectMapper.readValue(
-            messagePayloadJson,
-            new TypeReference<Message<GoodsAvailableEventPayload>>() {
+
+    Message<AllGoodsAvailableEventPayload> message = objectMapper.readValue(messagePayloadJson,
+            new TypeReference<Message<AllGoodsAvailableEventPayload>>() {
             }
     );
 
-    GoodsAvailableEventPayload payload = message.getData();
-    System.out.println("Goods availability checked for order: " + payload.getRefId());
-    System.out.println("Are required goods fully available? : " + payload.isAvailable());
-    System.out.println("Available items: " + payload.getAvailableItems());
-    System.out.println("Unavailable items: " + payload.getUnavailableItems());
+    AllGoodsAvailableEventPayload payload = message.getData();
+    boolean available = true;
 
-    runtimeService.createMessageCorrelation("GoodsAvailableEvent")
+
+
+    runtimeService.createMessageCorrelation("AllGoodsAvailableEvent")
             .processInstanceBusinessKey(message.getTraceid())
-            .setVariable("available", payload.isAvailable())
-            .setVariable("availableItems", payload.getAvailableItems())
-            .setVariable("unavailableItems", payload.getUnavailableItems())
+            .setVariable("available", available)
             .correlateWithResult();
   }
 
@@ -93,8 +90,8 @@ public class MessageListener {
         System.out.println("OrderPlacedEvent received");
       orderPlacedReceived(objectMapper.readValue(messagePayloadJson, new TypeReference<Message<Order>>() {}));
     }
-    if ("GoodsAvailableEvent".equals(messageType)) {
-      System.out.println("GoodsAvailableEvent received");
+    if ("AllGoodsAvailableEvent".equals(messageType)) {
+      System.out.println("AllGoodsAvailableEvent received");
       goodsAvailableReceived(messagePayloadJson);
     }
 

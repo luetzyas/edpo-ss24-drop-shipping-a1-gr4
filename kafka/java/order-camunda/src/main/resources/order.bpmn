@@ -111,11 +111,11 @@
     </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="available" name="yes" sourceRef="isStockAvailable" targetRef="Gateway_1qmn90u" />
     <bpmn:sequenceFlow id="Flow_13up8ge" sourceRef="stockAvailabilityReceived" targetRef="isStockAvailable" />
-    <bpmn:intermediateCatchEvent id="stockAvailabilityReceived" name="Items reserved received">
+    <bpmn:intermediateCatchEvent id="stockAvailabilityReceived" name="All items available received">
       <bpmn:extensionElements />
       <bpmn:incoming>Flow_15o31k3</bpmn:incoming>
       <bpmn:outgoing>Flow_13up8ge</bpmn:outgoing>
-      <bpmn:messageEventDefinition id="MessageEventDefinition_0yuhx0n" messageRef="Message_2nt38te" />
+      <bpmn:messageEventDefinition id="MessageEventDefinition_0yuhx0n" messageRef="Message_07kk2fj" />
     </bpmn:intermediateCatchEvent>
     <bpmn:endEvent id="Event_0twydwc">
       <bpmn:incoming>notAvailable</bpmn:incoming>
@@ -144,6 +144,7 @@
   <bpmn:message id="Message_0acukhu" name="VgrFinishedEvent" />
   <bpmn:message id="Message_0733363" name="GoodsAvailableEvent" />
   <bpmn:message id="Message_2nt38te" name="GoodsBlockedEvent" />
+  <bpmn:message id="Message_07kk2fj" name="AllGoodsAvailableEvent" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="order">
       <bpmndi:BPMNShape id="SendTask_0o0ju8o_di" bpmnElement="Task_08fl4d5">
@@ -223,7 +224,7 @@
       <bpmndi:BPMNShape id="Event_0zpmknv_di" bpmnElement="stockAvailabilityReceived">
         <dc:Bounds x="562" y="302" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="544" y="345" width="73" height="27" />
+          <dc:Bounds x="537" y="345" width="88" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0twydwc_di" bpmnElement="Event_0twydwc">

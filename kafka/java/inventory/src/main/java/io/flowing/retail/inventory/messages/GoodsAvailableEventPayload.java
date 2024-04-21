@@ -10,7 +10,7 @@ public class GoodsAvailableEventPayload {
     private String refId; // Reference ID to correlate with the check stock event
     private boolean available; // Indicates if all requested items are available
     private List<ItemAvailability> availableItems; // List of available items with details
-    private List<ItemAvailability> unavailableItems; // List of unavailable items with details
+    private List<ItemUnavailability> unavailableItems; // List of unavailable items with details
 
     @Data
     @AllArgsConstructor
@@ -18,5 +18,13 @@ public class GoodsAvailableEventPayload {
         private String itemId;
         private int requestedQuantity;
         private int availableQuantity; // This can be useful to indicate partial availability
+    }
+
+    @Data
+    @AllArgsConstructor
+    public static class ItemUnavailability {
+        private String itemId;
+        private int requestedQuantity;
+        private int unavailableQuantity;
     }
 }
