@@ -2,7 +2,8 @@ package io.flowing.retail.checkout.flow;
 
 import io.flowing.retail.checkout.application.CheckoutService;
 import io.flowing.retail.checkout.domain.Customer;
-import io.flowing.retail.checkout.domain.FactoryStockState;
+import io.flowing.retail.checkout.domain.InventoryBlockedGoodsState;
+import io.flowing.retail.checkout.domain.InventoryStockState;
 import io.flowing.retail.checkout.domain.Order;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 public class ProcessOrderAdapter implements JavaDelegate {
@@ -51,24 +53,35 @@ public class ProcessOrderAdapter implements JavaDelegate {
         aggregatedItems.forEach(order::addItem);
         logger.info("ProcessOrderAdapter: Items added to order " + order.getItems());
 
-        List<String> unavailableItems = new ArrayList<>();
+        Map<String, Integer> unavailableItems = new HashMap<>();
 
         for (Map.Entry<String, Integer> entry : aggregatedItems.entrySet()) {
             String articleId = entry.getKey();
             Integer requiredAmount = entry.getValue();
+            // All items from inventory stock
+            InventoryStockState stockState = checkoutService.getCurrentStockState().get(articleId);
+            // All blocked items from inventory reserved goods
+            InventoryBlockedGoodsState blockedState = checkoutService.getCurrentBlockedGoods().get(articleId);
+            // Net available items (stock - reserved goods)
+            int availableAmount = (stockState != null ? stockState.getAmount() : 0) - (blockedState != null ? blockedState.getAmount() : 0);
 
-            FactoryStockState stockState = checkoutService.getCurrentStockState().get(articleId);
-            if (stockState == null || stockState.getAmount() < requiredAmount) {
+            if (availableAmount < requiredAmount) {
                 // Item is not available in sufficient quantity
-                unavailableItems.add(articleId);
-                System.out.println("Insufficient stock for item: " + articleId);
+                int shortAmount = requiredAmount - availableAmount;
+                unavailableItems.put(articleId, shortAmount);
+                System.out.println("Insufficient stock for item: " + articleId + ", short by: " + shortAmount);
             }
         }
+
         // Check overall availability based on Workpiece types and their amounts
         boolean allItemsAvailable = unavailableItems.isEmpty();
         if (!allItemsAvailable) {
             execution.setVariable("allItemsAvailable", false);
-            execution.setVariable("unavailableItems", String.join(", ", unavailableItems));
+            // Create a string representation of unavailable items for display in Generated Task Form
+            String unavailableItemsDesc = unavailableItems.entrySet().stream()
+                    .map(e -> e.getKey() + " short by " + e.getValue())
+                    .collect(Collectors.joining(", "));
+            execution.setVariable("unavailableItems", unavailableItemsDesc);
         } else {
             execution.setVariable("allItemsAvailable", true);
         }

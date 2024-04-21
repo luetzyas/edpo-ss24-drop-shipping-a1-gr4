@@ -21,7 +21,7 @@ Select the items from the dropdown list and specify the quantity.
 6. `Process Order` Service Task:
     - Form data is extracted and an Order object is created and set as instance-variable.
     - If an item of the same type (Red 2x and Red 3x) was ordered, the quantity is aggregated (Red 5x).
-    - For each item, the ordered amount is checked against the local replica of the inventory data. 
+    - For each item, the ordered amount is checked against the local replica of the inventory data and the local replica of the blocked goods. 
    If no sufficient quantity is available the instance-variable `allItemsAvailable` is set to `false` and each item type which is not available is added to the instance-variable `unavailableItems`
 
 7. `is stock available?` Exclusive Gateway:
@@ -35,7 +35,7 @@ Select the items from the dropdown list and specify the quantity.
 
    - Claim the task, Order can be confirmed or not. Not available items are displayed.
      
-    <img src="confirm-order-claimed.png" width="500">
+    <img src="confirm-order-claimed-v2.png" width="500">
 
    - If the order is not confirmed, or after 1h timeout, the process ends.
    - If the order is confirmed, the process continues with the `Place Order` Send Task.
@@ -92,17 +92,23 @@ aggregatedItems.forEach(order::addItem);
   - The ordered amount of each item is checked against the local replica of the inventory data.
 
 ```java
-List<String> unavailableItems = new ArrayList<>();
+Map<String, Integer> unavailableItems = new HashMap<>();
 
 for (Map.Entry<String, Integer> entry : aggregatedItems.entrySet()) {
     String articleId = entry.getKey();
     Integer requiredAmount = entry.getValue();
+    // All items from inventory stock
+    InventoryStockState stockState = checkoutService.getCurrentStockState().get(articleId);
+    // All blocked items from inventory reserved goods
+    InventoryBlockedGoodsState blockedState = checkoutService.getCurrentBlockedGoods().get(articleId);
+    // Net available items (stock - reserved goods)
+    int availableAmount = (stockState != null ? stockState.getAmount() : 0) - (blockedState != null ? blockedState.getAmount() : 0);
 
-    FactoryStockState stockState = checkoutService.getCurrentStockState().get(articleId);
-    if (stockState == null || stockState.getAmount() < requiredAmount) {
+    if (availableAmount < requiredAmount) {
         // Item is not available in sufficient quantity
-        unavailableItems.add(articleId);
-        System.out.println("Insufficient stock for item: " + articleId);
+        int shortAmount = requiredAmount - availableAmount;
+        unavailableItems.put(articleId, shortAmount);
+        System.out.println("Insufficient stock for item: " + articleId + ", short by: " + shortAmount);
     }
 }
 ```
@@ -113,12 +119,16 @@ for (Map.Entry<String, Integer> entry : aggregatedItems.entrySet()) {
 ...
 // Check overall availability based on Workpiece types and their amounts
 boolean allItemsAvailable = unavailableItems.isEmpty();
-if (!allItemsAvailable) {
-    execution.setVariable("allItemsAvailable", false);
-    execution.setVariable("unavailableItems", String.join(", ", unavailableItems));
-} else {
+    if (!allItemsAvailable) {
+        execution.setVariable("allItemsAvailable", false);
+        // Create a string representation of unavailable items for display in Generated Task Form
+        String unavailableItemsDesc = unavailableItems.entrySet().stream()
+        .map(e -> e.getKey() + " short by " + e.getValue())
+        .collect(Collectors.joining(", "));
+        execution.setVariable("unavailableItems", unavailableItemsDesc);
+    } else {
     execution.setVariable("allItemsAvailable", true);
-}
+    }
 execution.setVariable("order", order); // Store the order object for the next task
 ```
 
@@ -139,7 +149,7 @@ messageSender.send(message);
 ```
 
 ### Event-Carried State Transfer Pattern for Inventory Data
-Every time there's a change in the inventory levels, the Inventory service broadcasts this information as an `InventoryUpdatedEvent`. The Checkout service listens to these events and maintains an up-to-date internal copy of the stock levels.
+Every time there's a change in the inventory levels, the Inventory service broadcasts this information as an `InventoryUpdatedEvent` as well as `GoodsBlockedEvent`. The Checkout service listens to these events and maintains an up-to-date internal copy of the stock levels.
 
 
    <img src="ECST-pattern.png" width="500">
@@ -147,6 +157,7 @@ Every time there's a change in the inventory levels, the Inventory service broad
 1. `MessageListener` is implemented in [MessageListener.java](src/main/java/io/flowing/retail/checkout/messages/MessageListener.java)
   - The `messageReceived` method listens to the `flowing-retail` topic and processes the incoming messages of type `InventoryUpdatedEvent`.
   - The `InventoryUpdatedEventPayload` is extracted from the message and passed to the `CheckoutService` for updating the local inventory data.
+  - Similar implementation for `GoodsBlockedEvent`. 
 
 ```java
 @KafkaListener(id = "checkout", topics = "flowing-retail")

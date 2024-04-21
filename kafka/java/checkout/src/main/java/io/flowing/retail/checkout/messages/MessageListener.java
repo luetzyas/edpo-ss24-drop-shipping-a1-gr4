@@ -34,5 +34,16 @@ public class MessageListener {
                 e.printStackTrace();
             }
         }
+        if ("GoodsBlockedEvent".equals(messageType)) {
+            System.out.println("Received GoodsBlockedEvent");
+            try {
+                Message<GoodsBlockedEventPayload> message = objectMapper.readValue(messagePayloadJson, new TypeReference<Message<GoodsBlockedEventPayload>>() {
+                });
+                GoodsBlockedEventPayload goodsBlockedEvent = message.getData();
+                checkoutService.updateBlockedGoods(goodsBlockedEvent);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

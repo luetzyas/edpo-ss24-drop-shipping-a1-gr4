@@ -1,5 +1,6 @@
 package io.flowing.retail.checkout.messages;
 
+import io.flowing.retail.checkout.domain.InventoryBlockedGoodsState;
 import io.flowing.retail.checkout.domain.InventoryStockState;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,8 +11,8 @@ import java.util.Map;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class InventoryUpdatedEventPayload {
+public class GoodsBlockedEventPayload {
 
-    private Map<String, InventoryStockState> stockDetails;
+    private Map<String, InventoryBlockedGoodsState> blockedGoodsStateMap;
 
 }
