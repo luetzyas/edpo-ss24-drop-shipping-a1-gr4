@@ -7,13 +7,8 @@
 
 ## Deadline
 
-- **Submission Date:** DD.MM.2024; 23:59 CET
-- **Updated Document based on Feedback:** DD.MM.2024; 20:00 CET
--
-    *
-
-*[Work distribution](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/blob/master/docs/submissions/change_log.md)
-**
+- **Submission Date:** 21.04.2024; 23:59 CET
+- **[Work distribution](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/blob/master/docs/submissions/change_log.md)**
 
 # Exercise 05: Zeebe.io
 
@@ -49,10 +44,25 @@ the [Zeebe.io documentation](https://docs.camunda.io/docs/components/zeebe/zeebe
 In constrast to our other services we wanted to implement Zeebe in the Mailing service as it is not orchestrated by the
 order service but choreographed to react on the applications events.
 
-| Camunda   | Performance, Scalability                                                      | Modern/Cloud                                                                              | Event handling                                                                                  |
-|-----------|-------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------|
-| 7         | workflow automation for monolithic architecture, which can limit scalability  | deployable environments, requires additional configurations and infrastructure management | Events contraint withing the BPMN execution, coupled to db transations                          | 
-| 8 (Zeebe) | distributed workflow engine using stream processing, supports high throughput | cloud-native features (e.g. gpt), docker inclusion, simplified deployment                 | Event-driven architecture (real-time processing = react to events and messages instantaneously) |
+**Camunda 7**
+- performance, Scalaibility
+  - workflow automation for monolithic architecture, which can limit scalability
+- native-cloud
+  - deployable environments
+  - requires additional configurations and infrastructure management
+- Event handling
+  - Events contraint withing the BPMN execution
+
+**Camunda 8 (Zeebe)**
+- performance, Scalaibility
+  - distributed workflow engine using stream processing
+  - supports high throughput
+- native-cloud
+  -  cloud-native features (e.g. gpt)
+  - docker inclusion
+  - simplified deployment              
+- Event handling
+  - Event-driven architecture (real-time processing = react to events and messages instantaneously)
 
 #### Additional Considerations
 
