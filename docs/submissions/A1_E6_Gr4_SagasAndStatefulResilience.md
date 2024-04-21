@@ -14,7 +14,7 @@
 
 ### Code
 
-[Release]() tbd
+[Release](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/releases/tag/EDPO_A1_3.0) 
 
 The
 Inventorys [README.md](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/blob/master/kafka/java/inventory/README.md)

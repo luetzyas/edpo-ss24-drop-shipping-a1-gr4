@@ -19,7 +19,7 @@
 
 ### Code
 
-[Release](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/releases/tag/EDPO_A1_E5_6)
+[Release](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/releases/tag/EDPO_A1_3.0)
 
 The [README.md](../../kafka/java/mailing-zeebe/README.md) file provides detailed description of implementation.
 
