@@ -1,5 +1,7 @@
 # Changelog Group 4
-This log summarizes all notable changes made to the project from Week 6 onwards to facilitate easy reading and evaluation. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
+
+This log summarizes all notable changes made to the project from Week 6 onwards to facilitate easy reading and
+evaluation. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 Here, you will find a brief overview of our progress, including major milestones and the submission dates of our work.
 
@@ -8,6 +10,7 @@ Here, you will find a brief overview of our progress, including major milestones
   - The given feedback to improve our project in the [feedback](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/tree/master/docs/submissions/feedback) folder.
 
 ## Group Information
+
 - **Yasmin Lützelschwab** ([luetzyas](https://github.com/luetzyas)) → [e-Mail](mailto:yasminesmeralda.luetzelschwab@student.unisg.ch)
 - **Stefan Meier** ([stefanmhsg](https://github.com/stefanmhsg)) → [e-Mail](mailto:stefan.meier@student.unisg.ch)
 
@@ -50,12 +53,20 @@ Here, you will find a brief overview of our progress, including major milestones
 
 
 **@luetzyas**
-- Assignment 1 Presentation
-  - Presentation slides
-  - Presentation script
-- 
+- Assignment 1 Presentation [Presentation](A1_Gr4_MidtermPresentation.pdf)
+    - Presentation slides
+    - Presentation script
+- added ADR's
+    - [0001 add Mailing service](adr/0001-add-mailing-service.md)
+    - [0002 add Factory service](adr/0002-add-factory-service.md)
+    - [0003 Choreographed vs. Orchestrated](adr/0003-Choreographed-vs-Orchestrated.md)
+    - [0004 Camunda 7 vs. 8](adr/0004-Camunda-7-vs-8.md)
+    - [0005 Mailing service with Camunda 8](adr/0005-mailing-service-with-camunda-8.md)
+- Inventory Service
+  - MQTT subscription >> topic `f/i/stock`
 
-TODO:
+TODO: adr mailing >> event discount granted
+
 - Adr for Camunda 7/8 (kann pro Microservice entschieden werden)
 - Camunda Docker image
   - https://docs.camunda.org/manual/7.20/installation/docker/

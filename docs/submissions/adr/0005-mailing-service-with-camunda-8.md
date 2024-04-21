@@ -1,10 +1,10 @@
-# 0. Title
+# 5. Mailing Service with Camunda 8
 
-Date: 2022-10-05
+Date: 2024-04-20
 
 ## Status
 
-Submitted to decision due 30.09.2023 / Approved / Suspended / Rejected / Deprecated 
+Implemented
 
 ## Context
 
@@ -16,22 +16,12 @@ Response to the forces with justification
 
 ### Granularity Disintegrators
 
-**Service functionality:**
-Is service doing too many unrelated things? Single-responsibility / single purpose principle.
-
-**Service Volatility:**
-Are changes isolated to only one part of the service?
-
-**Scalability and Throughout:**
-Do parts of the service need to scale differently?
-
-**Fault Tolerance:**
-Are there errors that cause critical functions to fall within the service? 
-
-**Data security:**
-Do some parts of the service need higher security levels than others?
-
-**Extensibility:** Is the service always expanding to add new context?
+Service functionality: Is service doing too many unrelated things? Single-responsibility / single purpose principle.
+Service Volatility: Are changes isolated to only one part of the service?
+Scalability and Throughout: Do parts of the service need to scale differently?
+Fault Tolerance: Are there errors that cause critical functions to fall within the service? 
+Data security: Do some parts of the service need higher security levels than others?
+Extensibility: Is the service always expanding to add new context?
 
 ### Granularity Integrators
 

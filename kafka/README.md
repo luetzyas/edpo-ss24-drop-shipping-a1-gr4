@@ -2,7 +2,7 @@
 
 This folder contains services that connect to Apache Kafka as means of communication between the services.
 
-![Microservices](../docs/img/kafka-services.png)
+![Microservices](../docs/img/kafka%20services/kafka-services.png)
 
 The nice thing about this architecture is, that Kafka is the only common denominator. For every service you can freely decide for
 
