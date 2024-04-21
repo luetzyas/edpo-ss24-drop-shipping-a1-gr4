@@ -92,3 +92,20 @@ As we can see from the event flow, the GoodsAvailableEvent is now only processed
 
 ## Reflections and lessons learned
 
+One of the most profound realizations from this project was the inherent complexity of distributed systems, especially when integrating multiple microservices that operate on different parts of a transaction. Implementing Zeebe to manage workflows highlighted the importance of clear boundaries and responsibilities among services, which helped in mitigating complexities related to state and event management.
+
+The Power and Pitfalls of Choreography and Orchestration
+Through the implementation of both choreographed and orchestrated processes, we learned valuable lessons about when to employ each strategy:
+
+Choreography is powerful for decoupling services and allowing for independent scaling and development. However, without a central point of control, it became challenging to handle errors and recover from them uniformly across all services.
+Orchestration provides a more centralized approach, which simplified some aspects of error handling and made the system's overall behavior more predictable. However, this came at the cost of tighter coupling and potentially reduced flexibility in how services could evolve.
+Idempotency and Event Deduplication
+One technical challenge that stood out was managing duplicate messages—a common issue in distributed systems with asynchronous messaging. Implementing an idempotent consumer pattern was essential for ensuring that operations such as inventory checks and updates are performed only once, regardless of how many times a message is received. This not only prevented data inconsistencies but also improved system resilience.
+
+**Team Collaboration and Workflow**
+This project also underscored the value of effective team collaboration. Utilizing tools like Git for version control and collaborative coding was indispensable. Regular meetings and clear communication channels enabled timely resolution of issues and helped synchronize work across different parts of the project. Each team member's unique skills were leveraged to enhance the project's overall quality and innovation.
+
+It was interesting to implement a variety of patterns and technologies, such as the Outbox Pattern, Zeebe, and Kafka, to address different aspects of distributed systems design. These experiences deepened our understanding of how to build resilient, scalable, and maintainable systems in a distributed environment.
+Also to implement BPMN with Camunda 7 and 8 (Zeebe).
+
+This project was not only a technical journey but also a comprehensive learning experience that challenged our understanding of complex system interactions, resilience patterns, and workflow management using modern event-driven architectures. The lessons learned here will undoubtedly influence our future projects and potentially guide our architectural decisions in professional environments.
