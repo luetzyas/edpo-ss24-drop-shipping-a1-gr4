@@ -51,6 +51,9 @@ Here, you will find a brief overview of our progress, including major milestones
   - Extended Flow for parallel execution of payment and reserving required goods
   - as per the newly created [README.md](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/blob/master/kafka/java/order-camunda/README.md)
 
+- Exercice 6
+  - Report for E6
+  - Outbox Pattern
 
 **@luetzyas**
 - Assignment 1 Presentation [Presentation](A1_Gr4_MidtermPresentation.pdf)
