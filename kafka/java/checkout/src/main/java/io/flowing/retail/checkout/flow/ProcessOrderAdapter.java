@@ -5,6 +5,7 @@ import io.flowing.retail.checkout.domain.Customer;
 import io.flowing.retail.checkout.domain.InventoryBlockedGoodsState;
 import io.flowing.retail.checkout.domain.InventoryStockState;
 import io.flowing.retail.checkout.domain.Order;
+import org.camunda.bpm.engine.delegate.BpmnError;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,48 +44,22 @@ public class ProcessOrderAdapter implements JavaDelegate {
         for (int i = 1; i <= 3; i++) { // 3 items Red/Blue/White
             String articleId = (String) execution.getVariable("articleId" + i);
             Integer amount = (Integer) execution.getVariable("amount" + i);
-
             if (articleId != null && amount != null) {
                 aggregatedItems.merge(articleId, amount, Integer::sum);
             }
+        }
+
+        // Check total amount of all items ordered in total, if a large amount is oderderd throw a bpmn error
+        int totalAmount = aggregatedItems.values().stream().mapToInt(Integer::intValue).sum();
+        if (totalAmount > 100) {
+            logger.error("ProcessOrderAdapter: Total amount of items exceeds 100, throwing BPMN error");
+            throw new BpmnError("Large_Order","Total amount of ordered items exceeds 100 items. Ordered total of: " + totalAmount + " items");
         }
 
         // Add aggregated items to the order
         aggregatedItems.forEach(order::addItem);
         logger.info("ProcessOrderAdapter: Items added to order " + order.getItems());
 
-        Map<String, Integer> unavailableItems = new HashMap<>();
-
-        for (Map.Entry<String, Integer> entry : aggregatedItems.entrySet()) {
-            String articleId = entry.getKey();
-            Integer requiredAmount = entry.getValue();
-            // All items from inventory stock
-            InventoryStockState stockState = checkoutService.getCurrentStockState().get(articleId);
-            // All blocked items from inventory reserved goods
-            InventoryBlockedGoodsState blockedState = checkoutService.getCurrentBlockedGoods().get(articleId);
-            // Net available items (stock - reserved goods)
-            int availableAmount = (stockState != null ? stockState.getAmount() : 0) - (blockedState != null ? blockedState.getAmount() : 0);
-
-            if (availableAmount < requiredAmount) {
-                // Item is not available in sufficient quantity
-                int shortAmount = requiredAmount - availableAmount;
-                unavailableItems.put(articleId, shortAmount);
-                System.out.println("Insufficient stock for item: " + articleId + ", short by: " + shortAmount);
-            }
-        }
-
-        // Check overall availability based on Workpiece types and their amounts
-        boolean allItemsAvailable = unavailableItems.isEmpty();
-        if (!allItemsAvailable) {
-            execution.setVariable("allItemsAvailable", false);
-            // Create a string representation of unavailable items for display in Generated Task Form
-            String unavailableItemsDesc = unavailableItems.entrySet().stream()
-                    .map(e -> e.getKey() + " short by " + e.getValue())
-                    .collect(Collectors.joining(", "));
-            execution.setVariable("unavailableItems", unavailableItemsDesc);
-        } else {
-            execution.setVariable("allItemsAvailable", true);
-        }
         execution.setVariable("order", order); // Store the order object for the next task
     }
 }
