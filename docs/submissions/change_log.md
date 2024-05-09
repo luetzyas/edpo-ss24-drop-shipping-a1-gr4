@@ -21,8 +21,20 @@ Here, you will find a brief overview of our progress, including major milestones
 - [**Exercise 4**: Orchestration vs Choreography in Flowing Retail](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/blob/master/docs/submissions/exercise_tasks/EDPO_SS24_E4.pdf)
 - [**Exercise 5**: Zeebe.io](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/blob/master/docs/submissions/exercise_tasks/EDPO_SS24_E5.pdf)
 - [**Exercise 6**: Sagas and Stateful Resilience Patterns](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/blob/master/docs/submissions/exercise_tasks/EDPO_SS24_E6.pdf)
+- [**Exercise 7**: Stream Processing with Kafka Streams (Part I)](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/blob/master/docs/submissions/exercise_tasks/EDPO_SS24_E7.pdf)
+- [**Exercise 8**: Stream Processing with Kafka Streams (Part II)](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/blob/master/docs/submissions/exercise_tasks/EDPO_SS24_E8.pdf)
 
-## Final Submission 21. April 2024
+## Final Submission Assignment 2 02. June 2024
+[Release 2.0](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/releases/tag/EDPO_A2)
+
+**@stefanmhsg**
+-
+
+**@luetzyas**
+-
+
+
+## Final Submission Assignment 1 21. April 2024
 [Release 1.2](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/releases/tag/EDPO_A1_3.0)
 
 **@stefanmhsg**
