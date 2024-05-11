@@ -28,7 +28,14 @@ Here, you will find a brief overview of our progress, including major milestones
 [Release 2.0](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/releases/tag/EDPO_A2)
 
 **@stefanmhsg**
--
+- Order-Camunda Service
+  - Stream Processing to get Daily Count of Orders
+    - DailyOrderTopology
+    - KafkaStreamsRunner
+    - POM.xml with dependencies
+
+- Checkout Service
+  - BPMN Error Handling if Order is greater than 100 items leads to a User Task for Human Intervention, displaying the custom error message
 
 **@luetzyas**
 -
