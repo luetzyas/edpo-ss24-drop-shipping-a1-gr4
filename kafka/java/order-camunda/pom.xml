@@ -90,6 +90,31 @@
 			<version>${spring.kafka.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>org.apache.kafka</groupId>
+			<artifactId>kafka-streams</artifactId>
+			<version>3.7.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.10.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.avro</groupId>
+			<artifactId>avro-maven-plugin</artifactId>
+			<version>1.11.3</version>
+		</dependency>
+		<dependency>
+			<groupId>io.confluent</groupId>
+			<artifactId>kafka-streams-avro-serde</artifactId>
+			<version>7.6.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.mitchseymour</groupId>
+			<artifactId>kafka-registryless-avro-serdes</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
 			<!-- make sure to use this version as of https://github.com/camunda/camunda-bpm-assert/issues/90 -->
 			<groupId>org.assertj</groupId>
 			<artifactId>assertj-core</artifactId>
@@ -137,6 +162,11 @@
 			<url>https://app.camunda.com/nexus/content/groups/public</url>
 		</repository>
 		<repository>
+			<id>confluent</id>
+			<name>Confluent</name>
+			<url>https://packages.confluent.io/maven/</url>
+		</repository>
+		<repository>
         <id>spring-milestones</id>
         <name>Spring Milestones</name>
         <url>https://repo.spring.io/milestone</url>
@@ -145,6 +175,12 @@
         </snapshots>
     </repository>
 	</repositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>confluent</id>
+			<url>https://packages.confluent.io/maven/</url>
+		</pluginRepository>
+	</pluginRepositories>
     <build>
     	<plugins>
 			 <plugin>
@@ -170,6 +206,28 @@
 			    <artifactId>maven-compiler-plugin</artifactId>
 			    <version>3.8.1</version>
 			</plugin>
+			<!--
+			<plugin>
+				<groupId>org.apache.avro</groupId>
+				<artifactId>avro-maven-plugin</artifactId>
+				<version>1.8.2</version>
+				<executions>
+					<execution>
+						<id>schemas</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>schema</goal>
+							<goal>protocol</goal>
+							<goal>idl-protocol</goal>
+						</goals>
+						<configuration>
+							<sourceDirectory>${project.basedir}/src/main/avro/</sourceDirectory>
+							<outputDirectory>${project.basedir}/src/main/java/</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			-->
     	</plugins>
     </build>
 </project>
