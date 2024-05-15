@@ -6,15 +6,15 @@ import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serializer;
 
-public class OrderSerdes implements Serde<Message<Order>> {
+public class OrderSerde implements Serde<Order> {
 
     @Override
-    public Serializer<Message<Order>> serializer() {
+    public Serializer<Order> serializer() {
         return new OrderSerializer();
     }
 
     @Override
-    public Deserializer<Message<Order>> deserializer() {
+    public Deserializer<Order> deserializer() {
         return new OrderDeserializer();
     }
 

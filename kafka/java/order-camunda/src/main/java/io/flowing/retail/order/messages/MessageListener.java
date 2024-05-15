@@ -37,8 +37,8 @@ public class MessageListener {
   @Transactional
   public void orderPlacedReceived(Message<Order> message) throws JsonParseException, JsonMappingException, IOException {
     Order order = message.getData();
-    
-    System.out.println("New order placed, start flow. " + order);
+    System.out.println("OrderPlacedEvent received full message: " + message);
+    System.out.println("New order placed, start flow. Order object: " + order);
     
     // persist domain entity
     repository.save(order);    

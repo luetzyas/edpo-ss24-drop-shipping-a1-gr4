@@ -1,5 +1,6 @@
 package io.flowing.retail.order.domain;
 
+import com.google.gson.annotations.SerializedName;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,7 @@ public class Order {
   @Id
 //  @GeneratedValue(generator = "uuid2")
 //  @GenericGenerator(name = "uuid2", strategy = "uuid2")
+  @SerializedName("orderId")
   protected String id; //= UUID.randomUUID().toString();
   @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER  )
   protected Customer customer = new Customer();

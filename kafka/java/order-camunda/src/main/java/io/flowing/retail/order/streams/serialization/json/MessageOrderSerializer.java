@@ -7,14 +7,14 @@ import org.apache.kafka.common.serialization.Serializer;
 
 import java.nio.charset.StandardCharsets;
 
-public class OrderSerializer implements Serializer<Order> {
+public class MessageOrderSerializer implements Serializer<Message<Order>> {
     private Gson gson = new Gson();
 
     @Override
-    public byte[] serialize(String topic, Order order) {
+    public byte[] serialize(String topic, Message<Order> order) {
         if (order == null) return null;
         String json = gson.toJson(order);
-        System.out.println("OrderSerializer output: " + json); // Debugging output
+        System.out.println("MessageOrderSerializer output: " + json); // Debugging output
         return gson.toJson(order).getBytes(StandardCharsets.UTF_8);
     }
 }

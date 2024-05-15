@@ -27,22 +27,11 @@ services:
       ALLOW_PLAINTEXT_LISTENER: 'yes'
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_LISTENERS: PLAINTEXT://:9092,PLAINTEXT_HOST://:29092
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_HOST://kafka:29092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
     depends_on:
       - zookeeper
-
-
-  inventory:
-    build:
-      context: ../../kafka/java/inventory
-      dockerfile: Dockerfile
-    networks:
-      - flowing
-    depends_on:
-      - kafka
-    environment:
-      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
 
 
 networks:
