@@ -41,7 +41,9 @@ Here, you will find a brief overview of our progress, including major milestones
 **@luetzyas**
 - docs
   - ADR [0004 Camunda 7 vs 8](adr/0004-Camunda-7-vs-8.md)
-
+- code
+  - new class [DailyItemsTopology](../../kafka/java/order-camunda/src/main/java/io/flowing/retail/order/streams/DailyItemsTopology.java)
+  - restructure [KafkaStreamsRunner](../../kafka/java/order-camunda/src/main/java/io/flowing/retail/order/streams/KafkaStreamsRunner.java) for multiple topologies
 
 ## Final Submission Assignment 1 21. April 2024
 [Release 1.2](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/releases/tag/EDPO_A1_3.0)

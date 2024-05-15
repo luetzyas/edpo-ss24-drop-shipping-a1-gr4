@@ -18,11 +18,14 @@ public class KafkaStreamsRunner {
 
     @PostConstruct
     public void startKafkaStreams() {
-        try {
-            Topology topology = DailyOrdersTopology.build();
+        startTopology(DailyOrdersTopology.build(), "daily-orders-app");
+        startTopology(DailyItemsTopology.build(), "daily-color-count-app");
+    }
 
+    private void startTopology(Topology topology, String applicationId) {
+        try {
             Properties config = new Properties();
-            config.put(StreamsConfig.APPLICATION_ID_CONFIG, "daily-orders-app");
+            config.put(StreamsConfig.APPLICATION_ID_CONFIG, applicationId);
             config.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
             config.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
             config.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, MessageOrderSerde.class);
@@ -30,11 +33,10 @@ public class KafkaStreamsRunner {
             KafkaStreams streams = new KafkaStreams(topology, config);
             Runtime.getRuntime().addShutdownHook(new Thread(streams::close));
 
-            System.out.println("Starting Daily Orders Streams");
+            System.out.println("Starting " + applicationId + " Streams");
             streams.start();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 }
