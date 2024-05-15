@@ -5,10 +5,12 @@ import io.flowing.retail.order.messages.Message;
 import io.flowing.retail.order.streams.serialization.json.MessageOrderSerde;
 import io.flowing.retail.order.streams.serialization.json.OrderSerde;
 import org.apache.kafka.common.serialization.Serdes;
+import org.apache.kafka.common.utils.Bytes;
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.Topology;
 import org.apache.kafka.streams.kstream.*;
+import org.apache.kafka.streams.state.WindowStore;
 
 import java.time.Duration;
 
@@ -24,11 +26,8 @@ public class DailyOrdersTopology {
         // Filter for only "OrderPlacedEvent" and then map to set the new key to order ID
         KStream<String, Order> orderPlacedEvents = ordersStream
                 .filter((key, value) -> value != null && "OrderPlacedEvent".equals(value.getType()))
-                .map((key, value) -> {
-                    String newKey = value.getData() != null ? value.getData().getId() : null;
-                    return new KeyValue<>(newKey, value.getData());
-                })
-                .filter((key, value) -> key != null && value != null);  // Ensure keys and values are not null
+                .map((key, value) -> KeyValue.pair("all_orders", value.getData())); // Use a constant key for all orders
+
 
         // Print each valid message to the console
         orderPlacedEvents.foreach((key, order) -> {
@@ -41,14 +40,16 @@ public class DailyOrdersTopology {
         KTable<Windowed<String>, Long> dailyOrderCounts = orderPlacedEvents
                 .groupByKey(Grouped.with(Serdes.String(), new OrderSerde())) // Ensure to use proper Serde for the Order class
                 .windowedBy(TimeWindows.of(Duration.ofDays(1)))
-                .count(Materialized.as("daily-order-counts"));
+                .count(Materialized.<String, Long, WindowStore<Bytes, byte[]>>as("daily-order-counts")
+                        .withKeySerde(Serdes.String())
+                        .withValueSerde(Serdes.Long()));
 
         // Print the daily counts
         dailyOrderCounts.toStream().foreach((windowedKey, count) -> {
             System.out.println("**DailyOrdersTopology** \n" +
-                    "Date: " + windowedKey.window().startTime() +
+                    "Window Start Time: " + windowedKey.window().startTime() +
                     ", Order ID: " + windowedKey.key() +
-                    ", Count: " + count);
+                    ", Total Orders Count: " + count);
         });
 
         return builder.build();
