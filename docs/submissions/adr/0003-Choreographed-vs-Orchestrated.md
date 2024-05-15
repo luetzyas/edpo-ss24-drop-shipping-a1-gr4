@@ -47,7 +47,7 @@ Grey = Monitor service listenes to events
       where services are aware of the events but do not need direct knowledge of other services' internal workflows.
 - **Orchestration:**
     - Orchestration inherently involves a central workflow logic. This central logic directs other services by telling
-      them what to do (*commandds*), which can simplify complex workflows and ensure that
+      them what to do (*commands*), which can simplify complex workflows and ensure that
       steps are followed in the correct order.
 
 ## Consequences

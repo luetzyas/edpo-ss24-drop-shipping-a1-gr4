@@ -23,6 +23,7 @@ Here, you will find a brief overview of our progress, including major milestones
 - [**Exercise 6**: Sagas and Stateful Resilience Patterns](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/blob/master/docs/submissions/exercise_tasks/EDPO_SS24_E6.pdf)
 - [**Exercise 7**: Stream Processing with Kafka Streams (Part I)](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/blob/master/docs/submissions/exercise_tasks/EDPO_SS24_E7.pdf)
 - [**Exercise 8**: Stream Processing with Kafka Streams (Part II)](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/blob/master/docs/submissions/exercise_tasks/EDPO_SS24_E8.pdf)
+- [**Exercise 9**: Stream Processing with Kafka Streams (Part III)](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/blob/master/docs/submissions/exercise_tasks/EDPO_SS24_E9.pdf)
 
 ## Final Submission Assignment 2 02. June 2024
 [Release 2.0](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/releases/tag/EDPO_A2)
@@ -38,7 +39,8 @@ Here, you will find a brief overview of our progress, including major milestones
   - BPMN Error Handling if Order is greater than 100 items leads to a User Task for Human Intervention, displaying the custom error message
 
 **@luetzyas**
--
+- docs
+  - ADR [0004 Camunda 7 vs 8](adr/0004-Camunda-7-vs-8.md)
 
 
 ## Final Submission Assignment 1 21. April 2024
