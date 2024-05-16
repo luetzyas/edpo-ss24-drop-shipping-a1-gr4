@@ -12,6 +12,8 @@ public class SensorDataProcessTopology {
     public static Topology build() {
         StreamsBuilder builder = new StreamsBuilder();
 
+        boolean debug = true;
+
         KStream<String, SensorData> sensorDataStream = builder.stream("sensor-data",
                 Consumed.with(Serdes.String(), new SensorDataSerde()));
 
@@ -41,7 +43,14 @@ public class SensorDataProcessTopology {
 
         // Print the output for debugging purposes
         mergedStream.foreach((key, sensorData) -> {
-            System.out.println("Key: " + key + ", SensorData: " + sensorData);
+            if (debug) {
+                System.out.println("Key: " + key + ", SensorData: " + sensorData);
+            } else {
+                // only print critical sensor data
+                if ("critical".equals(key)) {
+                    System.out.println("Key: " + key + ", SensorData: " + sensorData);
+                }
+            }
         });
 
         // Forward the processed stream to an output topic

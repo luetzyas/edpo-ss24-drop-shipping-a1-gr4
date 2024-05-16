@@ -20,16 +20,21 @@ public class SensorDataAggregate {
     }
 
     public SensorDataAggregate add(SensorData data) {
-        this.totalAirQuality += data.getAirQuality();
-        this.totalGasResistance += data.getGasResistance();
-        this.totalHumidity += data.getHumidity();
-        this.totalIndexedAirQuality += data.getIndexedAirQuality();
-        this.totalAirPressure += data.getAirPressure();
-        this.totalRelativeHumidity += data.getRelativeHumidity();
-        this.totalRoomTemperature += data.getRoomTemperature();
-        this.totalAirTemperature += data.getAirTemperature();
-        this.count++;
-        return this;
+        try {
+            this.totalAirQuality += data.getAirQuality();
+            this.totalGasResistance += data.getGasResistance();
+            this.totalHumidity += data.getHumidity();
+            this.totalIndexedAirQuality += data.getIndexedAirQuality();
+            this.totalAirPressure += data.getAirPressure();
+            this.totalRelativeHumidity += data.getRelativeHumidity();
+            this.totalRoomTemperature += data.getRoomTemperature();
+            this.totalAirTemperature += data.getAirTemperature();
+            this.count++;
+            return this;
+        } catch (Exception e) {
+            throw new RuntimeException("Error adding sensor data to aggregate", e);
+        }
+
     }
 
     public double getAverageAirQuality() {

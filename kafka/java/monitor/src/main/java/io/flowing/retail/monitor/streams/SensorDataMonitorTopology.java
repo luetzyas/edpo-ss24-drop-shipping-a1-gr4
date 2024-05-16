@@ -23,6 +23,11 @@ public class SensorDataMonitorTopology {
                 Consumed.with(Serdes.String(), new SensorDataSerde())
         );
 
+        // print to console
+        processedSensorDataStream.foreach((key, value) -> {
+            System.out.println("Monitor-App: Key: " + key + ", SensorData: " + value);
+        });
+
         // Filter for normal sensor data
         KStream<String, SensorData> normalSensorDataStream = processedSensorDataStream
                 .filter((key, value) -> "normal".equals(key));
@@ -33,7 +38,14 @@ public class SensorDataMonitorTopology {
                 .windowedBy(TimeWindows.of(Duration.ofHours(1)))
                 .aggregate(
                         SensorDataAggregate::new, // Initializer
-                        (key, newValue, aggregate) -> aggregate.add(newValue), // Aggregator defines how to add a new record (newValue) to the existing aggregation
+                        (key, newValue, aggregate) -> {
+                            try {
+                                return aggregate.add(newValue); // Aggregator defines how to add a new record (newValue) to the existing aggregation
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                return aggregate; // return the existing aggregate on error
+                            }
+                        },
                         Materialized.<String, SensorDataAggregate, WindowStore<Bytes, byte[]>>as("hourly-average-store")
                                 .withKeySerde(Serdes.String())
                                 .withValueSerde(new SensorDataAggregateSerde())
