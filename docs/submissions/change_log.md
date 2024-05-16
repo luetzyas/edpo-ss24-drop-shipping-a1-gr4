@@ -42,7 +42,7 @@ Here, you will find a brief overview of our progress, including major milestones
 - docs
   - ADR [0004 Camunda 7 vs 8](adr/0004-Camunda-7-vs-8.md)
 - code
-  - new class [DailyItemsTopology](../../kafka/java/order-camunda/src/main/java/io/flowing/retail/order/streams/DailyItemsTopology.java)
+  - new class [DailyItemsTopology](../../kafka/java/order-camunda/src/main/java/io/flowing/retail/order/streams/DailyItemsTopology.java) to get daily items count per day
   - restructure [KafkaStreamsRunner](../../kafka/java/order-camunda/src/main/java/io/flowing/retail/order/streams/KafkaStreamsRunner.java) for multiple topologies
 
 ## Final Submission Assignment 1 21. April 2024
