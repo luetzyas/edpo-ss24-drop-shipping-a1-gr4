@@ -18,7 +18,8 @@ public class KafkaStreamsRunner {
 
     @PostConstruct
     public void startKafkaStreams() {
-        startTopology(SensorDataTopology.build(), "sensor-data-app");
+        startTopology(SensorDataProcessTopology.build(), "sensor-data-process-app");
+        startTopology(SensorDataMonitorTopology.build(), "sensor-data-monitor-app");
     }
 
     private void startTopology(Topology topology, String applicationId) {

@@ -1,4 +1,4 @@
-package io.flowing.retail.monitor.streams;
+package io.flowing.retail.monitor.streams.serealization.json;
 
 import com.google.gson.Gson;
 import io.flowing.retail.monitor.domain.SensorData;

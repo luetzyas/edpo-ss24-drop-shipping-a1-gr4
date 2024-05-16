@@ -1,4 +1,4 @@
-package io.flowing.retail.monitor.streams;
+package io.flowing.retail.monitor.streams.serealization.json;
 
 import io.flowing.retail.monitor.domain.SensorData;
 import org.apache.kafka.common.serialization.Serde;
