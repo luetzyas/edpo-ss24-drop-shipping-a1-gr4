@@ -41,10 +41,16 @@ Here, you will find a brief overview of our progress, including major milestones
 **@luetzyas**
 - docs
   - ADR [0004 Camunda 7 vs 8](adr/0004-Camunda-7-vs-8.md)
+  - ADR [0005 Add new CRM-Camunda Service](adr/0005-add-crm-camunda-service.md)
 - code
-  - new class [DailyItemsTopology](../../kafka/java/order-camunda/src/main/java/io/flowing/retail/order/streams/DailyItemsTopology.java) to get daily items count per day
-  - restructure [KafkaStreamsRunner](../../kafka/java/order-camunda/src/main/java/io/flowing/retail/order/streams/KafkaStreamsRunner.java) for multiple topologies
-  - new microservice [crm-camunda](../../kafka/java/crm-camunda) to store and update customerdata
+  - Order-Camunda Service
+    - new class [DailyItemsTopology](../../kafka/java/order-camunda/src/main/java/io/flowing/retail/order/streams/DailyItemsTopology.java) to get daily items count per day
+    - restructure [KafkaStreamsRunner](../../kafka/java/order-camunda/src/main/java/io/flowing/retail/order/streams/KafkaStreamsRunner.java) for multiple topologies
+  - CRM-Camunda Serivice >> new microservice [crm-camunda](../../kafka/java/crm-camunda) to store and update customer data
+    - Process to load XML file with customer sample data during Springboot startup
+      - new classes: [Customers](../../kafka/java/crm-camunda/src/main/java/io/flowing/retail/crm/dbLoader/Customers.java), [DataLoader](../../kafka/java/crm-camunda/src/main/java/io/flowing/retail/crm/dbLoader/DataLoader.java)
+      - new xmlfile: [customers.xml](../../kafka/java/crm-camunda/src/main/resources/customers.xml)
+      - enhanced [CrmApplication](../../kafka/java/crm-camunda/src/main/java/io/flowing/retail/crm/CrmApplication.java) with demo bean
 
 ## Final Submission Assignment 1 21. April 2024
 [Release 1.2](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/releases/tag/EDPO_A1_3.0)
