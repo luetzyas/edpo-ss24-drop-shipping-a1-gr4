@@ -3,6 +3,8 @@ package io.flowing.retail.vgr.mqtt;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.flowing.retail.vgr.domain.Bme680Data;
 import io.flowing.retail.vgr.domain.FactoryOrderState;
+import io.flowing.retail.vgr.messages.MessageSender;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
@@ -11,7 +13,8 @@ import org.springframework.stereotype.Component;
 public class MqttInputHandler {
     private volatile String lastOrderStateJson;
     private final ObjectMapper objectMapper = new ObjectMapper();
-
+    @Autowired
+    private MessageSender messageSender;
     // @Autowired
     // private OrderStateRepository repository;
 
@@ -21,20 +24,18 @@ public class MqttInputHandler {
         try {
             String topic = message.getHeaders().get("mqtt_receivedTopic").toString();
             String payload = message.getPayload();
-            System.out.println("Received message from topic: " + topic);
-            System.out.println("Message payload: " + payload);
+           // System.out.println("Received message from topic: " + topic);
+           // System.out.println("Message payload: " + payload);
 
             if ("f/i/order".equals(topic)) {
                 lastOrderStateJson = message.getPayload();
-                // Process the message as needed, e.g., save to a database or log it
-                System.out.println("******** Updated order state ******** -->  : " + lastOrderStateJson);
-
                 FactoryOrderState orderState = objectMapper.readValue(lastOrderStateJson, FactoryOrderState.class);
-                // Save the order state using repository or any other service
-                // repository.save(orderState);
+
+                messageSender.sendToKafka("factory-orders", payload, "OrderUpdate");
             } else if ("i/bme680".equals(topic)) {
-                Bme680Data data = objectMapper.readValue(payload, Bme680Data.class);
-                // Perform operations specific to Bme680Data
+                // forwarding sensor data to Kafka
+                // Bme680Data data = objectMapper.readValue(payload, Bme680Data.class);
+                messageSender.sendToKafka("sensor-data", payload, "SensorUpdate");
             }
 
 

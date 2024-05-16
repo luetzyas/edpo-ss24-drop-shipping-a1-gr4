@@ -9,6 +9,8 @@ import org.springframework.kafka.config.TopicBuilder;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
+
 /**
  * Helper to send messages, currently nailed to Kafka, but could also send via AMQP (e.g. RabbitMQ) or
  * any other transport easily
@@ -44,4 +46,17 @@ public class MessageSender {
       throw new RuntimeException("Could not transform and send message: "+ e.getMessage(), e);
     }
   }
+  public void sendToKafka(String topic, String payload, String type) {
+    try {
+      ProducerRecord<String, String> record = new ProducerRecord<>(topic, payload);
+      if (type != null) {
+        record.headers().add("type", type.getBytes(StandardCharsets.UTF_8));
+      }
+      kafkaTemplate.send(record);
+      System.out.println("Sent message to Kafka topic: " + topic + ", Payload: " + payload);
+    } catch (Exception e) {
+      throw new RuntimeException("Could not send message to Kafka: " + e.getMessage(), e);
+    }
+  }
+
 }
