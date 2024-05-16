@@ -17,9 +17,9 @@
             <form class="form-inline">
                 <div class="form-group">
                     <button id="connect" class="btn btn-default" type="submit">Connect websocket</button>
-                    <button id="disconnect" class="btn btn-default" type="submit" disabled="disabled">Disconnect websocket
-                    </button>
+                    <button id="disconnect" class="btn btn-default" type="submit" disabled="disabled">Disconnect websocket</button>
                     <button id="sensor-data" class="btn btn-default" type="button">Sensor Data</button>
+                    <button id="customer-data" class="btn btn-default" type="button">Customer Data</button>
                 </div>
             </form>
         </div>   
@@ -72,6 +72,9 @@
         });
         $("#sensor-data").click(function () {
             window.location.href = "/sensor-data.html";
+        });
+        $("#customer-data").click(function () {
+            window.location.href = "/customer-data.html";
         });
     });
 

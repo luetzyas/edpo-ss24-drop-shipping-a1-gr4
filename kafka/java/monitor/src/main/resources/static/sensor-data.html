@@ -13,7 +13,6 @@
   <table class="table table-striped">
     <thead>
     <tr>
-      <th>Timestamp</th>
       <th>Air Quality</th>
       <th>Gas Resistance</th>
       <th>Humidity</th>
@@ -22,6 +21,7 @@
       <th>Relative Humidity</th>
       <th>Room Temperature</th>
       <th>Air Temperature</th>
+      <th>Timestamp</th>
     </tr>
     </thead>
     <tbody id="sensor-data">
@@ -35,20 +35,23 @@
       url: "/sensor-data",
       method: "GET",
       success: function (data) {
+        console.log("Fetched data:", data); // Log the data to check its structure
         var sensorDataHtml = '';
         data.forEach(function (sensor) {
+          console.log("Processing sensor data:", sensor); // Log each sensor data item
           sensorDataHtml += '<tr>' +
+                  '<td>' + sensor.averageAirQuality + '</td>' +
+                  '<td>' + sensor.averageGasResistance + '</td>' +
+                  '<td>' + sensor.averageHumidity + '</td>' +
+                  '<td>' + sensor.averageIndexedAirQuality + '</td>' +
+                  '<td>' + sensor.averageAirPressure + '</td>' +
+                  '<td>' + sensor.averageRelativeHumidity + '</td>' +
+                  '<td>' + sensor.averageRoomTemperature + '</td>' +
+                  '<td>' + sensor.averageAirTemperature + '</td>' +
                   '<td>' + sensor.timestamp + '</td>' +
-                  '<td>' + sensor.airQuality + '</td>' +
-                  '<td>' + sensor.gasResistance + '</td>' +
-                  '<td>' + sensor.humidity + '</td>' +
-                  '<td>' + sensor.indexedAirQuality + '</td>' +
-                  '<td>' + sensor.airPressure + '</td>' +
-                  '<td>' + sensor.relativeHumidity + '</td>' +
-                  '<td>' + sensor.roomTemperature + '</td>' +
-                  '<td>' + sensor.airTemperature + '</td>' +
                   '</tr>';
         });
+        console.log("Generated HTML:", sensorDataHtml); // Log the generated HTML
         $('#sensor-data').html(sensorDataHtml);
       },
       error: function (error) {

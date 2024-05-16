@@ -6,13 +6,18 @@ import io.flowing.retail.monitor.streams.serealization.json.SensorDataAggregateS
 import io.flowing.retail.monitor.streams.serealization.json.SensorDataSerde;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.common.utils.Bytes;
+import org.apache.kafka.streams.StoreQueryParameters;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.Topology;
 import org.apache.kafka.streams.kstream.*;
 import org.apache.kafka.streams.state.KeyValueStore;
+import org.apache.kafka.streams.state.QueryableStoreTypes;
+import org.apache.kafka.streams.state.ReadOnlyWindowStore;
 import org.apache.kafka.streams.state.WindowStore;
 
+import java.security.KeyStore;
 import java.time.Duration;
+import java.util.Properties;
 
 public class SensorDataMonitorTopology {
     public static Topology build() {
