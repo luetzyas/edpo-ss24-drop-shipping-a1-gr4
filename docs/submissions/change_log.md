@@ -44,6 +44,7 @@ Here, you will find a brief overview of our progress, including major milestones
 - code
   - new class [DailyItemsTopology](../../kafka/java/order-camunda/src/main/java/io/flowing/retail/order/streams/DailyItemsTopology.java) to get daily items count per day
   - restructure [KafkaStreamsRunner](../../kafka/java/order-camunda/src/main/java/io/flowing/retail/order/streams/KafkaStreamsRunner.java) for multiple topologies
+  - new microservice [crm-camunda](../../kafka/java/crm-camunda) to store and update customerdata
 
 ## Final Submission Assignment 1 21. April 2024
 [Release 1.2](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/releases/tag/EDPO_A1_3.0)
