@@ -51,11 +51,20 @@ Here, you will find a brief overview of our progress, including major milestones
 
 
 **@luetzyas**
-- docs
+- Documentation
   - ADR [0004 Camunda 7 vs 8](adr/0004-Camunda-7-vs-8.md)
-- code
+  - ADR [0005 Add new CRM-Camunda Service](adr/0005-add-crm-camunda-service.md) //TODO
+  - implement feedback in [Assignment_1-Final-Report](Assignment_1-Final-Report.pdf) //TODO
+  - work on final report for [Assingment_2-Final_Report](Assignment_2-Final-Report.pdf) //TODO
+
+- Order-Camunda Service
   - new class [DailyItemsTopology](../../kafka/java/order-camunda/src/main/java/io/flowing/retail/order/streams/DailyItemsTopology.java) to get daily items count per day
   - restructure [KafkaStreamsRunner](../../kafka/java/order-camunda/src/main/java/io/flowing/retail/order/streams/KafkaStreamsRunner.java) for multiple topologies
+- CRM-Camunda Service >> new microservice [crm-camunda](../../kafka/java/crm-camunda) to store and update customer data
+  - Process to load XML file with customer sample data during Springboot startup
+    - new classes: [Customers](../../kafka/java/crm-camunda/src/main/java/io/flowing/retail/crm/dbLoader/Customers.java), [DataLoader](../../kafka/java/crm-camunda/src/main/java/io/flowing/retail/crm/dbLoader/DataLoader.java)
+    - new xmlfile: [customers.xml](../../kafka/java/crm-camunda/src/main/resources/customers.xml)
+    - enhanced [CrmApplication](../../kafka/java/crm-camunda/src/main/java/io/flowing/retail/crm/CrmApplication.java) with demo bean
 
 ## Final Submission Assignment 1 21. April 2024
 [Release 1.2](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/releases/tag/EDPO_A1_3.0)
@@ -94,7 +103,7 @@ Here, you will find a brief overview of our progress, including major milestones
 - Assignment 1 [Presentation](A1_Gr4_MidtermPresentation.pdf)
     - Presentation slides
     - Presentation script
-- docs
+- Documentation
     - ADR [0001 add Mailing service](adr/0001-add-mailing-service.md)
     - ADR [0002 add Factory service](adr/0002-add-factory-service.md)
     - ADR [0003 Choreographed vs. Orchestrated](adr/0003-Choreographed-vs-Orchestrated.md)

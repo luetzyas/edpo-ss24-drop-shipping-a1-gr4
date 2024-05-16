@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<customers>
+    <customer>
+        <email>hnehls0@rambler.ru</email>
+        <name>Hi Nehls</name>
+        <address>30 Novick Trail</address>
+    </customer>
+    <customer>
+        <email>trobson1@google.ca</email>
+        <name>Trista Robson</name>
+        <address>33 Sunfield Crossing</address>
+    </customer>
+    <customer>
+        <email>lgreening2@ameblo.jp</email>
+        <name>Letisha Greening</name>
+        <address>71 Duke Place</address>
+    </customer>
+    <customer>
+        <email>rbaskerfield3@typepad.com</email>
+        <name>Reinwald Baskerfield</name>
+        <address>8 Manley Avenue</address>
+    </customer>
+    <customer>
+        <email>cle4@paginegialle.it</email>
+        <name>Courtnay Le Noury</name>
+        <address>39386 North Place</address>
+    </customer>
+    <customer>
+        <email>troseborough5@free.fr</email>
+        <name>Torey Roseborough</name>
+        <address>01 Walton Point</address>
+    </customer>
+    <customer>
+        <email>rdonisthorpe6@yolasite.com</email>
+        <name>Rolfe Donisthorpe</name>
+        <address>571 Petterle Park</address>
+    </customer>
+    <customer>
+        <email>sfaivre7@mozilla.org</email>
+        <name>Sibelle Faivre</name>
+        <address>89 Ilene Street</address>
+    </customer>
+    <customer>
+        <email>jakaster8@va.gov</email>
+        <name>Jermayne Akaster</name>
+        <address>5 West Park</address>
+    </customer>
+    <customer>
+        <email>ddawkins9@i2i.jp</email>
+        <name>Devlen Dawkins</name>
+        <address>23917 Fallview Plaza</address>
+    </customer>
+    <customer>
+        <email>jsydera@google.co.uk</email>
+        <name>Joan Syder</name>
+        <address>876 Bultman Crossing</address>
+    </customer>
+    <customer>
+        <email>mcostab@harvard.edu</email>
+        <name>Moira Costa</name>
+        <address>72395 Mccormick Terrace</address>
+    </customer>
+    <customer>
+        <email>lfrentzc@blogs.com</email>
+        <name>Lila Frentz</name>
+        <address>52241 Nelson Parkway</address>
+    </customer>
+    <customer>
+        <email>jmatushenkod@jiathis.com</email>
+        <name>Jackelyn Matushenko</name>
+        <address>0 Clarendon Drive</address>
+    </customer>
+    <customer>
+        <email>dporkere@wikimedia.org</email>
+        <name>Darb Porker</name>
+        <address>1577 Lien Hill</address>
+    </customer>
+</customers>

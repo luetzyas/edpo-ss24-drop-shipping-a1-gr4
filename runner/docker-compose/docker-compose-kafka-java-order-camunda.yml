@@ -133,6 +133,19 @@ services:
     environment:
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
 
+  crm:
+    build:
+      context: ../../kafka/java/crm-camunda
+      dockerfile: Dockerfile
+    networks:
+      - flowing
+    ports:
+      - "8098:8098"
+    depends_on:
+      - kafka
+    environment:
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+
   docs:
     image: flowingretail/docs
     networks:
