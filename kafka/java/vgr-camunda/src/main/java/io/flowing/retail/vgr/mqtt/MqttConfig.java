@@ -35,6 +35,8 @@ public class MqttConfig {
             options.setServerURIs(new String[]{mqttHost + ":" + mqttPort});
             options.setUserName(mqttUsername);
             options.setPassword(mqttPassword.toCharArray());
+            options.setAutomaticReconnect(true);
+            options.setKeepAliveInterval(60);
             DefaultMqttPahoClientFactory factory = new DefaultMqttPahoClientFactory();
             factory.setConnectionOptions(options);
             return factory;
@@ -52,6 +54,7 @@ public class MqttConfig {
             MqttPahoMessageDrivenChannelAdapter adapter =
                     new MqttPahoMessageDrivenChannelAdapter(mqttHost, clientFactory);
             adapter.addTopic(mqttTopic);
+            adapter.addTopic("i/bme680");
             adapter.setCompletionTimeout(5000);
             adapter.setConverter(new DefaultPahoMessageConverter());
             adapter.setOutputChannel(mqttInputChannel());
