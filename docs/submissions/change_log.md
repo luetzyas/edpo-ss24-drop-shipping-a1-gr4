@@ -35,8 +35,20 @@ Here, you will find a brief overview of our progress, including major milestones
     - KafkaStreamsRunner
     - POM.xml with dependencies
 
+- VGR-Service
+  - MQTT Topic `i/bme680` forwarded to Kafka Topic `sensor-data`
+
 - Checkout Service
   - BPMN Error Handling if Order is greater than 100 items leads to a User Task for Human Intervention, displaying the custom error message
+
+- Monitor-Service
+  - Stream Processing to monitor sensor data
+    - SensorDataProcessTopology
+    - SensorDataMonitorTopology
+    - KafkaStreamsRunner
+    - POM.xml with dependencies
+  - HTML Page for Average Sensor Data
+
 
 **@luetzyas**
 - docs
