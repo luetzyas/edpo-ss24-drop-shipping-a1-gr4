@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sensor Data</title>
+  <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <script src="/webjars/jquery/jquery.min.js"></script>
+  <script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container">
+  <h1>Sensor Data</h1>
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th>Timestamp</th>
+      <th>Air Quality</th>
+      <th>Gas Resistance</th>
+      <th>Humidity</th>
+      <th>Indexed Air Quality</th>
+      <th>Air Pressure</th>
+      <th>Relative Humidity</th>
+      <th>Room Temperature</th>
+      <th>Air Temperature</th>
+    </tr>
+    </thead>
+    <tbody id="sensor-data">
+    <!-- Sensor data will be appended here by JavaScript -->
+    </tbody>
+  </table>
+</div>
+<script>
+  $(document).ready(function () {
+    $.ajax({
+      url: "/sensor-data",
+      method: "GET",
+      success: function (data) {
+        var sensorDataHtml = '';
+        data.forEach(function (sensor) {
+          sensorDataHtml += '<tr>' +
+                  '<td>' + sensor.timestamp + '</td>' +
+                  '<td>' + sensor.airQuality + '</td>' +
+                  '<td>' + sensor.gasResistance + '</td>' +
+                  '<td>' + sensor.humidity + '</td>' +
+                  '<td>' + sensor.indexedAirQuality + '</td>' +
+                  '<td>' + sensor.airPressure + '</td>' +
+                  '<td>' + sensor.relativeHumidity + '</td>' +
+                  '<td>' + sensor.roomTemperature + '</td>' +
+                  '<td>' + sensor.airTemperature + '</td>' +
+                  '</tr>';
+        });
+        $('#sensor-data').html(sensorDataHtml);
+      },
+      error: function (error) {
+        console.log("Error fetching sensor data", error);
+      }
+    });
+  });
+</script>
+</body>
+</html>

@@ -19,6 +19,7 @@
                     <button id="connect" class="btn btn-default" type="submit">Connect websocket</button>
                     <button id="disconnect" class="btn btn-default" type="submit" disabled="disabled">Disconnect websocket
                     </button>
+                    <button id="sensor-data" class="btn btn-default" type="button">Sensor Data</button>
                 </div>
             </form>
         </div>   
@@ -59,6 +60,21 @@
 </body>
 <script type="text/javascript">
 
+    $(function () {
+        $("form").on('submit', function (e) {
+            e.preventDefault();
+        });
+        $("#connect").click(function () {
+            connect();
+        });
+        $("#disconnect").click(function () {
+            disconnect();
+        });
+        $("#sensor-data").click(function () {
+            window.location.href = "/sensor-data.html";
+        });
+    });
+
 		function load() {
 			 $.ajax({
               url: "./event",
@@ -69,6 +85,8 @@
 			}
           })
 		}
-</script> 
+
+
+</script>
 
 </html>
