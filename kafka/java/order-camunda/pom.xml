@@ -89,6 +89,7 @@
 			<artifactId>spring-kafka</artifactId>
 			<version>${spring.kafka.version}</version>
 		</dependency>
+		<!-- Kafka Streams -->
 		<dependency>
 			<groupId>org.apache.kafka</groupId>
 			<artifactId>kafka-streams</artifactId>
@@ -114,6 +115,7 @@
 			<artifactId>kafka-registryless-avro-serdes</artifactId>
 			<version>1.0.0</version>
 		</dependency>
+		<!-- Kafka Streams -->
 		<dependency>
 			<!-- make sure to use this version as of https://github.com/camunda/camunda-bpm-assert/issues/90 -->
 			<groupId>org.assertj</groupId>

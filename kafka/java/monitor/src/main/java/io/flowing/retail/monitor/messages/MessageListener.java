@@ -48,5 +48,10 @@ public class MessageListener {
     // and probably send to connected websocket (TODO: Not a good place for the code here!)
     simpMessageTemplate.convertAndSend("/topic/events", event);
   }
+  @Transactional
+  @KafkaListener(id = "monitor-sensors", topics = "i/bme680")
+  public void sensorDataReceived(String message) throws Exception {
+
+  }
 
 }
