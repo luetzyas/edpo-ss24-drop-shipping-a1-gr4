@@ -2,6 +2,7 @@ package io.flowing.retail.monitor.streams;
 
 import io.flowing.retail.monitor.domain.SensorData;
 import io.flowing.retail.monitor.domain.SensorDataAggregate;
+import io.flowing.retail.monitor.messages.MessageListener;
 import io.flowing.retail.monitor.streams.serealization.json.SensorDataAggregateSerde;
 import io.flowing.retail.monitor.streams.serealization.json.SensorDataSerde;
 import org.apache.kafka.common.serialization.Serdes;
@@ -14,13 +15,16 @@ import org.apache.kafka.streams.state.KeyValueStore;
 import org.apache.kafka.streams.state.QueryableStoreTypes;
 import org.apache.kafka.streams.state.ReadOnlyWindowStore;
 import org.apache.kafka.streams.state.WindowStore;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import java.security.KeyStore;
 import java.time.Duration;
 import java.util.Properties;
 
 public class SensorDataMonitorTopology {
-    public static Topology build() {
+
+    public static Topology build(KafkaStreamsService kafkaStreamsService) {
         StreamsBuilder builder = new StreamsBuilder();
 
         KStream<String, SensorData> processedSensorDataStream = builder.stream(
@@ -68,8 +72,10 @@ public class SensorDataMonitorTopology {
         // Handle critical sensor data
         criticalSensorDataStream.foreach((key, value) -> {
             System.out.println("ALERT! Critical sensor data received: " + value);
-            // You can add more alert handling logic here
+            kafkaStreamsService.sendCriticalData(value);
         });
+
+
 
         return builder.build();
     }

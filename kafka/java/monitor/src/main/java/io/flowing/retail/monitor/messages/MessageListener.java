@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.flowing.retail.monitor.domain.PastEvent;
+import io.flowing.retail.monitor.domain.SensorData;
 import io.flowing.retail.monitor.persistence.LogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -47,11 +48,6 @@ public class MessageListener {
 
     // and probably send to connected websocket (TODO: Not a good place for the code here!)
     simpMessageTemplate.convertAndSend("/topic/events", event);
-  }
-  @Transactional
-  @KafkaListener(id = "monitor-sensors", topics = "i/bme680")
-  public void sensorDataReceived(String message) throws Exception {
-
   }
 
 }

@@ -22,7 +22,7 @@ public class KafkaStreamsRunner {
     @PostConstruct
     public void startKafkaStreams() {
         startTopology(SensorDataProcessTopology.build(), "sensor-data-process-app");
-        startTopology(SensorDataMonitorTopology.build(), "sensor-data-monitor-app");
+        startTopology(SensorDataMonitorTopology.build(kafkaStreamsService), "sensor-data-monitor-app");
     }
 
     private void startTopology(Topology topology, String applicationId) {
@@ -32,6 +32,7 @@ public class KafkaStreamsRunner {
             config.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
             config.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
             config.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
+            config.put(StreamsConfig.PROCESSING_GUARANTEE_CONFIG, StreamsConfig.EXACTLY_ONCE_V2);
 
             KafkaStreams streams = new KafkaStreams(topology, config);
             Runtime.getRuntime().addShutdownHook(new Thread(streams::close));

@@ -6,6 +6,8 @@
   <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <script src="/webjars/jquery/jquery.min.js"></script>
   <script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+  <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+  <script src="/webjars/stomp-websocket/stomp.min.js"></script>
 </head>
 <body>
 <div class="container">
@@ -29,8 +31,32 @@
     <!-- Sensor data will be appended here by JavaScript -->
     </tbody>
   </table>
+  <h2>Critical Sensor Data</h2>
+  <div id="critical-data">
+    <!-- Critical sensor data will be appended here by JavaScript -->
+  </div>
 </div>
 <script>
+  var stompClient = null;
+
+  function connect() {
+    var socket = new SockJS('/gs-guide-websocket');
+    stompClient = Stomp.over(socket);
+    stompClient.connect({}, function (frame) {
+      console.log('Connected: ' + frame);
+      stompClient.subscribe('/topic/critical-data', function (message) {
+        showCriticalData(JSON.parse(message.body));
+      });
+    });
+  }
+
+  function showCriticalData(message) {
+    var criticalDataHtml = '<div class="alert alert-danger">' +
+            'ALERT! Critical sensor data received: ' + JSON.stringify(message) +
+            '</div>';
+    $('#critical-data').append(criticalDataHtml);
+  }
+
   $(document).ready(function () {
     $.ajax({
       url: "/sensor-data",
@@ -60,6 +86,8 @@
         console.log("Error fetching sensor data", error);
       }
     });
+
+    connect();
   });
 </script>
 </body>
