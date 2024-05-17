@@ -2,14 +2,14 @@ package io.flowing.retail.monitor.web;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
-import java.time.Duration;
-import java.time.Instant;
+import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import io.flowing.retail.monitor.domain.SensorData;
 import io.flowing.retail.monitor.domain.SensorDataAggregate;
+import io.flowing.retail.monitor.domain.SensorDataAggregateWithWindow;
 import io.flowing.retail.monitor.messages.MessageListener;
 import io.flowing.retail.monitor.streams.KafkaStreamsService;
 import org.apache.kafka.streams.KeyValue;
@@ -43,8 +43,8 @@ public class MonitorRestController {
   }
 
   @RequestMapping(path = "/sensor-data", method = GET)
-  public List<SensorDataAggregate> getAllSensorData() {
-    List<SensorDataAggregate> sensorDataList = new ArrayList<>();
+  public List<SensorDataAggregateWithWindow> getAllSensorData() {
+    List<SensorDataAggregateWithWindow> sensorDataList = new ArrayList<>();
     if (!kafkaStreamsService.isRunning()) {
       throw new IllegalStateException("Monitor Rest Controller: Kafka Streams is not running");
     }
@@ -54,11 +54,22 @@ public class MonitorRestController {
       Instant from = now.minus(Duration.ofHours(24)); // Adjust the duration as needed
       System.out.println("******* RestController: Fetching data from " + from + " to " + now);
 
+      // Fetch all entries within the time range
       KeyValueIterator<Windowed<String>, SensorDataAggregate> iterator = store.fetchAll(from, now);
       while (iterator.hasNext()) {
         KeyValue<Windowed<String>, SensorDataAggregate> entry = iterator.next();
-        sensorDataList.add(entry.value);
+        // Log each entry
         System.out.println("Key: " + entry.key + ", Value: " + entry.value);
+
+        ZoneId targetTimeZone = ZoneId.of("Europe/Berlin"); // Set timezone
+
+        LocalDateTime windowStart = entry.key.window().startTime().atZone(targetTimeZone).toLocalDateTime();
+        LocalDateTime windowEnd = entry.key.window().endTime().atZone(targetTimeZone).toLocalDateTime();
+        sensorDataList.add(new SensorDataAggregateWithWindow(
+                entry.value,
+                windowStart,
+                windowEnd
+        ));
       }
       iterator.close();
     } catch (Exception e) {

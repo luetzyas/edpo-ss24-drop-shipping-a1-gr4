@@ -40,7 +40,7 @@ public class SensorDataMonitorTopology {
         // Calculate average values per hour for normal data
         KTable<Windowed<String>, SensorDataAggregate> hourlyAverage = normalSensorDataStream
                 .groupByKey(Grouped.with(Serdes.String(), new SensorDataSerde()))
-                .windowedBy(TimeWindows.of(Duration.ofHours(1)))
+                .windowedBy(TimeWindows.ofSizeWithNoGrace(Duration.ofHours(1)))
                 .aggregate(
                         SensorDataAggregate::new, // Initializer
                         (key, newValue, aggregate) -> {

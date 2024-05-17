@@ -13,6 +13,8 @@
   <table class="table table-striped">
     <thead>
     <tr>
+      <th>Window Start</th>
+      <th>Window End</th>
       <th>Air Quality</th>
       <th>Gas Resistance</th>
       <th>Humidity</th>
@@ -21,7 +23,6 @@
       <th>Relative Humidity</th>
       <th>Room Temperature</th>
       <th>Air Temperature</th>
-      <th>Timestamp</th>
     </tr>
     </thead>
     <tbody id="sensor-data">
@@ -40,14 +41,16 @@
         data.forEach(function (sensor) {
           console.log("Processing sensor data:", sensor); // Log each sensor data item
           sensorDataHtml += '<tr>' +
-                  '<td>' + sensor.averageAirQuality + '</td>' +
-                  '<td>' + sensor.averageGasResistance + '</td>' +
-                  '<td>' + sensor.averageHumidity + '</td>' +
-                  '<td>' + sensor.averageIndexedAirQuality + '</td>' +
-                  '<td>' + sensor.averageAirPressure + '</td>' +
-                  '<td>' + sensor.averageRelativeHumidity + '</td>' +
-                  '<td>' + sensor.averageRoomTemperature + '</td>' +
-                  '<td>' + sensor.averageAirTemperature + '</td>' +
+                  '<td>' + sensor.windowStart + '</td>' +
+                  '<td>' + sensor.windowEnd + '</td>' +
+                  '<td>' + sensor.aggregate.averageAirQuality + '</td>' +
+                  '<td>' + sensor.aggregate.averageGasResistance + '</td>' +
+                  '<td>' + sensor.aggregate.averageHumidity + '</td>' +
+                  '<td>' + sensor.aggregate.averageIndexedAirQuality + '</td>' +
+                  '<td>' + sensor.aggregate.averageAirPressure + '</td>' +
+                  '<td>' + sensor.aggregate.averageRelativeHumidity + '</td>' +
+                  '<td>' + sensor.aggregate.averageRoomTemperature + '</td>' +
+                  '<td>' + sensor.aggregate.averageAirTemperature + '</td>' +
                   '</tr>';
         });
         console.log("Generated HTML:", sensorDataHtml); // Log the generated HTML
