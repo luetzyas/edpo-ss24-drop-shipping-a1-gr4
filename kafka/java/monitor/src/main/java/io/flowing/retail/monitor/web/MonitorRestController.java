@@ -12,6 +12,9 @@ import io.flowing.retail.monitor.domain.SensorData;
 import io.flowing.retail.monitor.domain.SensorDataAggregate;
 import io.flowing.retail.monitor.messages.MessageListener;
 import io.flowing.retail.monitor.streams.KafkaStreamsService;
+import org.apache.kafka.streams.KeyValue;
+import org.apache.kafka.streams.kstream.Windowed;
+import org.apache.kafka.streams.state.KeyValueIterator;
 import org.apache.kafka.streams.state.ReadOnlyWindowStore;
 import org.apache.kafka.streams.state.WindowStoreIterator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,24 +46,25 @@ public class MonitorRestController {
   public List<SensorDataAggregate> getAllSensorData() {
     List<SensorDataAggregate> sensorDataList = new ArrayList<>();
     if (!kafkaStreamsService.isRunning()) {
-      throw new IllegalStateException("Kafka Streams is not running");
+      throw new IllegalStateException("Monitor Rest Controller: Kafka Streams is not running");
     }
     try {
       ReadOnlyWindowStore<String, SensorDataAggregate> store = kafkaStreamsService.getHourlyAverageStore();
       Instant now = Instant.now();
       Instant from = now.minus(Duration.ofHours(24)); // Adjust the duration as needed
       System.out.println("******* RestController: Fetching data from " + from + " to " + now);
-      store.fetchAll(from, now).forEachRemaining(entry -> {
-        WindowStoreIterator<SensorDataAggregate> iterator = store.fetch(String.valueOf(entry.key), from, now);
-        System.out.println("First value = Key: " + entry.key + ", Value: " + entry.value);
-        while (iterator.hasNext()) {
-          sensorDataList.add(iterator.next().value);
-          System.out.println("Next Value: " + iterator.next().value);
-        }
-      });
+
+      KeyValueIterator<Windowed<String>, SensorDataAggregate> iterator = store.fetchAll(from, now);
+      while (iterator.hasNext()) {
+        KeyValue<Windowed<String>, SensorDataAggregate> entry = iterator.next();
+        sensorDataList.add(entry.value);
+        System.out.println("Key: " + entry.key + ", Value: " + entry.value);
+      }
+      iterator.close();
     } catch (Exception e) {
       e.printStackTrace();
     }
+    System.out.println(sensorDataList);
     return sensorDataList;
   }
 

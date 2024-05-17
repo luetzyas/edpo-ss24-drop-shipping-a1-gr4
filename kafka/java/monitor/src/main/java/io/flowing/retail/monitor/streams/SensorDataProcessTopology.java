@@ -44,7 +44,7 @@ public class SensorDataProcessTopology {
         // Print the output for debugging purposes
         mergedStream.foreach((key, sensorData) -> {
             if (debug) {
-                System.out.println("Key: " + key + ", SensorData: " + sensorData);
+                System.out.println("Process-App: Key: " + key + ", SensorData: " + sensorData);
             } else {
                 // only print critical sensor data
                 if ("critical".equals(key)) {
