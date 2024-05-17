@@ -47,7 +47,8 @@ Here, you will find a brief overview of our progress, including major milestones
     - SensorDataMonitorTopology
     - KafkaStreamsRunner
     - POM.xml with dependencies
-  - HTML Page for Average Sensor Data
+  - Display sensor data on Monitor Dashboard by Windowed Aggregation
+  - Display ciritcal sensor data on Monitor Dashboard
 
 
 **@luetzyas**
