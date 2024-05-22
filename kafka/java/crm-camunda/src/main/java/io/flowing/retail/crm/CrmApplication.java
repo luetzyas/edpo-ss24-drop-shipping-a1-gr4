@@ -1,6 +1,6 @@
 package io.flowing.retail.crm;
 
-import io.flowing.retail.crm.domain.Customer;
+import io.flowing.retail.crm.domain.db.Customer;
 import io.flowing.retail.crm.persistence.CrmRepository;
 import org.camunda.bpm.spring.boot.starter.annotation.EnableProcessApplication;
 import org.springframework.beans.factory.annotation.Value;

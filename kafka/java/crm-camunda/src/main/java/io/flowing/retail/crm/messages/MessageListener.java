@@ -1,23 +1,16 @@
 package io.flowing.retail.crm.messages;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.flowing.retail.crm.application.CrmService;
-import io.flowing.retail.crm.domain.Customer;
+import io.flowing.retail.crm.domain.db.Customer;
 import io.flowing.retail.crm.persistence.CrmRepository;
 import org.camunda.bpm.engine.RuntimeService;
-import org.camunda.spin.plugin.variable.SpinValues;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.io.IOException;
 
 @Component
 public class MessageListener {
@@ -39,7 +32,7 @@ public class MessageListener {
    * It might make more sense to handle each and every message type individually.
    */
   @Transactional
-  @KafkaListener(id = "order", topics = MessageSender.TOPIC_NAME)
+  @KafkaListener(id = "crm", topics = MessageSender.TOPIC_NAME)
   public void newCustomerCommand(String messagePayloadJson, @Header("type") String messageType) throws Exception{
     // TODO: add command when customer is updated form
     if ("notDoneYet".equals(messageType)) {

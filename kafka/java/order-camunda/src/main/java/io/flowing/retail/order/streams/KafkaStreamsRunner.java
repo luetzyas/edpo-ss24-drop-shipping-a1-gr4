@@ -20,6 +20,7 @@ public class KafkaStreamsRunner {
     public void startKafkaStreams() {
         startTopology(DailyOrdersTopology.build(), "daily-orders-app");
         startTopology(DailyItemsTopology.build(), "daily-color-count-app");
+        startTopology(OrderEnrichmentTopology.build(), "order-enrichment-app");
     }
 
     private void startTopology(Topology topology, String applicationId) {
@@ -29,6 +30,7 @@ public class KafkaStreamsRunner {
             config.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
             config.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
             config.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, MessageOrderSerde.class);
+            config.put("schema.registry.url", "http://localhost:8081");
 
             KafkaStreams streams = new KafkaStreams(topology, config);
             Runtime.getRuntime().addShutdownHook(new Thread(streams::close));

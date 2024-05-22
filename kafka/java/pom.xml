@@ -18,6 +18,7 @@
 		<module>mailing</module>
 		<module>vgr-camunda</module>
 		<module>order-camunda</module>
+		<module>crm-camunda</module>
 	</modules>
 
 	<build>

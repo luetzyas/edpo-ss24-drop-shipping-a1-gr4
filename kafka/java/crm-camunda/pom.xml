@@ -216,7 +216,6 @@
 			    <artifactId>maven-compiler-plugin</artifactId>
 			    <version>3.8.1</version>
 			</plugin>
-			<!--
 			<plugin>
 				<groupId>org.apache.avro</groupId>
 				<artifactId>avro-maven-plugin</artifactId>
@@ -237,7 +236,6 @@
 					</execution>
 				</executions>
 			</plugin>
-			-->
     	</plugins>
     </build>
 </project>
