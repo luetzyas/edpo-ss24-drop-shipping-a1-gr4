@@ -33,7 +33,24 @@
   </table>
   <h2>Critical Sensor Data</h2>
   <div id="critical-data">
-    <!-- Critical sensor data will be appended here by JavaScript -->
+    <table class="table table-bordered">
+      <thead>
+      <tr>
+        <th>Air Quality</th>
+        <th>Gas Resistance</th>
+        <th>Humidity</th>
+        <th>Indexed Air Quality</th>
+        <th>Air Pressure</th>
+        <th>Relative Humidity</th>
+        <th>Room Temperature</th>
+        <th>Air Temperature</th>
+        <th>Timestamp</th>
+      </tr>
+      </thead>
+      <tbody id="critical-data-body">
+      <!-- Data rows will go here -->
+      </tbody>
+    </table>
   </div>
 </div>
 <script>
@@ -51,21 +68,37 @@
   }
 
   function showCriticalData(message) {
-    var criticalDataHtml = '<div class="alert alert-danger">' +
-            'ALERT! Critical sensor data received: ' + JSON.stringify(message) +
-            '</div>';
-    $('#critical-data').append(criticalDataHtml);
+    var data = message;
+    var maxRows = 20; // Maximum rows to display in the table
+    var rowCount = $('#critical-data-body tr').length;
+
+    if (rowCount >= maxRows) {
+      $('#critical-data-body tr:first').remove(); // Remove the oldest row
+    }
+
+    var rowData = '<tr>' +
+            '<td>' + data.airQuality + '</td>' +
+            '<td>' + data.gasResistance + '</td>' +
+            '<td>' + data.humidity + '</td>' +
+            '<td>' + data.indexedAirQuality + '</td>' +
+            '<td>' + data.airPressure + '</td>' +
+            '<td>' + data.relativeHumidity + '</td>' +
+            '<td>' + data.roomTemperature + '</td>' +
+            '<td>' + data.airTemperature + '</td>' +
+            '<td>' + new Date(data.timestamp).toLocaleString() + '</td>' +
+            '</tr>';
+
+    $('#critical-data-body').append(rowData);
   }
+
 
   $(document).ready(function () {
     $.ajax({
       url: "/sensor-data",
       method: "GET",
       success: function (data) {
-        console.log("Fetched data:", data); // Log the data to check its structure
         var sensorDataHtml = '';
         data.forEach(function (sensor) {
-          console.log("Processing sensor data:", sensor); // Log each sensor data item
           sensorDataHtml += '<tr>' +
                   '<td>' + sensor.windowStart + '</td>' +
                   '<td>' + sensor.windowEnd + '</td>' +
@@ -79,7 +112,6 @@
                   '<td>' + sensor.aggregate.averageAirTemperature + '</td>' +
                   '</tr>';
         });
-        console.log("Generated HTML:", sensorDataHtml); // Log the generated HTML
         $('#sensor-data').html(sensorDataHtml);
       },
       error: function (error) {
