@@ -41,7 +41,8 @@ public class MessageListener {
     System.out.println("New order placed, start flow. Order object: " + order);
     
     // persist domain entity
-    repository.save(order);    
+    repository.save(order);    // TODO: Because the customer is only added after EnrichmentTopology, and this currently listens to OrderPlacedEvent, the customer is not yet added to the order. This should listen to EnrichedORderPlaced Topic See: OrderDeserializer input: {"orderId":"checkout-generated-6e061518-f853-4f59-b915-8b50d0743e69","customer":{},"items":[{"articleId":"BLUE","amount":2}],"email":"trobson1@google.ca"}
+
     try {
       // and kick of a new flow instance
       runtimeService.createMessageCorrelation(message.getType())
