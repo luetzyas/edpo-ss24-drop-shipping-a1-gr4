@@ -1,6 +1,6 @@
 package io.flowing.retail.crm;
 
-import io.flowing.retail.crm.domain.db.Customer;
+import io.flowing.retail.crm.domain.Customer;
 import io.flowing.retail.crm.persistence.CrmRepository;
 import org.camunda.bpm.spring.boot.starter.annotation.EnableProcessApplication;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,11 +26,12 @@ public class CrmApplication {
             switch (runDemo) {
                 case 1:
                     String demoEmail = "trobson1@google.ca";
-                    System.out.println(crmRepository.findByEmail(demoEmail));
+                    System.out.println("**CRM DATA** :" + crmRepository.findByEmail(demoEmail));
                     break;
                 case 2:
                     // Fetch all customers
                     Iterable<Customer> customers = crmRepository.findAll();
+                    System.out.println("**CRM DATA** :");
                     customers.forEach(System.out::println);
                     break;
                 default:

@@ -3,7 +3,7 @@ package io.flowing.retail.crm.messages;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.flowing.retail.crm.application.CrmService;
-import io.flowing.retail.crm.domain.db.Customer;
+import io.flowing.retail.crm.domain.Customer;
 import io.flowing.retail.crm.persistence.CrmRepository;
 import org.camunda.bpm.engine.RuntimeService;
 import org.springframework.beans.factory.annotation.Autowired;

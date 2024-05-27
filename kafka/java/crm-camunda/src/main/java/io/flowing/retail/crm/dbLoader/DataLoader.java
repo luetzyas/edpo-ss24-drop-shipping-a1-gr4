@@ -1,6 +1,6 @@
 package io.flowing.retail.crm.dbLoader;
 
-import io.flowing.retail.crm.domain.db.Customer;
+import io.flowing.retail.crm.domain.Customer;
 import io.flowing.retail.crm.persistence.CrmRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
