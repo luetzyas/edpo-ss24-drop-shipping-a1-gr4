@@ -18,7 +18,7 @@ public class MessageOrderDeserializer implements Deserializer<Message<Order>> {
     public Message<Order> deserialize(String topic, byte[] bytes) {
       if (bytes == null) return null;
       // Debugging output
-      System.out.println("MessageOrderDeserializer input: " + new String(bytes, StandardCharsets.UTF_8));
+      //System.out.println("MessageOrderDeserializer input: " + new String(bytes, StandardCharsets.UTF_8));
       return gson.fromJson(new String(bytes, StandardCharsets.UTF_8), type);
     }
 }

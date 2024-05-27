@@ -13,8 +13,8 @@ public class MessageOrderSerializer implements Serializer<Message<Order>> {
     @Override
     public byte[] serialize(String topic, Message<Order> order) {
         if (order == null) return null;
-        String json = gson.toJson(order);
-        System.out.println("MessageOrderSerializer output: " + json); // Debugging output
+       // String json = gson.toJson(order);
+       // System.out.println("MessageOrderSerializer output: " + json); // Debugging output
         return gson.toJson(order).getBytes(StandardCharsets.UTF_8);
     }
 }
