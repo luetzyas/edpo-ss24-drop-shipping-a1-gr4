@@ -1,16 +1,6 @@
 {
   "components": [
     {
-      "label": "Customer Name",
-      "type": "textfield",
-      "id": "customerName",
-      "key": "customerName",
-      "validate": {
-        "required": true
-      },
-      "defaultValue": "Trista Robson"
-    },
-    {
       "label": "Customer E-Mail",
       "type": "textfield",
       "id": "customerAddress",

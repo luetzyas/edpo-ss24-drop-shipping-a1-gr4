@@ -31,13 +31,8 @@ public class ProcessOrderAdapter implements JavaDelegate {
         // Create a new order
         logger.info("ProcessOrderAdapter: Creating order");
         Order order = new Order();
+        order.setEmail((String) execution.getVariable("email"));
 
-        // Set customer details
-        Customer customer = new Customer();
-        customer.setName((String) execution.getVariable("customerName"));
-        customer.setEmail((String) execution.getVariable("email"));
-        order.setCustomer(customer);
-        logger.info("ProcessOrderAdapter: Customer details set to " + customer.getName() + " " + customer.getEmail());
 
         // Aggregate items by articleId
         Map<String, Integer> aggregatedItems = new HashMap<>();
