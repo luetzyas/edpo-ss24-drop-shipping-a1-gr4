@@ -1,6 +1,7 @@
 package io.flowing.retail.crm.dbLoader;
 
 import io.flowing.retail.crm.domain.Customer;
+import io.flowing.retail.crm.messages.MessageSender;
 import io.flowing.retail.crm.persistence.CrmRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -23,11 +24,16 @@ public class DataLoader implements CommandLineRunner {
     @Autowired
     private CrmRepository crmRepository;
 
+    @Autowired
+    private MessageSender messageSender;
+
     @Override
     public void run(String... args) throws Exception {
         // Load sample data into the database
         // loadSampleData();
-        parseXMLFile();
+
+        List<Customer> customers = parseXMLFile(); // Load and return customers
+        saveCustomers(customers); // Save customers to the database and send to Kafka
     }
 
     private void loadSampleData() {
@@ -46,15 +52,10 @@ public class DataLoader implements CommandLineRunner {
         System.out.println("Sample data loaded into the database.");
     }
 
-    private void loadSampleDataFromXML() {
-        try {
 
-        } catch (Exception e) {
-            e.printStackTrace();  // Auch hier, um andere Fehler zu fangen
-        }
-    }
 
-    public void parseXMLFile() {
+    public List<Customer> parseXMLFile() {
+        List<Customer> customers = new ArrayList<>();
         try {
             // Get File
             File file = new File(Objects.requireNonNull(getClass().getClassLoader().getResource("customers.xml")).getFile());
@@ -67,13 +68,9 @@ public class DataLoader implements CommandLineRunner {
             Document document = builder.parse(file);
             document.getDocumentElement().normalize();
 
-            // root node
-            Element root = document.getDocumentElement();
-
             // Get all customers
             NodeList nList = document.getElementsByTagName("customer");
 
-            List<Customer> customers = new ArrayList<>();
             for (int temp = 0; temp < nList.getLength(); temp++) {
                 Node node = nList.item(temp);
                 if (node.getNodeType() == Node.ELEMENT_NODE) {
@@ -86,12 +83,23 @@ public class DataLoader implements CommandLineRunner {
                 }
             }
 
-            // Save each customer to the database
-            crmRepository.saveAll(customers);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return customers;
     }
 
+    private void saveCustomers(List<Customer> customers) {
+        crmRepository.saveAll(customers); // Save all customers to the database
+        try {
+            customers.forEach(customer -> {
+                messageSender.send(customer); // Send each customer to the Kafka topic after saving
+            });
+            System.out.println("Customers loaded and sent to Kafka.");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
 
 }

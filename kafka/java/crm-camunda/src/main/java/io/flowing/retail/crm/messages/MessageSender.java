@@ -1,6 +1,7 @@
 package io.flowing.retail.crm.messages;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.flowing.retail.crm.domain.Customer;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ public class MessageSender {
     return TopicBuilder.name(TOPIC_NAME).partitions(1).replicas(1).build();
   }
 
-  public void send(Message<?> m) {
+  public void sendMessage(Message<?> m) {
     try {
       // avoid too much magic and transform ourselves
       String jsonMessage = objectMapper.writeValueAsString(m);
@@ -37,6 +38,21 @@ public class MessageSender {
       // wrap into a proper message for Kafka including a header
       ProducerRecord<String, String> record = new ProducerRecord<String, String>(TOPIC_NAME, jsonMessage);
       record.headers().add("type", m.getType().getBytes());
+
+      // and send it
+      kafkaTemplate.send(record);
+    } catch (Exception e) {
+      throw new RuntimeException("Could not transform and send message: "+ e.getMessage(), e);
+    }
+  }
+
+
+  public void send(Customer customer) {
+    try {
+      String jsonMessage = objectMapper.writeValueAsString(customer);
+
+      ProducerRecord<String, String> record = new ProducerRecord<String, String>(TOPIC_NAME, jsonMessage);
+      record.headers().add("type", customer.getEmail().getBytes());
 
       // and send it
       kafkaTemplate.send(record);

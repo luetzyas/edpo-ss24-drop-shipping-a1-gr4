@@ -1,6 +1,5 @@
 package io.flowing.retail.crm.application;
 
-import io.flowing.retail.crm.messages.CustomerProducer;
 import io.flowing.retail.crm.messages.MessageSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -17,9 +16,6 @@ public class CrmService {
     @Autowired
     private CrmRepository crmRepository;
 
-    @Autowired
-    private CustomerProducer customerProducer;
-
     /**
      * Processes a new customer by checking if they already exist in the database
      * and saving them if they do not.
@@ -30,6 +26,7 @@ public class CrmService {
         try {
             if (!crmRepository.existsByEmail(customer.getEmail())) {
                 crmRepository.save(customer);
+                messageSender.send((customer));
             } else {
                 // Optionally handle logic if customer already exists
                 // e.g., update records, log information, or throw a custom exception
@@ -69,7 +66,7 @@ public class CrmService {
                 existingCustomer.setName(newCustomerData.getName());
                 existingCustomer.setAddress(newCustomerData.getAddress());
                 crmRepository.save(existingCustomer);
-                customerProducer.sendCustomerUpdate(existingCustomer);
+                messageSender.send(existingCustomer);
             } else {
                 // Handle the case where customer does not exist in the DB
                 System.err.println("Customer not found with email: " + newCustomerData.getEmail());
