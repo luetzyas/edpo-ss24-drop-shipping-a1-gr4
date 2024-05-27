@@ -31,7 +31,7 @@ public class DailyOrdersTopology {
 
         // Print each valid message to the console
         orderPlacedEvents.foreach((key, order) -> {
-            System.out.println("Streamed Message Key: " + key + ", Order ID: " + order.getId() + ", Items: " + order.getItems());
+            System.out.println("*DailyOrdersTopology* Streamed Message Key: " + key + ", Order ID: " + order.getId() + ", Items: " + order.getItems());
             order.getItems().forEach(item ->
                     System.out.println("Item: " + item.getArticleId() + ", Quantity: " + item.getAmount()));
         });

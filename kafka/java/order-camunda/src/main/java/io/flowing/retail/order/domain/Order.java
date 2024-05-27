@@ -23,6 +23,8 @@ public class Order {
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER  )
   protected List<OrderItem> items = new ArrayList<OrderItem>();
 
+  private String email;
+
   public void addItem(OrderItem i) {
     items.add(i);
   }
@@ -63,6 +65,12 @@ public class Order {
     this.customer = customer;
   }
 
+  public void setEmail(String email) {
+    this.email = email;
+  }
 
-  
+  public String getEmail() {
+    return email;
+  }
+
 }

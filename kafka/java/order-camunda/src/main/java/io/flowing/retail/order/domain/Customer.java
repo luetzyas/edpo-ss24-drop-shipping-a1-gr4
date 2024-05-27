@@ -4,11 +4,17 @@ import com.google.gson.annotations.SerializedName;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 
 
 @Entity
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Customer {
   
   @Id
@@ -23,29 +29,5 @@ public class Customer {
 
   @SerializedName("email")
   private String email;
-  
-  public String getName() {
-    return name;
-  }
-  public Customer setName(String name) {
-    this.name = name;
-    return this;
-  }
-  public String getAddress() {
-    return address;
-  }
-  public Customer setAddress(String address) {
-    this.address = address;
-    return this;
-  }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public Customer setEmail(String email) {
-        this.email = email;
-        return this;
-    }
 
 }
