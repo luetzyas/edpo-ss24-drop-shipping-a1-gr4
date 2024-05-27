@@ -20,6 +20,9 @@ public class Customer {
   private String name;
   @SerializedName("address")
   private String address;
+
+  @SerializedName("email")
+  private String email;
   
   public String getName() {
     return name;
@@ -35,5 +38,14 @@ public class Customer {
     this.address = address;
     return this;
   }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public Customer setEmail(String email) {
+        this.email = email;
+        return this;
+    }
 
 }

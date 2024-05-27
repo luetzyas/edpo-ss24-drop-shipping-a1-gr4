@@ -7,16 +7,18 @@
       "key": "customerName",
       "validate": {
         "required": true
-      }
+      },
+      "defaultValue": "Trista Robson"
     },
     {
-      "label": "Customer Address",
+      "label": "Customer E-Mail",
       "type": "textfield",
       "id": "customerAddress",
-      "key": "customerAddress",
+      "key": "email",
       "validate": {
         "required": true
-      }
+      },
+      "defaultValue": "trobson1@google.ca"
     },
     {
       "values": [
@@ -81,7 +83,7 @@
       "key": "amount2",
       "description": "how many of the other thing you want"
     },
-        {
+    {
       "values": [
         {
           "value": "RED",
