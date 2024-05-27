@@ -51,8 +51,11 @@ public class MessageSender {
     try {
       String jsonMessage = objectMapper.writeValueAsString(customer);
 
-      ProducerRecord<String, String> record = new ProducerRecord<String, String>(TOPIC_NAME, jsonMessage);
+      ProducerRecord<String, String> record = new ProducerRecord<String, String>(TOPIC_NAME, customer.getEmail(), jsonMessage);
       record.headers().add("type", customer.getEmail().getBytes());
+
+      // print for debugging
+      System.out.println("CRM Sending message: " + record);
 
       // and send it
       kafkaTemplate.send(record);
