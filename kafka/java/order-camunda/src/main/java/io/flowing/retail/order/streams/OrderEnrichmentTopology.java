@@ -15,6 +15,8 @@ import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.Topology;
 import org.apache.kafka.streams.kstream.*;
+import org.springframework.kafka.support.serializer.JsonSerde;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,6 +24,7 @@ public class OrderEnrichmentTopology {
 
     public static Topology build() {
         StreamsBuilder builder = new StreamsBuilder();
+        String schemaRegistryUrl = "http://localhost:8081";
 
         // Define the Customer KTable
         KTable<String, Customer> customerTable = builder.table(
@@ -61,27 +64,27 @@ public class OrderEnrichmentTopology {
             System.out.println("*OrderEnrichmentTopology* Enriched Order ID: " + order.getOrderId() + ", Items: " + order.getItems() + ", Customer: " + order.getCustomer());
         });
 
-
- /*
-        // Perform a left join to enrich orders with customer information
-        KStream<String, Order> enrichedOrders = orderPlacedEvents.leftJoin(
-                customerTable,
-                (order, customer) -> {
-                    if (customer != null) {
-                        order.setCustomer(
-                                new Customer(customer.getId(), customer.getName(), customer.getAddress(), customer.getEmail())
-                        );
-                    }
-                    return order;
-                }
+        // Branch the stream into successful matches and no matches
+        KStream<String, EnrichedOrder>[] branches = enrichedOrders.branch(
+                (key, value) -> value.getCustomer().getCustomerId().equals("noMatch"),
+                (key, value) -> !value.getCustomer().getCustomerId().equals("noMatch")
         );
-   /*
-        // Print the enriched orders to the console
-        enrichedOrders.foreach((key, order) -> System.out.println("Enriched Order: " + order));
 
-        // Optionally, you can write the enriched orders to a new topic
-        enrichedOrders.to("enriched-orders", Produced.with(Serdes.String(), new OrderSerde()));
-*/
+        KStream<String, EnrichedOrder> noMatches = branches[0];
+        KStream<String, EnrichedOrder> successfulMatches = branches[1];
+
+        // Define how to serialize and deserialize the EnrichedOrder to the topic
+        Produced<String, EnrichedOrder> producedEnrichedOrder = Produced.with(Serdes.String(), AvroSerdes.enrichedOrderSerde(schemaRegistryUrl));
+
+        // Process no matches (e.g., send them to a topic to handle registration)
+        noMatches.to("customer-not-found", producedEnrichedOrder);
+
+        // Process successful matches (e.g., continue processing or store them)
+        successfulMatches.to("enriched-order", producedEnrichedOrder);
+
+
+
+
 
 
         return builder.build();
