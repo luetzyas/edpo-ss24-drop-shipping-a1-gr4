@@ -48,7 +48,6 @@ public class MessageListener {
       runtimeService.createMessageCorrelation(message.getType())
               .processInstanceBusinessKey(message.getTraceid())
               .setVariable("orderId", order.getId())
-              .setVariable("customer", SpinValues.jsonValue(objectMapper.writeValueAsString(order.getCustomer())).create())
               .setVariable("items", SpinValues.jsonValue(objectMapper.writeValueAsString(order.getItems())).create())
               .correlateWithResult();
     } catch (JsonProcessingException e) {

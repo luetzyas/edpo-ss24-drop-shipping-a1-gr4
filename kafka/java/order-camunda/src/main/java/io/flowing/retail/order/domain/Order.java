@@ -18,8 +18,7 @@ public class Order {
 //  @GenericGenerator(name = "uuid2", strategy = "uuid2")
   @SerializedName("orderId")
   protected String id; //= UUID.randomUUID().toString();
-  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER  )
-  protected Customer customer = new Customer();
+
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER  )
   protected List<OrderItem> items = new ArrayList<OrderItem>();
 
@@ -49,21 +48,12 @@ public class Order {
   public List<OrderItem> getItems() {
     return items;
   }
-
-
  
   @Override
   public String toString() {
     return "Order [id=" + id + ", items=" + items + "]";
   }
 
-  public Customer getCustomer() {
-    return customer;
-  }
-
-  public void setCustomer(Customer customer) {
-    this.customer = customer;
-  }
 
   public void setEmail(String email) {
     this.email = email;

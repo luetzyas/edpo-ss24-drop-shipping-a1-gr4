@@ -32,8 +32,8 @@ public class ShipGoodsAdapter implements JavaDelegate {
             new ShipGoodsCommandPayload() //
               .setRefId(order.getId())
               .setPickId(pickId) //
-              .setRecipientName(order.getCustomer().getName()) //
-              .setRecipientAddress(order.getCustomer().getAddress()))); 
+              .setRecipientName("Recipient Name") //
+              .setRecipientAddress("Recipient Address"))); //TODO read from object after enrichment is in place
   }  
 
 }
