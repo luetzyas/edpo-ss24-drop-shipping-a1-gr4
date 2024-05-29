@@ -41,7 +41,7 @@ public class OrderEnrichmentTopology {
         // print each valid message to the console
 
         customerTable.toStream().foreach((key, customer) -> {
-            System.out.println("*OrderEnrichmentTopology* Customer ID: " + customer.getId() + ", Name: " + customer.getName() + ", Email: " + customer.getEmail());
+            System.out.println("*OrderEnrichmentTopology* Customer ID: " + customer.getId() + ", Name: " + customer.getName() + ", Email: " + customer.getEmail() + ", Address: " + customer.getAddress());
         });
 
        orderPlacedEvents.foreach((key, order) -> {
