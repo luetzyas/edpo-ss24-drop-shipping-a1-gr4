@@ -12,7 +12,7 @@ public class OrderDataToAvroMapper {
                 .map(OrderDataToAvroMapper::convertToAvroOrderItem)
                 .collect(Collectors.toList());
 
-        io.flowing.retail.order.domain.avro.Customer avroCustomer = convertToAvroCustomer(customer);
+        io.flowing.retail.order.domain.avro.Customer avroCustomer = convertToAvroCustomer(customer, order);
 
         return new EnrichedOrder(order.getId(), avroOrderItems, avroCustomer, order.getEmail());
     }
@@ -24,10 +24,10 @@ public class OrderDataToAvroMapper {
         );
     }
 
-    private static io.flowing.retail.order.domain.avro.Customer convertToAvroCustomer(io.flowing.retail.order.domain.Customer customer) {
+    private static io.flowing.retail.order.domain.avro.Customer convertToAvroCustomer(io.flowing.retail.order.domain.Customer customer, io.flowing.retail.order.domain.Order order) {
         if (customer == null) {
             return new io.flowing.retail.order.domain.avro.Customer(
-                    "noMatch", "Unknown", "No Address", "no-email"
+                    "noMatch", "Unknown", "No Address", order.getEmail()
             );
         }
         return new io.flowing.retail.order.domain.avro.Customer(
