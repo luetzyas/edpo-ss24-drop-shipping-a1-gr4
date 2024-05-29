@@ -1,0 +1,60 @@
+{
+  "namespace": "io.flowing.retail.order.domain.avro",
+  "name": "EnrichedOrder",
+  "type": "record",
+  "fields": [
+    {
+      "name": "orderId",
+      "type": "string"
+    },
+    {
+      "name": "items",
+      "type": {
+        "type": "array",
+        "items": {
+          "type": "record",
+          "name": "OrderItem",
+          "fields": [
+            {
+              "name": "articleId",
+              "type": "string"
+            },
+            {
+              "name": "amount",
+              "type": "int"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "customer",
+      "type": {
+        "type": "record",
+        "name": "Customer",
+        "fields": [
+          {
+            "name": "customerId",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "address",
+            "type": "string"
+          },
+          {
+            "name": "email",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    {
+      "name": "email",
+      "type": "string"
+    }
+  ]
+}
