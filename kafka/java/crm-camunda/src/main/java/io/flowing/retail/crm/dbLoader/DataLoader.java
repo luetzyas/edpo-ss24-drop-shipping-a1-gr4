@@ -14,6 +14,7 @@ import org.w3c.dom.NodeList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -57,15 +58,14 @@ public class DataLoader implements CommandLineRunner {
     public List<Customer> parseXMLFile() {
         List<Customer> customers = new ArrayList<>();
         try {
-            // Get File
-            File file = new File(Objects.requireNonNull(getClass().getClassLoader().getResource("customers.xml")).getFile());
+            InputStream inputStream = getClass().getClassLoader().getResourceAsStream("customers.xml");
 
             // Create a new factory to create parsers
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
 
             // Parse the XML file to get a DOM Document object
-            Document document = builder.parse(file);
+            Document document = builder.parse(inputStream);
             document.getDocumentElement().normalize();
 
             // Get all customers
