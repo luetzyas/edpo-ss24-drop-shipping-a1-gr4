@@ -1,0 +1,175 @@
+version: "4"
+
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    hostname: zookeeper
+    container_name: zookeeper
+    networks:
+      - flowing
+    ports:
+      - 2181:2181
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ALLOW_ANONYMOUS_LOGIN: 'yes'
+
+  kafka:
+    image: confluentinc/cp-enterprise-kafka:latest
+    hostname: kafka
+    container_name: kafka
+    networks:
+      - flowing
+    ports:
+      - 9092:9092
+      - 29092:29092
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_HOST_NAME: localhost
+      ALLOW_PLAINTEXT_LISTENER: 'yes'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_LISTENERS: INTERNAL://0.0.0.0:29092,EXTERNAL://0.0.0.0:9092
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:29092,EXTERNAL://localhost:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+    depends_on:
+      - zookeeper
+
+  schema-registry:
+    image: confluentinc/cp-schema-registry:latest
+    hostname: schema-registry
+    container_name: schema-registry
+    depends_on:
+      - kafka
+    ports:
+      - "8081:8081"
+    environment:
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: PLAINTEXT://kafka:29092
+    networks:
+      - flowing
+
+  checkout:
+    build:
+      context: ../../kafka/java/checkout
+      dockerfile: Dockerfile
+    networks:
+      - flowing
+    ports:
+      - "8091:8091"
+    depends_on:
+      - kafka
+    environment:
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:29092
+
+  order:
+    build:
+      context: ../../kafka/java/order-camunda
+      dockerfile: Dockerfile
+    networks:
+      - flowing
+    ports:
+      - "8092:8092"
+    depends_on:
+      - kafka
+    environment:
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:29092
+
+  payment:
+    build:
+      context: ../../kafka/java/payment-camunda
+      dockerfile: Dockerfile
+    networks:
+      - flowing
+    ports:
+      - "8093:8093"
+    depends_on:
+      - kafka
+    environment:
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:29092
+
+  inventory:
+    build:
+      context: ../../kafka/java/inventory
+      dockerfile: Dockerfile
+    networks:
+      - flowing
+    depends_on:
+      - kafka
+    environment:
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:29092
+
+  shipping:
+    build:
+      context: ../../kafka/java/shipping
+      dockerfile: Dockerfile
+    networks:
+      - flowing
+    depends_on:
+      - kafka
+    environment:
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:29092
+
+  monitor:
+    build:
+      context: ../../kafka/java/monitor
+      dockerfile: Dockerfile
+    networks:
+      - flowing
+    ports:
+      - "8095:8095"
+    depends_on:
+      - kafka
+    environment:
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:29092
+
+  mailing:
+    build:
+      context: ../../kafka/java/mailing
+      dockerfile: Dockerfile
+    networks:
+      - flowing
+    ports:
+      - "8096:8096"
+    depends_on:
+      - kafka
+    environment:
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:29092
+
+  vgr:
+    build:
+      context: ../../kafka/java/vgr-camunda
+      dockerfile: Dockerfile
+    networks:
+      - flowing
+    ports:
+      - "8097:8097"
+    depends_on:
+      - kafka
+    environment:
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:29092
+
+  crm:
+    build:
+      context: ../../kafka/java/crm-camunda
+      dockerfile: Dockerfile
+    networks:
+      - flowing
+    ports:
+      - "8098:8098"
+    depends_on:
+      - kafka
+    environment:
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:29092
+
+  docs:
+    image: flowingretail/docs
+    networks:
+      - flowing
+    ports:
+      - "8099:80"
+    environment:
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:29092
+
+networks:
+  flowing:
+    driver: bridge
