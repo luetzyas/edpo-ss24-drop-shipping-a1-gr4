@@ -24,7 +24,9 @@ public class OrderEnrichmentTopology {
 
     public static Topology build() {
         StreamsBuilder builder = new StreamsBuilder();
-        String schemaRegistryUrl = "http://localhost:8081";
+      //  String schemaRegistryUrl = "http://localhost:8081"; // Local
+        String schemaRegistryUrl = "http://schema-registry:8081"; // Docker
+
 
         // Define the Customer KTable
         KTable<String, Customer> customerTable = builder.table(
