@@ -39,19 +39,25 @@ public class MessageListener {
     Order order = message.getData();
     System.out.println("OrderPlacedEvent received full message: " + message);
     System.out.println("New order placed, start flow. Order object: " + order);
-    
-    // persist domain entity
-    repository.save(order);    // TODO: Because the customer is only added after EnrichmentTopology, and this currently listens to OrderPlacedEvent, the customer is not yet added to the order. This should listen to EnrichedORderPlaced Topic See: OrderDeserializer input: {"orderId":"checkout-generated-6e061518-f853-4f59-b915-8b50d0743e69","customer":{},"items":[{"articleId":"BLUE","amount":2}],"email":"trobson1@google.ca"}
 
-    try {
-      // and kick of a new flow instance
-      runtimeService.createMessageCorrelation(message.getType())
-              .processInstanceBusinessKey(message.getTraceid())
-              .setVariable("orderId", order.getId())
-              .setVariable("items", SpinValues.jsonValue(objectMapper.writeValueAsString(order.getItems())).create())
-              .correlateWithResult();
-    } catch (JsonProcessingException e) {
-      throw new RuntimeException("Failed to serialize order items", e);
+    // Check if the order is already processed
+    if (!repository.existsById(order.getId())) {
+      // Persist the order if it's new
+      repository.save(order);
+      System.out.println("New order placed, start flow. Order object: " + order);
+
+      try {
+        // Kick off a new business process
+        runtimeService.createMessageCorrelation(message.getType())
+                .processInstanceBusinessKey(message.getTraceid())
+                .setVariable("orderId", order.getId())
+                .setVariable("items", SpinValues.jsonValue(objectMapper.writeValueAsString(order.getItems())).create())
+                .correlateWithResult();
+      } catch (JsonProcessingException e) {
+        throw new RuntimeException("Failed to serialize order items", e);
+      }
+    } else {
+      System.out.println("Order already processed: " + order.getId());
     }
 
   }
