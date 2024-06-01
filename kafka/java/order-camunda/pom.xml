@@ -110,10 +110,17 @@
 			<artifactId>kafka-streams-avro-serde</artifactId>
 			<version>7.6.0</version>
 		</dependency>
+		<!--
 		<dependency>
 			<groupId>com.mitchseymour</groupId>
 			<artifactId>kafka-registryless-avro-serdes</artifactId>
 			<version>1.0.0</version>
+		</dependency>
+		-->
+		<dependency>
+			<groupId>io.confluent</groupId>
+			<artifactId>kafka-avro-serializer</artifactId>
+			<version>7.6.0</version>
 		</dependency>
 		<!-- Kafka Streams -->
 		<dependency>
