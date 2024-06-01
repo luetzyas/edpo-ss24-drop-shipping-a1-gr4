@@ -1,11 +1,10 @@
 package io.flowing.retail.order.streams;
 
-import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde;
 import io.flowing.retail.order.domain.Customer;
 import io.flowing.retail.order.domain.Order;
 import io.flowing.retail.order.domain.OrderDataToAvroMapper;
 import io.flowing.retail.order.domain.avro.EnrichedOrder;
-import io.flowing.retail.order.messages.Message;
+import io.flowing.retail.order.messages.cloud.Message;
 import io.flowing.retail.order.streams.serialization.avro.AvroSerdes;
 import io.flowing.retail.order.streams.serialization.json.CustomerSerde;
 import io.flowing.retail.order.streams.serialization.json.MessageOrderSerde;
@@ -15,10 +14,6 @@ import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.Topology;
 import org.apache.kafka.streams.kstream.*;
-import org.springframework.kafka.support.serializer.JsonSerde;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class OrderEnrichmentTopology {
 
@@ -83,11 +78,6 @@ public class OrderEnrichmentTopology {
 
         // Process successful matches (e.g., continue processing or store them)
         successfulMatches.to("enriched-order", producedEnrichedOrder);
-
-
-
-
-
 
         return builder.build();
     }

@@ -1,4 +1,4 @@
-package io.flowing.retail.order.messages;
+package io.flowing.retail.order.messages.cloud;
 
 import io.flowing.retail.order.domain.OrderItem;
 import lombok.AllArgsConstructor;

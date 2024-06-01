@@ -1,13 +1,15 @@
-package io.flowing.retail.order.messages;
+package io.flowing.retail.order.messages.cloud;
 
 import java.io.IOException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import io.flowing.retail.order.domain.avro.EnrichedOrder;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.spin.plugin.variable.SpinValues;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -94,7 +96,7 @@ public class MessageListener {
   public void messageReceived(String messagePayloadJson, @Header("type") String messageType) throws Exception{
     if ("OrderPlacedEvent".equals(messageType)) {
         System.out.println("OrderPlacedEvent received");
-      orderPlacedReceived(objectMapper.readValue(messagePayloadJson, new TypeReference<Message<Order>>() {}));
+     // orderPlacedReceived(objectMapper.readValue(messagePayloadJson, new TypeReference<Message<Order>>() {}));
     }
     if ("AllGoodsAvailableEvent".equals(messageType)) {
       System.out.println("AllGoodsAvailableEvent received");

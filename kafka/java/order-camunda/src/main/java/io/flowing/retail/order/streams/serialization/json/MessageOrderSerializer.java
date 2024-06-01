@@ -2,7 +2,7 @@ package io.flowing.retail.order.streams.serialization.json;
 
 import com.google.gson.Gson;
 import io.flowing.retail.order.domain.Order;
-import io.flowing.retail.order.messages.Message;
+import io.flowing.retail.order.messages.cloud.Message;
 import org.apache.kafka.common.serialization.Serializer;
 
 import java.nio.charset.StandardCharsets;

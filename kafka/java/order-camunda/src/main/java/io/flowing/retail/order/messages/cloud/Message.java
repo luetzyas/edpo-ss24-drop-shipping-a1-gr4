@@ -1,9 +1,7 @@
-package io.flowing.retail.order.messages;
+package io.flowing.retail.order.messages.cloud;
 
 import java.util.Date;
 import java.util.UUID;
-
-import org.springframework.beans.factory.annotation.Value;
 
 public class Message<T> {
 

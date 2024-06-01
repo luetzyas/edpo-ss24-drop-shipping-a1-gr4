@@ -1,17 +1,14 @@
 package io.flowing.retail.order.streams;
 
-import camundajar.impl.geny.Bytes;
 import io.flowing.retail.order.domain.Order;
 import io.flowing.retail.order.domain.OrderItem;
-import io.flowing.retail.order.messages.Message;
+import io.flowing.retail.order.messages.cloud.Message;
 import io.flowing.retail.order.streams.serialization.json.MessageOrderSerde;
-import io.flowing.retail.order.streams.serialization.json.OrderSerde;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.Topology;
 import org.apache.kafka.streams.kstream.*;
-import org.apache.kafka.streams.state.WindowStore;
 
 import java.time.Duration;
 import java.util.ArrayList;

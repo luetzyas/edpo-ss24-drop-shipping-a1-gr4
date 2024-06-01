@@ -1,7 +1,7 @@
 package io.flowing.retail.order.streams;
 
 import io.flowing.retail.order.domain.Order;
-import io.flowing.retail.order.messages.Message;
+import io.flowing.retail.order.messages.cloud.Message;
 import io.flowing.retail.order.streams.serialization.json.MessageOrderSerde;
 import io.flowing.retail.order.streams.serialization.json.OrderSerde;
 import org.apache.kafka.common.serialization.Serdes;

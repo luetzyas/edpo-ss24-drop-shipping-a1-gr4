@@ -1,8 +1,8 @@
 package io.flowing.retail.order.flow;
 
 import io.flowing.retail.order.domain.Order;
-import io.flowing.retail.order.messages.Message;
-import io.flowing.retail.order.messages.MessageSender;
+import io.flowing.retail.order.messages.cloud.Message;
+import io.flowing.retail.order.messages.cloud.MessageSender;
 import io.flowing.retail.order.persistence.OrderRepository;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;

@@ -1,12 +1,9 @@
 package io.flowing.retail.order.streams.serialization.json;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import io.flowing.retail.order.domain.Order;
-import io.flowing.retail.order.messages.Message;
 import org.apache.kafka.common.serialization.Deserializer;
 
-import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 
 public class OrderDeserializer implements Deserializer<Order> {
