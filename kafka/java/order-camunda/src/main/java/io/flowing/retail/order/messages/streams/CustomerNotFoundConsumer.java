@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 
 @Service
-public class EnrichedOrderConsumer {
+public class CustomerNotFoundConsumer {
 
     @Autowired
     private OrderRepository repository;
@@ -23,15 +23,15 @@ public class EnrichedOrderConsumer {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @KafkaListener(topics = "enriched-order", groupId = "${spring.kafka.consumer.group-id}")
+    @KafkaListener(topics = "customer-not-found", groupId = "${spring.kafka.consumer.group-id}")
     public void listen(ConsumerRecord<String, EnrichedOrder> record) {
         String key = record.key();
         EnrichedOrder enrichedOrder = record.value();
 
-        System.out.println("Received EnrichedOrder with key: " + key);
+        System.out.println("Customer not found: Received EnrichedOrder with key: " + key);
 
         // Process the EnrichedOrder
-        System.out.println("Received EnrichedOrder: " + enrichedOrder);
+        System.out.println("Customer not found: Received EnrichedOrder: " + enrichedOrder);
 
         // Extract the order from the EnrichedOrder
         io.flowing.retail.order.domain.Order order = OrderDataToAvroMapper.convertToOrder(enrichedOrder);
@@ -40,7 +40,7 @@ public class EnrichedOrderConsumer {
         if (!repository.existsById(order.getId())) {
             // Persist the order if it's new
             repository.save(order);
-            System.out.println("New order placed, start flow. Order object: " + order);
+            System.out.println("New order placed, Customer is not registered. Waiting for Registration. Order object: " + order);
 
             try {
                 // Kick off a new business process
@@ -48,7 +48,7 @@ public class EnrichedOrderConsumer {
                         .processInstanceBusinessKey(order.getId())
                         .setVariable("orderId", order.getId())
                         .setVariable("items", SpinValues.jsonValue(objectMapper.writeValueAsString(order.getItems())).create())
-                        .setVariable("isCustomerRegistered", true)
+                        .setVariable("isCustomerRegistered", false)
                         .correlateWithResult();
             } catch (JsonProcessingException e) {
                 throw new RuntimeException("Failed to serialize order items", e);
