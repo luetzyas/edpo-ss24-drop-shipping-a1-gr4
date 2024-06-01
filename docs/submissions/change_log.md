@@ -53,8 +53,9 @@ Here, you will find a brief overview of our progress, including major milestones
 
 **@luetzyas**
 - Documentation
+  - Work on final presentation slides
   - ADR [0004 Camunda 7 vs 8](adr/0004-Camunda-7-vs-8.md)
-  - ADR [0005 Add new CRM-Camunda Service](adr/0005-add-crm-camunda-service.md) //TODO
+  - ADR [0005 Add new CRM-Camunda Service](adr/0005-add-crm-camunda-service.md) 
   - implement feedback in [Assignment_1-Final-Report](Assignment_1-Final-Report.pdf) //TODO
   - work on final report for [Assingment_2-Final_Report](Assignment_2-Final-Report.pdf) //TODO
 

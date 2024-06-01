@@ -30,6 +30,8 @@ Green = Choreography </br>
 Blue = Orchestrated by the order service </br>
 Grey = Monitor service listenes to events
 
+## Granularity Disintegrators
+
 - **Service functionality:**
   The Checkout and Mailing services are specialized and are better off with direct orchestration to ensure a consistent
   and controlled flow.

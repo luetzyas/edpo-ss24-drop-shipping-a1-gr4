@@ -22,7 +22,7 @@ current status of the order at the smart factory.
 <br></br>
 ![enhanved Microservice overview](../../docs/kafka-services/add-factory-kafka-services.png)
 
-### Granularity Disintegrators
+## Granularity Disintegrators
 
 - **Workflow and Choreography:**
   This microservice is orchestrated by the Order Service, which ensures that the order fulfillment process is enriched
