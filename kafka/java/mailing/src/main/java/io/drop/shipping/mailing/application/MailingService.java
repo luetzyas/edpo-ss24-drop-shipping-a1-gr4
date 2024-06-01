@@ -3,7 +3,7 @@ package io.drop.shipping.mailing.application;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import io.drop.shipping.mailing.messages.Message;
+import io.drop.shipping.mailing.messages.cloud.Message;
 import io.drop.shipping.mailing.messages.payload.*;
 import org.springframework.stereotype.Component;
 

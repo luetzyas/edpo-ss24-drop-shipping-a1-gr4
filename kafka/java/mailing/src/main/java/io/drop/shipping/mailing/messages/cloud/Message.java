@@ -1,4 +1,4 @@
-package io.drop.shipping.mailing.messages;
+package io.drop.shipping.mailing.messages.cloud;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
