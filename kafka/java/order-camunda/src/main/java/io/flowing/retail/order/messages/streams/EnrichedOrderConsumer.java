@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.flowing.retail.order.domain.OrderDataToAvroMapper;
 import io.flowing.retail.order.domain.avro.EnrichedOrder;
 import io.flowing.retail.order.persistence.OrderRepository;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.spin.plugin.variable.SpinValues;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,12 @@ public class EnrichedOrderConsumer {
     private ObjectMapper objectMapper;
 
     @KafkaListener(topics = "enriched-order", groupId = "${spring.kafka.consumer.group-id}")
-    public void listen(EnrichedOrder enrichedOrder) {
+    public void listen(ConsumerRecord<String, EnrichedOrder> record) {
+        String key = record.key();
+        EnrichedOrder enrichedOrder = record.value();
+
+        System.out.println("Received EnrichedOrder with key: " + key);
+
         // Process the EnrichedOrder
         System.out.println("Received EnrichedOrder: " + enrichedOrder);
 
