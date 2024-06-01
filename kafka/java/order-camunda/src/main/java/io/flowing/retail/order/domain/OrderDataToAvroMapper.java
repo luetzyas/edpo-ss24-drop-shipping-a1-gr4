@@ -37,5 +37,24 @@ public class OrderDataToAvroMapper {
                 customer.getEmail()
         );
     }
+
+    public static io.flowing.retail.order.domain.Order convertToOrder(io.flowing.retail.order.domain.avro.EnrichedOrder avroOrder) {
+        List<io.flowing.retail.order.domain.OrderItem> orderItems = avroOrder.getItems().stream()
+                .map(OrderDataToAvroMapper::convertToOrderItem)
+                .collect(Collectors.toList());
+
+        return new io.flowing.retail.order.domain.Order(
+                avroOrder.getOrderId().toString(),
+                orderItems,
+                avroOrder.getEmail().toString()
+        );
+    }
+
+    private static io.flowing.retail.order.domain.OrderItem convertToOrderItem(io.flowing.retail.order.domain.avro.OrderItem avroOrderItem) {
+        return new io.flowing.retail.order.domain.OrderItem(
+                avroOrderItem.getArticleId().toString(),
+                avroOrderItem.getAmount()
+        );
+    }
 }
 

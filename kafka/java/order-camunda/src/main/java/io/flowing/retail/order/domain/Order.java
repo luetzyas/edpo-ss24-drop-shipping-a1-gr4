@@ -5,12 +5,17 @@ import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity(name="OrderEntity")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Order {
 
   @Id
@@ -24,9 +29,6 @@ public class Order {
 
   private String email;
 
-  public void addItem(OrderItem i) {
-    items.add(i);
-  }
   
   public int getTotalSum() {
     int sum = 0;
@@ -35,32 +37,18 @@ public class Order {
     }
     return sum;
   }
-  
-  public String getId() {
-    return id;
-  }
+
 
   @JsonProperty("orderId")
   public void setId(String id) {
     this.id = id;
   }
 
-  public List<OrderItem> getItems() {
-    return items;
-  }
  
   @Override
   public String toString() {
     return "Order [id=" + id + ", items=" + items + "]";
   }
 
-
-  public void setEmail(String email) {
-    this.email = email;
-  }
-
-  public String getEmail() {
-    return email;
-  }
 
 }

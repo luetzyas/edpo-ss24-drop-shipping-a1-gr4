@@ -31,13 +31,11 @@ public class MessageListener {
   private RuntimeService runtimeService;
   @Autowired
   private ObjectMapper objectMapper;
-  
-  /**
-   * Handles incoming OrderPlacedEvents. 
-   *
-   */
+
+  /*
   @Transactional
   public void orderPlacedReceived(Message<Order> message) throws JsonParseException, JsonMappingException, IOException {
+
     Order order = message.getData();
     System.out.println("OrderPlacedEvent received full message: " + message);
     System.out.println("New order placed, start flow. Order object: " + order);
@@ -63,7 +61,7 @@ public class MessageListener {
     }
 
   }
-
+ */
   @Transactional
   public void goodsAvailableReceived(String messagePayloadJson) throws IOException {
 
@@ -94,10 +92,13 @@ public class MessageListener {
   @Transactional
   @KafkaListener(id = "order", topics = MessageSender.TOPIC_NAME)
   public void messageReceived(String messagePayloadJson, @Header("type") String messageType) throws Exception{
+    /*
     if ("OrderPlacedEvent".equals(messageType)) {
         System.out.println("OrderPlacedEvent received");
      // orderPlacedReceived(objectMapper.readValue(messagePayloadJson, new TypeReference<Message<Order>>() {}));
     }
+
+     */
     if ("AllGoodsAvailableEvent".equals(messageType)) {
       System.out.println("AllGoodsAvailableEvent received");
       goodsAvailableReceived(messagePayloadJson);
