@@ -131,10 +131,6 @@ KStream is used for stateless transformations and simple processing tasks.
 
 
 
-## CRM Service
-> new Microservice to manage customer data
-
-
 
 ## Implemented Topologies
 ![Topology Overview](../docs/topologies/stream-processing-apps.png)
@@ -362,14 +358,34 @@ KStream is used for stateless transformations and simple processing tasks.
 
 </table>
 
-## Reflections and lessons learned
-> Kafka Streams
+## Reflections and additional lessons learned
 
-> Avro
- 
-> Others
+### Benfits of Kafka Streams compared to Java Streams
+In the first part of the assignment, we used Java Streams to process Inventory and Order Data.
+For example, we had to calculate the total amount of items per category in the Inventory or total amount of items per order.
+Also, we used Java Streams to handle the Item-Availability check.
+
+<img src="java_streams.png" width="700"/>
 
 
-**Team Collaboration and Workflow**
-xxxx
+The implementation was quite complex and required a lot of code and manual handling of state with Maps and Lists.
+Kafka Streams would have been a better choice for this kind of processing as it provides built-in support for stateful operations and 
+also it extracts the processing logic into a separate topology which makes the code more readable and maintainable.
 
+### Avro Serialization
+We realized that Avro serialization should be manily used as a Data Transfer Object (DTO) between services and does not
+necessarily replace the need for POJOs. In our case, we used Avro for the EnrichedOrder class which is the join 
+of the Order and the Customer Domain. In this case it was a good choice because the EnrichedOrder only used as DTO.
+
+We could not use Avro for example for the Customer class in the CRM Service since we require POJOs for the Database. 
+More generally, where we required annotations like @Entity, @Id, etc. we could not use Avro.
+
+### Cloud Events 
+The Message Class was useful to wrap the actual payload and provide additional metadata. It led to some overhead 
+when we had to unwrap the payload in the Kafka Streams Topologies. 
+
+### Kafka still a challenge
+Until the end of the assignment, we still had some challenges with the way Kafka requires substantial understanding
+of the underlying concepts. Debugging Kafka Streams applications can be challenging due to the various settings and configurations.
+Also, we noticed differences when running the application locally and in the Docker container that required
+extra installation steps of libraries via Dockerfile.
