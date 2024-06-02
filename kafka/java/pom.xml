@@ -13,7 +13,6 @@
 		<module>payment-camunda</module>
 		<module>inventory</module>
 		<module>shipping</module>
-		<module>choreography-alternative</module>
 		<module>monitor</module>
 		<module>mailing</module>
 		<module>vgr-camunda</module>
