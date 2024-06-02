@@ -12,6 +12,8 @@
 
 # Final Report
 
+[Revised A1 Report](Assignment_1-revised-Final-Report.pdf)
+
 ## Code
 
 [Release](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/releases/tag/EDPO_A2)
@@ -77,10 +79,6 @@ are displayed in a table and the critical sensor records are listed below in rea
 
 
 ![kafka](../docs/kafka-services/add-crm-kafka-services.png)
-
-
-## Workflow
-![workflow](../docs/workflow.png) // TODO enhnace 
 
 ## Concepts
 
@@ -372,7 +370,7 @@ In the first part of the assignment, we used Java Streams to process Inventory a
 For example, we had to calculate the total amount of items per category in the Inventory or total amount of items per order.
 Also, we used Java Streams to handle the Item-Availability check.
 
-<img src="java_streams.png" width="700"/>
+<img src="java_streams.png" width="700" al="code"/>
 
 
 The implementation was quite complex and required a lot of code and manual handling of state with Maps and Lists.

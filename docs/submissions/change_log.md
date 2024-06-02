@@ -59,6 +59,7 @@ Here, you will find a brief overview of our progress, including major milestones
   - implement feedback in [Assignment_1-revised-Final-Report](Assignment_1-revised-Final-Report.pdf) 
   - work on final report for [Assingment_2-Final_Report](Assignment_2-Final-Report.pdf) 
   - create diagrams of the topologies for Assignment 2 >> the graphics can be found [here](../docs/topologies)
+  - prepare project for final submission on Git and Canvas
   
 - Presentation
   - add [Midterm](Midterm-Presentation-EDPO-Gr4.pdf) presentation file to project
