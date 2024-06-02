@@ -32,36 +32,6 @@ public class MessageListener {
   @Autowired
   private ObjectMapper objectMapper;
 
-  /*
-  @Transactional
-  public void orderPlacedReceived(Message<Order> message) throws JsonParseException, JsonMappingException, IOException {
-
-    Order order = message.getData();
-    System.out.println("OrderPlacedEvent received full message: " + message);
-    System.out.println("New order placed, start flow. Order object: " + order);
-
-    // Check if the order is already processed
-    if (!repository.existsById(order.getId())) {
-      // Persist the order if it's new
-      repository.save(order);
-      System.out.println("New order placed, start flow. Order object: " + order);
-
-      try {
-        // Kick off a new business process
-        runtimeService.createMessageCorrelation(message.getType())
-                .processInstanceBusinessKey(message.getTraceid())
-                .setVariable("orderId", order.getId())
-                .setVariable("items", SpinValues.jsonValue(objectMapper.writeValueAsString(order.getItems())).create())
-                .correlateWithResult();
-      } catch (JsonProcessingException e) {
-        throw new RuntimeException("Failed to serialize order items", e);
-      }
-    } else {
-      System.out.println("Order already processed: " + order.getId());
-    }
-
-  }
- */
   @Transactional
   public void goodsAvailableReceived(String messagePayloadJson) throws IOException {
 
@@ -73,12 +43,32 @@ public class MessageListener {
     AllGoodsAvailableEventPayload payload = message.getData();
     boolean available = true;
 
-
-
     runtimeService.createMessageCorrelation("AllGoodsAvailableEvent")
             .processInstanceBusinessKey(message.getTraceid())
             .setVariable("available", available)
             .correlateWithResult();
+  }
+
+  @Transactional
+  public void customerRegisteredEventReceived(String messagePayloadJson) throws IOException {
+    try {
+      Message<CustomerRegisteredEventPayload> message = objectMapper.readValue(messagePayloadJson,
+              new TypeReference<Message<CustomerRegisteredEventPayload>>() {
+              }
+      );
+
+      CustomerRegisteredEventPayload payload = message.getData();
+      System.out.println("CustomerRegisteredEvent received: " + payload);
+
+      runtimeService.createMessageCorrelation("CustomerRegisteredEvent")
+              .processInstanceBusinessKey(payload.getRefId())
+              .setVariable("customer", payload.getCustomer())
+              .correlateWithResult();
+
+    } catch (JsonProcessingException e) {
+      e.printStackTrace();
+    }
+
   }
 
 
@@ -90,39 +80,16 @@ public class MessageListener {
    * It might make more sense to handle each and every message type individually.
    */
   @Transactional
-  @KafkaListener(id = "order", topics = MessageSender.TOPIC_NAME)
+  @KafkaListener(id = "order", topics = "flowing-retail", containerFactory = "messageListenerContainerFactory")
   public void messageReceived(String messagePayloadJson, @Header("type") String messageType) throws Exception{
-    /*
-    if ("OrderPlacedEvent".equals(messageType)) {
-        System.out.println("OrderPlacedEvent received");
-     // orderPlacedReceived(objectMapper.readValue(messagePayloadJson, new TypeReference<Message<Order>>() {}));
-    }
-
-     */
     if ("AllGoodsAvailableEvent".equals(messageType)) {
       System.out.println("AllGoodsAvailableEvent received");
       goodsAvailableReceived(messagePayloadJson);
     }
-
-
-    Message<JsonNode> message = objectMapper.readValue( //
-        messagePayloadJson, //
-        new TypeReference<Message<JsonNode>>() {});
-    
-    long correlatingInstances = runtimeService.createExecutionQuery() //
-      .messageEventSubscriptionName(message.getType()) //
-      .processInstanceBusinessKey(message.getTraceid()) //
-      .count();
-    
-    if (correlatingInstances==1) {
-      System.out.println("Correlating " + message + " to waiting flow instance");
-      
-      runtimeService.createMessageCorrelation(message.getType())
-        .processInstanceBusinessKey(message.getTraceid())
-        .setVariable(//
-            "PAYLOAD_" + message.getType(), // 
-            SpinValues.jsonValue(message.getData().toString()).create())//
-        .correlateWithResult();
+    if ("CustomerRegisteredEvent".equals(messageType)) {
+      System.out.println("CustomerRegisteredEvent received");
+      customerRegisteredEventReceived(messagePayloadJson);
     }
   }
+
 }

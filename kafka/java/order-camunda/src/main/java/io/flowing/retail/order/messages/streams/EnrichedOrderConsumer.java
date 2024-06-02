@@ -23,8 +23,8 @@ public class EnrichedOrderConsumer {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @KafkaListener(topics = "enriched-order", groupId = "${spring.kafka.consumer.group-id}")
-    public void listen(ConsumerRecord<String, EnrichedOrder> record) {
+    @KafkaListener(topics = "enriched-order", groupId = "enriched-order-service-group", containerFactory = "enrichedOrderKafkaListenerContainerFactory")
+    public void listen(ConsumerRecord<String, EnrichedOrder> record) { //TODO change to generic record
         String key = record.key();
         EnrichedOrder enrichedOrder = record.value();
 

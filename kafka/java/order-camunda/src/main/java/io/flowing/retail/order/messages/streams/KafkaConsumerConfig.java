@@ -28,10 +28,10 @@ public class KafkaConsumerConfig {
     @Value("${spring.kafka.properties.schema.registry.url}")
     private String schemaRegistryUrl;
 
-    @Value("${spring.kafka.consumer.group-id}")
+    @Value("${enriched-order-service-group.spring.kafka.consumer.group-id}")
     private String groupId;
 
-    @Bean
+    @Bean(name = "enrichedOrderConsumerFactory")
     public ConsumerFactory<String, EnrichedOrder> consumerFactory() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
@@ -47,11 +47,10 @@ public class KafkaConsumerConfig {
         return new DefaultKafkaConsumerFactory<>(props);
     }
 
-    @Bean
+    @Bean(name = "enrichedOrderKafkaListenerContainerFactory")
     public ConcurrentKafkaListenerContainerFactory<String, EnrichedOrder> kafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, EnrichedOrder> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
-        factory.setCommonErrorHandler(new DefaultErrorHandler(new FixedBackOff(0L, 0L))); // Suppress retries
         return factory;
     }
 }
