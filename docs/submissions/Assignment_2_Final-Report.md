@@ -20,9 +20,39 @@ The [README.md](/kafka/java/mailing/README.md) file provides detailed descriptio
 
 ## General Project Description
 
-We intro
+What Services did we implement?
+Here you can see an enhanced diagram of the flowing-retail application with two additional microservices: Mailing and
+Factory
 
-![kafka](../docs/kafka-services/enhanced-kafka-services.png)
+The mailing service is choreographed and is listening to all events happening in the flowing-retail process. Its primary
+role is to keep our customers informed every step of the way by dispatching timely update emails in response to various
+events triggered throughout the retail process.
+
+Under the choreography section, we have the Checkout Service, which was enhanced to initiate the flowing retail
+processing via a camunda form (which you will see in the next slide)
+
+Transitioning to the orchestration aspect of our enhancements, we introduce the VGR, or smart factory service. With this
+service we ensure that the order’s lifecycle is monitored from the factory onwoards. Furthermore, this service actively
+reacts to order updates and inventory changes within the smart factory setting
+
+The Services Inventory, Payment, Factory and Shipping are all orchestrated by the order service.
+
+Additionally we enhanced the inventory and factory service with MQTT which is subscribed to the smart factory topics
+“f/i/stock” for inventory and “f/i/order” for the factory service.
+
+For the second part of the course, we implemented a new microservice, the CRM service, which manages customer data. 
+This service has some data stored in a local database and is also connected to a Kafka topic to receive updates from the
+other services.
+
+We introduced Topology classes to track daily orders and item counts by product type. Additionally, 
+a join-topology allows us to enrich orders with customer data from our new customer service.
+If the customer exists in the database, it will be enriched; otherwise, if the customer cannot be found, we will use a placeholder.
+
+> avro
+
+> monitor enhancements
+
+![kafka](../docs/kafka-services/add-crm-kafka-services.png)
 
 ### Where does the Choreography end and orchestration start
 
