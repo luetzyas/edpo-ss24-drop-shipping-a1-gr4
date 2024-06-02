@@ -69,7 +69,7 @@
   });
 
   function loadModel() {
-    $.get('/order-collaboration.bpmn', function(data) {
+    $.get('/order.bpmn', function(data) {
        viewer.importXML(data, function(err) {
          if (err) {
            console.log('error rendering', err);
