@@ -43,14 +43,32 @@ decentralized manner to events as they occur.
 
 ## Concepts
 
+### State 
+- Stateless and Stateful Event Processing
 
 
 
-### Event-carried State Transfer
+### Serialization and Deserialization
+- JSON 
+- Avro
+
+### Time Semantics
+- Event Time: The time when the event actually occurred and was created by the source
+- Processing Time: The time when the stream processing app processes the event
+- Log Append Time: The time when the event arrives in the Kafka topic
+- Time windows
+
+### Stream Table Duality
+- KTable
+- GlobalKTable
+- KStream
+
+### Processing Guarantees
+- At least once
+- Exactly once
+- At most once
 
 
-
-![event carried state transfer](../docs/event-carried-state-transfer.png)
 
 ## CRM Service
 > new Microservice to manage customer data
