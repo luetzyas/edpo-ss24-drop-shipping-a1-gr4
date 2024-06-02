@@ -27,6 +27,8 @@ public class OrderPlacedAdapter implements JavaDelegate {
             Order order = (Order) execution.getVariable("order");
 
             Message<Order> message = new Message<>("OrderPlacedEvent", order);
+            message.setTraceid(order.getOrderId());
+            message.setCorrelationid(order.getOrderId());
             messageSender.send(message); // Serialize and send the order as a Kafka message
         } catch (Exception e) {
             e.printStackTrace();
