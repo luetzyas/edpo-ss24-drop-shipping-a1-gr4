@@ -62,34 +62,19 @@ address of the CRM service in the console output where the registration-flow can
 The notification will contain the Order-ID and the E-Mail address used at the Checkout. Those are the keys to match the 
 registration to the waiting flow-instance in the Order Service and the Customer to the Order.
 
-**Factory Service:** Initially implemented with the intention to represent the Vacuum Gripper 
+**Factory Service:** Initially implemented with the intention to represent the Vacuum Gripper it evolved into the Smart Factory abstraction. 
+In the code we thus refer to it as VGR. In the context of Assignment 2, this Service provides parts of the Smart Factory Dataset.
+It has an MQTT client that subscribes to the topic i/bme680 which provides sensor data. The records are directly forwarded
+to the Kafka topic sensor-data without processing at this point. 
 
+**Monitor Service:** Is now responsible for the processing of the sensor data. It has two Kafka Streams Topologies.
+The SensorDataProcessTopology categorizes the sensor data into critical and non-critical based on specific conditions.
+The SensorDataMonitorTopology provides insights by aggregating the normal sensor data to compute average values per hour. 
+Also, it logs each critical sensor data entry. The results visualized on the Monitor HTML page. The hourly average values
+are displayed in a table and the critical sensor records are listed below in real-time.
 
 **Services as per Report for Assignment 1:** Inventory, Payment, Shipping. 
 
-
-
-
-
-Transitioning to the orchestration aspect of our enhancements, we introduce the VGR, or smart factory service. With this
-service we ensure that the order’s lifecycle is monitored from the factory onwoards. Furthermore, this service actively
-reacts to order updates and inventory changes within the smart factory setting
-
-
-Additionally we enhanced the inventory and factory service with MQTT which is subscribed to the smart factory topics
-“f/i/stock” for inventory and “f/i/order” for the factory service.
-
-For the second part of the course, we implemented a new microservice, the CRM service, which manages customer data. 
-This service has some data stored in a local database and is also connected to a Kafka topic to receive updates from the
-other services.
-
-We introduced Topology classes to track daily orders and item counts by product type. Additionally, 
-a join-topology allows us to enrich orders with customer data from our new customer service.
-If the customer exists in the database, it will be enriched; otherwise, if the customer cannot be found, we will use a placeholder.
-
-> avro
-
-> monitor enhancements
 
 ![kafka](../docs/kafka-services/add-crm-kafka-services.png)
 
