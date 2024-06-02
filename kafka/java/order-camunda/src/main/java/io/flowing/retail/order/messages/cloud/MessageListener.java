@@ -35,18 +35,23 @@ public class MessageListener {
   @Transactional
   public void goodsAvailableReceived(String messagePayloadJson) throws IOException {
 
-    Message<AllGoodsAvailableEventPayload> message = objectMapper.readValue(messagePayloadJson,
-            new TypeReference<Message<AllGoodsAvailableEventPayload>>() {
-            }
-    );
+    try {
+      Message<AllGoodsAvailableEventPayload> message = objectMapper.readValue(messagePayloadJson,
+              new TypeReference<Message<AllGoodsAvailableEventPayload>>() {
+              }
+      );
 
-    AllGoodsAvailableEventPayload payload = message.getData();
-    boolean available = true;
+      AllGoodsAvailableEventPayload payload = message.getData();
 
-    runtimeService.createMessageCorrelation("AllGoodsAvailableEvent")
-            .processInstanceBusinessKey(message.getTraceid())
-            .setVariable("available", available)
-            .correlateWithResult();
+      runtimeService.createMessageCorrelation("AllGoodsAvailableEvent")
+              .processInstanceBusinessKey(message.getTraceid())
+              .setVariable("available", "true")
+              .correlateWithResult();
+
+      System.out.println("AllGoodsAvailableEvent received: " + payload + " for " + message.getTraceid());
+    } catch (JsonProcessingException e) {
+      e.printStackTrace();
+    }
   }
 
   @Transactional
@@ -71,7 +76,26 @@ public class MessageListener {
 
   }
 
+  @Transactional
+  public void paymentReceivedEventReceived(String messagePayloadJson) throws IOException {
+    try {
+      Message<PaymentReceivedEventPayload> message = objectMapper.readValue(messagePayloadJson,
+              new TypeReference<Message<PaymentReceivedEventPayload>>() {
+              }
+      );
 
+      PaymentReceivedEventPayload payload = message.getData();
+      System.out.println("PaymentReceivedEvent received: " + payload);
+
+      runtimeService.createMessageCorrelation("PaymentReceivedEvent")
+              .processInstanceBusinessKey(payload.getRefId())
+              .setVariable("refId", payload.getRefId())
+              .correlateWithResult();
+
+    } catch (JsonProcessingException e) {
+      e.printStackTrace();
+    }
+  }
   /**
    * Very generic listener for simplicity. It takes all events and checks, if a 
    * flow instance is interested. If yes, they are correlated, 
@@ -89,6 +113,30 @@ public class MessageListener {
     if ("CustomerRegisteredEvent".equals(messageType)) {
       System.out.println("CustomerRegisteredEvent received");
       customerRegisteredEventReceived(messagePayloadJson);
+    }
+    if ("PaymentReceivedEvent".equals(messageType)) {
+      System.out.println("PaymentReceivedEvent received");
+      paymentReceivedEventReceived(messagePayloadJson);
+    }
+
+    Message<JsonNode> message = objectMapper.readValue( //
+            messagePayloadJson, //
+            new TypeReference<Message<JsonNode>>() {});
+
+    long correlatingInstances = runtimeService.createExecutionQuery() //
+            .messageEventSubscriptionName(message.getType()) //
+            .processInstanceBusinessKey(message.getTraceid()) //
+            .count();
+
+    if (correlatingInstances==1) {
+      System.out.println("Correlating " + message + " to waiting flow instance");
+
+      runtimeService.createMessageCorrelation(message.getType())
+              .processInstanceBusinessKey(message.getTraceid())
+              .setVariable(//
+                      "PAYLOAD_" + message.getType(), //
+                      SpinValues.jsonValue(message.getData().toString()).create())//
+              .correlateWithResult();
     }
   }
 

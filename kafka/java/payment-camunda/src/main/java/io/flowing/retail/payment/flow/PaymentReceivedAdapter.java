@@ -17,8 +17,10 @@ public class PaymentReceivedAdapter implements JavaDelegate {
   @Override
   public void execute(DelegateExecution context) throws Exception {
     String refId = (String) context.getVariable("refId");
-    String correlationId = (String) context.getVariable("correlationId");
+    String correlationId = (String) context.getVariable("refId");
     String traceId = context.getProcessBusinessKey();
+
+    System.out.println("PaymentReceivedAdapter for " + refId + " with correlation id " + correlationId);
 
     messageSender.send(new Message<PaymentReceivedEventPayload>("PaymentReceivedEvent",
             traceId, new PaymentReceivedEventPayload().setRefId(refId))

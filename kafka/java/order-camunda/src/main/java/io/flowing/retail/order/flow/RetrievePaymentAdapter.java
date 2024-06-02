@@ -32,6 +32,8 @@ public class RetrievePaymentAdapter implements JavaDelegate {
             new RetrievePaymentCommandPayload() //
               .setRefId(order.getId()) //
               .setAmount(order.getTotalSum())));
+
+    System.out.println("RetrievePaymentAdapter for refId " + order.getId());
   }
 
 }
