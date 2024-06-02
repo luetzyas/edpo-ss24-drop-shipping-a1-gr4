@@ -41,17 +41,29 @@ factory topics “f/i/stock” for inventory and “f/i/order” for the factory
 
 ### Where does the Choreography end and orchestration start
 
-In our Flowing Retail application, we delve into the rich landscape of service coordination, articulating the
+In our Flowing Retail application, we dip into the rich landscape of service coordination, articulating the
 nuanced dance between Orchestration and Choreography. The Checkout Service, initiates the sequence of
 events to start processing the order.
 
-Once the order is placed, it simultaneously demonstrates the concept of Orchestration. Due to high semantic coupling it
-acts with authoritative knowledge of the entire process flow, conducting each ensuring the order's lifecycle is followed
-meticulously. (This approach is particularly useful for complex business transactions requiring coordinated steps and
-when consistency is paramount.)
+The Checkout Service plays an important role because it embodies the principle of orchestration. When an order is
+placed, this service takes action, wielding authority over the entire operational process. It is uniquely informed about
+every step that must be taken, from order validation to final confirmation, ensuring that each phase seamlessly
+transitions into the next. Because of this high level of semantic coupling, the service knows exactly which process to
+initiate and manage at each stage, making it essential for carrying out complex, multi-step transactions that require
+precise coordination and consistency. The orchestration process ensures that each component service, such as payment
+processing and inventory management.
 
-Complementing this is our Mailing Service, which adheres to the principles of Choreography, responding in a
-decentralized manner to events as they occur.
+In contrast, our Mailing Service demonstrates Choreography. Unlike Orchestration, where a central system directs
+interactions, Choreography entails services acting independently based on event triggers and established protocols. The
+Mailing Service does not receive direct instructions from a central authority. Instead, it listens for specific events,
+such as order confirmations, and then performs the task of sending order-related emails to customers autonomously. This
+decentralization enables a scalable and adaptable system in which services react dynamically to changes and events in
+the ecosystem. Each service understands its role and interacts with other services through a series of reactive,
+self-managed actions that contribute to the overall workflow while avoiding centralized control.
+
+This distinction between Choreography and Orchestration in our application provides a solid framework for understanding
+how various services interact within a complex system, emphasizing the strengths and appropriate use cases for each
+approach in service-oriented architectures.
 
 ### Workflow
 
@@ -155,6 +167,17 @@ One technical challenge that stood out was managing duplicate messages—a commo
 asynchronous messaging. Implementing an idempotent consumer pattern was essential for ensuring that operations such as
 inventory checks and updates are performed only once, regardless of how many times a message is received. This not only
 prevented data inconsistencies but also improved system resilience.
+
+One notable feature of our architecture was the use of Kafka, which, while powerful, frequently felt like a "black box"
+due to the opaque nature of its internal message handling. This opacity made it difficult to trace and debug issues in
+our message flows. We worked a lot with system prints to trace our progress and be able to see how we transformed our 
+messages during the process.
+
+Furthermore, significant time was spent refining the business logic within each service to accommodate the complexities
+brought on by distributed processing and asynchronous communications. This emphasis on business logic, while necessary,
+diverted attention away from other potential optimizations and improvements to our system architecture. Consider
+prioritizing sustainable business logic for future projects. Balancing the application's administrative tasks proved
+challenging.
 
 **Team Collaboration and Workflow**
 
