@@ -78,19 +78,6 @@ are displayed in a table and the critical sensor records are listed below in rea
 
 ![kafka](../docs/kafka-services/add-crm-kafka-services.png)
 
-### Where does the Choreography end and orchestration start
-
-In our Flowing Retail application, we delve into the rich landscape of service coordination, articulating the nuanced
-dance between Orchestration and Choreography. The Checkout Service, initiates the sequence of events to start processing
-the order.
-
-Once the order is placed, it simultaneously demonstrates the concept of Orchestration. Due to high semantic coupling it
-acts with authoritative knowledge of the entire process flow, conducting each ensuring the order's lifecycle is followed
-meticulously. (This approach is particularly useful for complex business transactions requiring coordinated steps and
-when consistency is paramount.)
-
-Complementing this is our Mailing Service, which adheres to the principles of Choreography, responding in a
-decentralized manner to events as they occur.
 
 ## Workflow
 ![workflow](../docs/workflow.png) // TODO enhnace 
