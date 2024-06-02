@@ -1,0 +1,68 @@
+{
+  "components": [
+    {
+      "label": "Name",
+      "type": "textfield",
+      "id": "Field_1lncype",
+      "key": "name",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "label": "Address",
+      "type": "textfield",
+      "id": "Field_1tucqcs",
+      "key": "address",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "label": "E-Mail",
+      "type": "textfield",
+      "id": "Field_1hobntl",
+      "key": "email",
+      "validate": {
+        "required": true
+      },
+      "description": "use same as for order"
+    },
+    {
+      "label": "Order Id",
+      "type": "textfield",
+      "id": "Field_1eoeusa",
+      "key": "refId",
+      "description": "Past your OrderId",
+      "validate": {
+        "required": true
+      },
+      "defaultValue": "checkout-generated-..."
+    },
+    {
+      "label": "By signing up, you agree to our Privacy Policy and Terms of Use.",
+      "type": "checkbox",
+      "id": "Field_03o1pxl",
+      "key": "field_1hojlda",
+      "disabled": true,
+      "defaultValue": true,
+      "properties": {}
+    },
+    {
+      "action": "submit",
+      "label": "Submit",
+      "type": "button",
+      "id": "Field_1w8px18",
+      "key": "field_14cdws9"
+    }
+  ],
+  "type": "default",
+  "id": "customer-form",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.3.0"
+  },
+  "executionPlatform": "Camunda Platform",
+  "executionPlatformVersion": "7.17.0",
+  "schemaVersion": 4
+}

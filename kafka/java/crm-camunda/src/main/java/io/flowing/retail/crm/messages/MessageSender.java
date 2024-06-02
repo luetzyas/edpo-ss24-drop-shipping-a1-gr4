@@ -36,9 +36,10 @@ public class MessageSender {
       String jsonMessage = objectMapper.writeValueAsString(m);
 
       // wrap into a proper message for Kafka including a header
-      ProducerRecord<String, String> record = new ProducerRecord<String, String>(TOPIC_NAME, jsonMessage);
+      ProducerRecord<String, String> record = new ProducerRecord<String, String>("flowing-retail", jsonMessage);
       record.headers().add("type", m.getType().getBytes());
 
+      System.out.println("CRM Sending message: " + jsonMessage + " with type " + m.getType());
       // and send it
       kafkaTemplate.send(record);
     } catch (Exception e) {

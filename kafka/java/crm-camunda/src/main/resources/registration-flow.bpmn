@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_09iu7hb" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.3.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.17.0">
+  <bpmn:process id="registration-flow" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1" name="Registration Form submitted" camunda:formRef="customer-form" camunda:formRefBinding="latest">
+      <bpmn:outgoing>Flow_0gfn55e</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_0gfn55e" sourceRef="StartEvent_1" targetRef="Activity_0anpsxj" />
+    <bpmn:serviceTask id="Activity_0anpsxj" name="Register Customer" camunda:delegateExpression="${registerCustomerAdapter}">
+      <bpmn:incoming>Flow_0gfn55e</bpmn:incoming>
+      <bpmn:outgoing>Flow_0sqyg2c</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_0sqyg2c" sourceRef="Activity_0anpsxj" targetRef="Event_1fusra8" />
+    <bpmn:endEvent id="Event_1fusra8">
+      <bpmn:incoming>Flow_0sqyg2c</bpmn:incoming>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_03f2bv2" camunda:delegateExpression="${notifyOrderAdapter}" />
+    </bpmn:endEvent>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="registration-flow">
+      <bpmndi:BPMNShape id="Event_1led1z4_di" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="79" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="153" y="122" width="88" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_16fjmlg_di" bpmnElement="Activity_0anpsxj">
+        <dc:Bounds x="270" y="57" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0j204v5_di" bpmnElement="Event_1fusra8">
+        <dc:Bounds x="512" y="79" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0gfn55e_di" bpmnElement="Flow_0gfn55e">
+        <di:waypoint x="215" y="97" />
+        <di:waypoint x="270" y="97" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0sqyg2c_di" bpmnElement="Flow_0sqyg2c">
+        <di:waypoint x="370" y="97" />
+        <di:waypoint x="512" y="97" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
