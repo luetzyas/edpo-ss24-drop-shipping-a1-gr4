@@ -18,7 +18,9 @@
 
 [Release](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/releases/tag/EDPO_A2)
 
-The [README.md](/kafka/java/mailing/README.md) file provides detailed description of implementation.
+How to Run: 
+
+[Run Confguration](
 
 ## General Project Description
 
@@ -114,18 +116,13 @@ to aggregate and process data over fixed intervals.
 
 ### Stream Table Duality
 **KTable:** A KTable is a changelog stream where each data record represents an update (insert, update, delete) 
-of a primary-keyed table. KTable is used for stateful processing and joins.
+of a primary-keyed table. KTable is used for stateful processing and joins
 
-**GlobalKTable:** A GlobalKTable is similar to a KTable but is replicated on all instances of the Kafka Streams application.
+**GlobalKTable:** A GlobalKTable is similar to a KTable but is replicated on all instances of the Kafka Streams application. 
+In our application, we haven't used GlobalKTable as we had no use case for a global state store.
 
 **KStream:** A KStream is a record stream of key-value pairs, where each record is treated as an independent event. 
 KStream is used for stateless transformations and simple processing tasks.
-
-
-### Processing Guarantees
-- At least once
-- Exactly once
-- At most once
 
 
 
@@ -174,6 +171,10 @@ KStream is used for stateless transformations and simple processing tasks.
     </tr>
 </table>
 
+Example output:
+
+<img alt="img_7.png" src="img_7.png" width="600"/>
+
 ### Daily Items
 
 <table>
@@ -211,6 +212,10 @@ KStream is used for stateless transformations and simple processing tasks.
         </td>
     </tr>
 </table>
+
+Example output:
+
+<img alt="img_6.png" src="img_6.png" width="600"/>
 
 ### Sensor Data Monitoring
 
@@ -272,6 +277,10 @@ KStream is used for stateless transformations and simple processing tasks.
         </td>
     </tr>
 </table>
+
+Example output of both topologies:
+
+<img alt="img_8.png" src="img_8.png" width="600"/>
 
 ### Order Enrichment with Customer Data
 
@@ -384,6 +393,7 @@ also it extracts the processing logic into a separate topology which makes the c
 We realized that Avro serialization should be manily used as a Data Transfer Object (DTO) between services and does not
 necessarily replace the need for POJOs. In our case, we used Avro for the EnrichedOrder class which is the join 
 of the Order and the Customer Domain. In this case it was a good choice because the EnrichedOrder only used as DTO.
+But still, we had to write a Mapper to create the EnrichedOrder from the Order and Customer POJOs.
 
 We could not use Avro for example for the Customer class in the CRM Service since we require POJOs for the Database. 
 More generally, where we required annotations like @Entity, @Id, etc. we could not use Avro.
