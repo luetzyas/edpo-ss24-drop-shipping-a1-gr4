@@ -306,6 +306,16 @@ KStream is used for stateless transformations and simple processing tasks.
 </table>
 
 ## BPMN Extensions
+
+Through our project journey we updated and introduced new BPMN processes into our application. We enhanced the order
+service to be able to process check out, factory, and CRM processes. Then introduced a bpmn process for the checkout service.
+So that during the checkout we can check our inventory from the smart factory. We also added a human task and time
+attribute to continue the checkout if the stock from the factory inventory is not enough. 
+For out new services VGR (Smart Factory) and CRM we added a simple bpmn process to show the interaction between the services.
+
+In this Matrix it is made graphically visible which bpmn is from the forked project (EDPO) Column, and for which
+Assignment 1 or 3 we added the bpmn to our application.
+
 <table>
     <tr>
         <th>Process</th>
