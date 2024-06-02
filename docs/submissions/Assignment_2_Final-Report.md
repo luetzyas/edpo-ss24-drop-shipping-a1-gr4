@@ -78,10 +78,6 @@ are displayed in a table and the critical sensor records are listed below in rea
 
 ![kafka](../docs/kafka-services/add-crm-kafka-services.png)
 
-
-## Workflow
-![workflow](../docs/workflow.png) // TODO enhnace 
-
 ## Concepts
 
 ### State 
