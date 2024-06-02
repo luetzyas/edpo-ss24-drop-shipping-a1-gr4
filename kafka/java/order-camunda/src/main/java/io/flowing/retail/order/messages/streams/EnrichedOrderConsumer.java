@@ -24,7 +24,7 @@ public class EnrichedOrderConsumer {
     private ObjectMapper objectMapper;
 
     @KafkaListener(topics = "enriched-order", groupId = "enriched-order-service-group", containerFactory = "enrichedOrderKafkaListenerContainerFactory")
-    public void listen(ConsumerRecord<String, EnrichedOrder> record) { //TODO change to generic record
+    public void listen(ConsumerRecord<String, EnrichedOrder> record) {
         String key = record.key();
         EnrichedOrder enrichedOrder = record.value();
 
