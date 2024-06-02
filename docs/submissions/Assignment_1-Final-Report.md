@@ -8,12 +8,7 @@
 ## Deadline
 
 - **Submission Date:** 21.04.2024; 23:59 CET
-- **Reworked Date:** 31.05.2024
--
-    *
-
-*[Work distribution](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/blob/master/docs/submissions/change_log.md)
-**
+- **[Work distribution](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/blob/master/docs/submissions/change_log.md)**
 
 # Final Report
 
@@ -48,9 +43,8 @@ Additionally we enhanced the inventory and factory service with MQTT which is su
 ### Where does the Choreography end and orchestration start
 
 In our Flowing Retail application, we delve into the rich landscape of service coordination, articulating the nuanced
-dance between Orchestration and Choreography. Each approach is important in streamlining our microservice architecture
-and optimizing both the flexibility and control of the service interaction. The Checkout Service, initiates the sequence
-of events to start processing the order. The order is the orchestrator of the entire process.
+dance between Orchestration and Choreography. The Checkout Service, initiates the sequence of events to start processing
+the order.
 
 Once the order is placed, it simultaneously demonstrates the concept of Orchestration. Due to high semantic coupling it
 acts with authoritative knowledge of the entire process flow, conducting each ensuring the order's lifecycle is followed
@@ -164,7 +158,6 @@ inventory checks and updates are performed only once, regardless of how many tim
 prevented data inconsistencies but also improved system resilience.
 
 **Team Collaboration and Workflow**
-
 This project also underscored the value of effective team collaboration. Utilizing tools like Git for version control
 and collaborative coding was indispensable. Regular meetings and clear communication channels enabled timely resolution
 of issues and helped synchronize work across different parts of the project. Each team member's unique skills were
