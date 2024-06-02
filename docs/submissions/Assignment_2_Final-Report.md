@@ -126,6 +126,7 @@ KStream is used for stateless transformations and simple processing tasks.
 
 
 ## Implemented Topologies
+![Topology Overview](../docs/topologies/stream-processing-apps.png)
 
 ### Daily Orders
 
@@ -299,6 +300,27 @@ KStream is used for stateless transformations and simple processing tasks.
     </tr>
 </table>
 
+## BPMN Extensions
+- order
+- checkout
+- crm
+- factory vgr
+- payment und shipping haben wir keine änderungen gemacht
+
+<table>
+    <tr>
+        <th>Process</th>
+        <th>EDPO</th>
+        <th>A1</th>
+        <th>A2</th>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+</table>
 
 ## Reflections and lessons learned
 > Kafka Streams
