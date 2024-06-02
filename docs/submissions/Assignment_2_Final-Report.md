@@ -340,24 +340,47 @@ KStream is used for stateless transformations and simple processing tasks.
 </table>
 
 ## BPMN Extensions
-- order
-- checkout
-- crm
-- factory vgr
-- payment und shipping haben wir keine änderungen gemacht
-
 <table>
     <tr>
         <th>Process</th>
         <th>EDPO</th>
-        <th>A1</th>
-        <th>A2</th>
+        <th>Group 4</th>
     </tr>
     <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+        <td>Order</td>
+        <td>
+            <img src="../docs/bpmn/Order-Before.png" alt="EDPO: Order from the course">
+        </td>
+        <td>
+            <img src="../docs/bpmn/Order-A1.png" alt="Gr4: Order with our changes">
+        </td>
+    </tr>
+    <tr>
+        <td>Checkout</td>
+        <td>
+            -
+        </td>
+        <td>
+            <img src="../docs/bpmn/checkout.png" alt="Gr4: Checkout">
+        </td>
+    </tr>
+    <tr>
+        <td>CRM</td>
+        <td>
+            -
+        </td>
+        <td>
+            <img src="../docs/bpmn/CRM.png" alt="Gr4: CRM">
+        </td>
+    </tr>
+    <tr>
+        <td>Factory</td>
+        <td>
+            -
+        </td>
+        <td>
+            <img src="../docs/bpmn/VGR.png" alt="Gr4: VGR">
+        </td>
     </tr>
 </table>
 

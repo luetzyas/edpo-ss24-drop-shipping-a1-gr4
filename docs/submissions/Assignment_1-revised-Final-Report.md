@@ -7,12 +7,8 @@
 
 ## Deadline
 
-- **Submission Date:** 21.04.2024; 23:59 CET
--
-    *
-
-*[Work distribution](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/blob/master/docs/submissions/change_log.md)
-**
+- **Submission Date:** 02.06.2024; 23:59 CET
+- **[Work distribution](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/blob/master/docs/submissions/change_log.md)**
 
 # Final Report
 
