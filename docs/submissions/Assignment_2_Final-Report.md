@@ -20,7 +20,9 @@
 
 How to Run: 
 
-[Run Confguration](
+Build the project with Maven and use the Docker File docker-compose-kafka-java-order-camunda-schema-registry.yml in the runner folder.
+
+[Intellij Run Confguration](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/blob/ee93cee900bf2dcf0193bd347ef074357bca6478/.run/Flowing%20Retail%20Schema%20Registry%20Compose%20up.run.xml)
 
 ## General Project Description
 
@@ -102,11 +104,7 @@ The schema is stored in the schema registry, which ensures consistency across pr
 
 
 ### Time Semantics
-**Event Time:** The time when the event actually occurred and was created by the source 
-
-**Processing Time:** The time when the stream processing app processes the event
-
-**Log Append Time:** The time when the event arrives in the Kafka topic 
+The Factory Dataset provides sensor data with a timestamp from 2020. We therefore treat the data by relying on the wall time for windowing and aggregation.
 
 **Time windows:** Tumbling Windows: These are fixed-size, non-overlapping windows. 
 Tumbling windows are used to segment the data stream into distinct chunks for aggregation. 
@@ -281,6 +279,8 @@ Example output:
 Example output of both topologies:
 
 <img alt="img_8.png" src="img_8.png" width="600"/>
+
+![img_9.png](img_9.png)
 
 ### Order Enrichment with Customer Data
 
