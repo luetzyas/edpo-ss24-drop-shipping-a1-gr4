@@ -18,7 +18,9 @@
 
 [Release](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/releases/tag/EDPO_A2)
 
-The [README.md](/kafka/java/mailing/README.md) file provides detailed description of implementation.
+How to Run: 
+
+[Run Confguration](
 
 ## General Project Description
 
