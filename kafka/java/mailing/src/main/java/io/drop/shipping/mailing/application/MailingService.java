@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.drop.shipping.mailing.messages.cloud.Message;
 import io.drop.shipping.mailing.messages.payload.*;
+import org.apache.avro.generic.GenericRecord;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -103,5 +104,18 @@ public class MailingService {
         } catch (Exception e) {
             System.out.println("Error " + Thread.currentThread().getStackTrace() + e);
         }
+    }
+
+    public void sendMailForCustomerNotFoundEvent(GenericRecord enrichedOrder) {
+        // Extracting the order ID from the enriched order
+        String orderId = enrichedOrder.get("orderId").toString();
+        String email = enrichedOrder.get("email").toString();
+
+        String emailSubject = "Please register to complete your order";
+        String emailContent = "The order with Order ID: " + orderId + " has been placed, but customer with email: "+email+" is not registered. Waiting for registration. Please sign up here: http://localhost:8098/";
+        String recipient = email;
+
+        sendMail(emailSubject, emailContent, recipient);
+
     }
 }
