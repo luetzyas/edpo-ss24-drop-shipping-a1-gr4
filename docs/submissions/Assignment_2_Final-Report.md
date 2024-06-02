@@ -20,22 +20,61 @@ The [README.md](/kafka/java/mailing/README.md) file provides detailed descriptio
 
 ## General Project Description
 
-What Services did we implement?
-Here you can see an enhanced diagram of the flowing-retail application with two additional microservices: Mailing and
-Factory
+As outlined in the report for the first part of the assignment, we have extended the Flowing Retail application.
+By including the high-level Smart-factory Dataset through the Factory Service and by having an Order-fulfillment process
+we had several options for stream processing.
 
-The mailing service is choreographed and is listening to all events happening in the flowing-retail process. Its primary
-role is to keep our customers informed every step of the way by dispatching timely update emails in response to various
-events triggered throughout the retail process.
+For the second part of the assignment we enhanced the flowing-retail application with an additional CRM Microservice and
+have implemented Kafka Streams topologies in the existing Order Service and the Monitor Service. 
 
-Under the choreography section, we have the Checkout Service, which was enhanced to initiate the flowing retail
-processing via a camunda form (which you will see in the next slide)
+### Service Overview:
+
+**Checkout Service:** Contains a Camunda form to place an order and start the retail process. It will check if the items 
+to be ordered are in stock and will notify the customer through a User Task about a potential shortfall of items and 
+asking for a confirmation to proceed with the order. If the ordered amount is unusually high, a human intervention 
+is triggered via BPMN error and requires an employee to check and sign off the order.
+
+**CRM Service:** Implements a Customer Database which gets initialized with some sample data. Every operation will be
+streamed to the Kafka topic customer. The service also has a Camunda Form for Customers to register themselves.
+
+**Order Service:** The Order Service is the heart of the Flowing Retail application. It contains the order 
+fulfillment BPMN process integrating the Inventory, Payment, Factory and Shipping services in an orchestrated manner.
+The Checkout, CRM, Monitor and Mailing services are also integrated in the process but in an orchestrated manner.
+
+The entry point to the Order Service is it's OrderEnrichmentTopology which consumes the OrderPlacedEvents from the Checkout.
+The OrderEnrichmentTopology enriches the order with customer data from the CRM service and then starts the order fulfillment process.
+If the Customer could not be matched to the E-Mail used at the Checkout, the flow-instance will wait until the Customer
+has signed up via registration form in the CRM Service. The OrderEnrichmentTopology will cause the Mailing Service to send 
+a Notification to the Customer providing a link to the registration form. When using the same E-Mail address and
+the provided Order-ID the Customer can be matched to the waiting flow-instance and the Order will eventually be processed.
+
+The fulfillment gets parallelized to on the one hand block the required amount of items in the Inventory and on the other hand
+to request the Payment. If both are successful the Order will be sent to the Factory for production. The produced items
+will be picked up and shipped to the Customer. 
+
+The Order Service further contains the DailyOrdersTopology and the DailyItemsTopology tracking the number of orders and the 
+total amount of each item ordered per day.
+
+**Mailing Service:** Listens to all events happening in the flowing-retail process. Its primary
+role is to keep our customers informed about the major steps throughout the retail process. It also sends a notification
+to the customer if the order could not be processed due to missing customer data. In fact, it will provide the localhost
+address of the CRM service in the console output where the registration-flow can be started with the customer-form. 
+The notification will contain the Order-ID and the E-Mail address used at the Checkout. Those are the keys to match the 
+registration to the waiting flow-instance in the Order Service and the Customer to the Order.
+
+**Factory Service:** Initially implemented with the intention to represent the Vacuum Gripper 
+
+
+**Services as per Report for Assignment 1:** Inventory, Payment, Shipping. 
+
+
+
+
 
 Transitioning to the orchestration aspect of our enhancements, we introduce the VGR, or smart factory service. With this
 service we ensure that the order’s lifecycle is monitored from the factory onwoards. Furthermore, this service actively
 reacts to order updates and inventory changes within the smart factory setting
 
-The Services Inventory, Payment, Factory and Shipping are all orchestrated by the order service.
 
 Additionally we enhanced the inventory and factory service with MQTT which is subscribed to the smart factory topics
 “f/i/stock” for inventory and “f/i/order” for the factory service.
