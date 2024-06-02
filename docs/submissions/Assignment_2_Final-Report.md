@@ -38,11 +38,13 @@ when consistency is paramount.)
 Complementing this is our Mailing Service, which adheres to the principles of Choreography, responding in a
 decentralized manner to events as they occur.
 
-### Workflow
+## Workflow
+![workflow](../docs/workflow.png) // TODO enhnace 
+
+## Concepts
 
 
 
-![workflow](../docs/workflow.png)
 
 ### Event-carried State Transfer
 
@@ -50,20 +52,22 @@ decentralized manner to events as they occur.
 
 ![event carried state transfer](../docs/event-carried-state-transfer.png)
 
-### Inventory Service
+## CRM Service
+> new Microservice to manage customer data
 
 
-![inventory](../docs/inventory.png)
 
-### Event Flow
+## Topologies
 
-
-![eventflow](../docs/eventflow.png)
 
 ## Reflections and lessons learned
+> Kafka Streams
 
+> Avro
+ 
+> Others
 
 
 **Team Collaboration and Workflow**
-
+xxxx
 

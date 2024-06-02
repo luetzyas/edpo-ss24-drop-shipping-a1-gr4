@@ -58,10 +58,16 @@ Here, you will find a brief overview of our progress, including major milestones
   - ADR [0005 Add new CRM-Camunda Service](adr/0005-add-crm-camunda-service.md) 
   - implement feedback in [Assignment_1-Final-Report](Assignment_1-Final-Report.pdf) //TODO
   - work on final report for [Assingment_2-Final_Report](Assignment_2-Final-Report.pdf) //TODO
-
+  - create diagrams of the topologies for Assignment 2 >> the graphis can be found [here](../docs/topologies)
+  
+- Presentation
+  - add [Midterm](Midterm-Presentation-EDPO-Gr4.pdf) presentation file to project
+  - add [Final](Final-Presentation-EDPO-Gr4.pdf) presentation file to project
+  
 - Order-Camunda Service
   - new class [DailyItemsTopology](../../kafka/java/order-camunda/src/main/java/io/flowing/retail/order/streams/DailyItemsTopology.java) to get daily items count per day
   - restructure [KafkaStreamsRunner](../../kafka/java/order-camunda/src/main/java/io/flowing/retail/order/streams/KafkaStreamsRunner.java) for multiple topologies
+  
 - CRM-Camunda Service >> new microservice [crm-camunda](../../kafka/java/crm-camunda) to store and update customer data
   - Process to load XML file with customer sample data during Springboot startup
     - new classes: [Customers](../../kafka/java/crm-camunda/src/main/java/io/flowing/retail/crm/dbLoader/Customers.java), [DataLoader](../../kafka/java/crm-camunda/src/main/java/io/flowing/retail/crm/dbLoader/DataLoader.java)
