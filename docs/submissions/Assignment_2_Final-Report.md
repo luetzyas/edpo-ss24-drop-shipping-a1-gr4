@@ -44,6 +44,14 @@ For the second part of the course, we implemented a new microservice, the CRM se
 This service has some data stored in a local database and is also connected to a Kafka topic to receive updates from the
 other services.
 
+We introduced Topology classes to track daily orders and item counts by product type. Additionally, 
+a join-topology allows us to enrich orders with customer data from our new customer service.
+If the customer exists in the database, it will be enriched; otherwise, if the customer cannot be found, we will use a placeholder.
+
+> avro
+
+> monitor enhancements
+
 ![kafka](../docs/kafka-services/add-crm-kafka-services.png)
 
 ### Where does the Choreography end and orchestration start
