@@ -14,7 +14,7 @@
 
 ## Code
 
-[Release]()
+[Release](https://github.com/luetzyas/edpo-ss24-drop-shipping-a1-gr4/releases/tag/EDPO_A2)
 
 The [README.md](/kafka/java/mailing/README.md) file provides detailed description of implementation.
 
@@ -275,26 +275,26 @@ KStream is used for stateless transformations and simple processing tasks.
             <img src="../docs/topologies/order-enrichment-join-topology.png" alt="Topology: Order Enrichment">
         </td>
         <td>
-            <p>The <strong>OrderEnrichmentTopology</strong> class outlines a Kafka Streams topology that enriches incoming orders with customer data.</p>
-            <p>This topology processes the 'flowing-retail' topic and enriches each order by linking it with the corresponding customer information. The key steps involved in the topology are as follows:</p>
+            <p>The <strong>OrderEnrichmentTopology</strong> class designs a Kafka Streams topology that enriches incoming orders with customer data.</p>
+            <p>This topology processes the 'flowing-retail' topic and enriches each order by linking it with corresponding customer information. The key steps involved in the topology are as follows:</p>
             <ol>
                 <li><strong>Stream Initialization</strong>: 
-                    <p>The topology begins by streaming order data from the 'flowing-retail' topic, using the <em>MessageOrderSerde</em> for deserialization.</p>
+                    <p>The topology begins by streaming order data from the 'flowing-retail' topic using the <em>MessageOrderSerde</em> for deserialization.</p>
                 </li>
                 <li><strong>Customer Information Table</strong>: 
-                    <p>A KTable is set up to hold customer information, streaming data from the 'customer' topic using the <em>CustomerSerde</em> for deserialization. This table allows for quick lookups of customer data.</p>
+                    <p>A <em>KTable</em> is set up to hold customer information, streaming data from the 'customer' topic using the <em>CustomerSerde</em> for deserialization. This table allows for quick lookups of customer data.</p>
                 </li>
                 <li><strong>Filter and Map Orders</strong>: 
                     <p>Orders are filtered to process only 'OrderPlacedEvent' types, and the stream is remapped with the order email as the key, facilitating customer data lookup.</p>
                 </li>
                 <li><strong>Enrich Orders</strong>: 
-                    <p>The customer KTable is joined with the order stream to enrich each order with the corresponding customer details, creating a new stream of enriched orders.</p>
+                    <p>The customer <em>KTable</em> is left-joined with the order stream to enrich each order with the corresponding customer details, creating a stream of enriched orders. Orders without matching customer data are identified for further handling.</p>
                 </li>
-                <li><strong>Output to Topic</strong>: 
-                    <p>Enriched orders are then serialized into an Avro format and published to an output topic for further processing or storage.</p>
+                <li><strong>Branch and Output</strong>: 
+                    <p>The enriched stream is branched into two: one for successfully matched orders that are directed to the 'enriched-order' topic, and another for unmatched orders sent to the 'customer-not-found' topic.</p>
                 </li>
             </ol>
-            <p>This topology enables a deeper analysis of order data by incorporating customer details directly into each order event, enhancing the data's richness for subsequent processing steps or analytical applications.</p>
+            <p>This topology effectively segregates orders based on customer data availability, enhancing the data's richness for subsequent processing steps or analytical applications while providing pathways for handling anomalies.</p>
         </td>
     </tr>
 </table>
