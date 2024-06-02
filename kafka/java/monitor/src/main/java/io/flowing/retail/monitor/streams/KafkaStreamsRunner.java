@@ -21,8 +21,13 @@ public class KafkaStreamsRunner {
 
     @PostConstruct
     public void startKafkaStreams() {
-        startTopology(SensorDataProcessTopology.build(), "sensor-data-process-app");
-        startTopology(SensorDataMonitorTopology.build(kafkaStreamsService), "sensor-data-monitor-app");
+        try {
+            startTopology(SensorDataProcessTopology.build(), "sensor-data-process-app");
+            startTopology(SensorDataMonitorTopology.build(kafkaStreamsService), "sensor-data-monitor-app");
+        } catch (Exception e) {
+            System.out.println("Error starting Kafka Streams topologies: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     private void startTopology(Topology topology, String applicationId) {
@@ -33,8 +38,17 @@ public class KafkaStreamsRunner {
             config.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
             config.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
             config.put(StreamsConfig.PROCESSING_GUARANTEE_CONFIG, StreamsConfig.EXACTLY_ONCE_V2);
+            config.put(StreamsConfig.REPLICATION_FACTOR_CONFIG, 1);
 
             KafkaStreams streams = new KafkaStreams(topology, config);
+            streams.setStateListener((newState, oldState) -> {
+                System.out.println("State change from " + oldState + " to " + newState);
+                if (newState == KafkaStreams.State.ERROR) {
+                    System.err.println("Kafka Streams entered ERROR state. Exiting...");
+                    System.exit(1);
+                }
+            });
+
             Runtime.getRuntime().addShutdownHook(new Thread(streams::close));
 
             kafkaStreamsService.registerStreams(streams); // Register KafkaStreams instance
@@ -42,6 +56,7 @@ public class KafkaStreamsRunner {
             System.out.println("Starting " + applicationId + " Streams");
             streams.start();
         } catch (Exception e) {
+            System.out.println("Error starting Kafka Streams for " + applicationId + ": " + e.getMessage());
             e.printStackTrace();
         }
     }
