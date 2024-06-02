@@ -344,7 +344,8 @@ KStream is used for stateless transformations and simple processing tasks.
     <tr>
         <th>Process</th>
         <th>EDPO</th>
-        <th>Group 4</th>
+        <th>Group 4 A1</th>
+        <th>Group 4 A2</th>
     </tr>
     <tr>
         <td>Order</td>
@@ -352,7 +353,10 @@ KStream is used for stateless transformations and simple processing tasks.
             <img src="../docs/bpmn/Order-Before.png" alt="EDPO: Order from the course">
         </td>
         <td>
-            <img src="../docs/bpmn/Order-A1.png" alt="Gr4: Order with our changes">
+            <img src="../docs/bpmn/Order-A1.png" alt="Gr4: Order with our changes A1">
+        </td>
+        <td>
+            <img src="../docs/bpmn/Order-A2.png" alt="Gr4: Order with our changes A2">
         </td>
     </tr>
     <tr>
@@ -365,15 +369,6 @@ KStream is used for stateless transformations and simple processing tasks.
         </td>
     </tr>
     <tr>
-        <td>CRM</td>
-        <td>
-            -
-        </td>
-        <td>
-            <img src="../docs/bpmn/CRM.png" alt="Gr4: CRM">
-        </td>
-    </tr>
-    <tr>
         <td>Factory</td>
         <td>
             -
@@ -382,6 +377,17 @@ KStream is used for stateless transformations and simple processing tasks.
             <img src="../docs/bpmn/VGR.png" alt="Gr4: VGR">
         </td>
     </tr>
+    <tr>
+        <td>CRM</td>
+        <td>
+            -
+        </td>
+        <td></td>
+        <td>
+            <img src="../docs/bpmn/CRM.png" alt="Gr4: CRM">
+        </td>
+    </tr>
+
 </table>
 
 ## Reflections and lessons learned
